@@ -70,7 +70,6 @@ see f data b =
 
 type Msg
   = GotFile File
-  | LoadMidi
   | ReadBuffer (Result String ArrayBuffer)
   | Back
   | Start Time
@@ -105,11 +104,6 @@ update msg model =
     GotFile file ->
       ( model
       , Task.attempt ReadBuffer (File.readFileAsArrayBuffer file |> Task.mapError toString)
-      )
-
-    LoadMidi ->
-      ( model
-      , Task.attempt ReadBuffer (File.fetchArrayBuffer "sample.mid")
       )
 
     ReadBuffer (Ok buf) ->

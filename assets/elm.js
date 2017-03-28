@@ -12217,15 +12217,6 @@ var _user$project$Main$update = F2(
 							_elm_lang$core$Basics$toString,
 							_user$project$BinaryDecoder_File$readFileAsArrayBuffer(_p15._0)))
 				};
-			case 'LoadMidi':
-				return {
-					ctor: '_Tuple2',
-					_0: model,
-					_1: A2(
-						_elm_lang$core$Task$attempt,
-						_user$project$Main$ReadBuffer,
-						_user$project$BinaryDecoder_File$fetchArrayBuffer('sample.mid'))
-				};
 			case 'ReadBuffer':
 				if (_p15._0.ctor === 'Ok') {
 					var _p17 = _p15._0._0;
@@ -12256,8 +12247,8 @@ var _user$project$Main$update = F2(
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Main',
 						{
-							start: {line: 104, column: 3},
-							end: {line: 180, column: 8}
+							start: {line: 103, column: 3},
+							end: {line: 174, column: 8}
 						},
 						_p15)(
 						A2(_elm_lang$core$Basics_ops['++'], 'failed to read arrayBuffer: ', _p15._0._0));
@@ -12367,7 +12358,6 @@ var _user$project$Main$main = _elm_lang$html$Html$programWithFlags(
 				_1: {ctor: '[]'}
 			}
 		}));
-var _user$project$Main$LoadMidi = {ctor: 'LoadMidi'};
 var _user$project$Main$GotFile = function (a) {
 	return {ctor: 'GotFile', _0: a};
 };

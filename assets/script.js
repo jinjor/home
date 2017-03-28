@@ -3,7 +3,7 @@ window.onerror = (message, url, line) => {
     + url + '\n' + line;
   return false;
 };
-let sample = '/assets/sample.mid';
+let sample = './assets/sample.mid';
 let app = Elm.Main.fullscreen(sample);
 app.ports.start.subscribe(() => {
 });
