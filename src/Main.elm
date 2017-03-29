@@ -1,10 +1,8 @@
 port module Main exposing (..)
 
-import Array
-import Json.Decode as Decode
+import Dict exposing (Dict)
 import Task
 import Time exposing (Time)
-import Process
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -21,9 +19,9 @@ port start : () -> Cmd msg
 port stop : () -> Cmd msg
 
 
-main : Program (Maybe String) Model Msg
+main : Program Never Model Msg
 main =
-  programWithFlags
+  program
     { init = init
     , update = update
     , subscriptions = subscriptions
@@ -32,8 +30,8 @@ main =
 
 
 type alias Model =
-  { midi : Maybe Midi
-  , playing : Bool
+  { midiContents : Dict String MidiContent
+  , playing : Maybe String
   , startTime : Time
   , currentTime : Time
   , futureNotes : List (Detailed Note)
@@ -48,44 +46,26 @@ type Error
   | DecodeError ArrayBuffer Byte.Error
 
 
-get : (data -> Maybe a) -> data -> a
-get f data =
-  case f data of
-    Just a ->
-      a
-
-    Nothing ->
-      Debug.crash "undefined"
-
-
-see : (data -> Maybe a) -> data -> b -> b
-see f data b =
-  case f data of
-    Just a ->
-      b
-
-    Nothing ->
-      Debug.crash "undefined"
+type alias FileName
+  = String
 
 
 type Msg
-  = GotFile File
-  | ReadBuffer (Result String ArrayBuffer)
+  = TriggerLoadFile FileName
+  | ReadBuffer FileName (Result String ArrayBuffer)
   | Back
-  | Start Time
+  | TriggerStart FileName Midi
+  | Start FileName Midi Time
   | Stop
   | Tick Time
-  | Timed (Time -> Msg)
-  | ToggleTrack Int
+  | ToggleTrack FileName Int
   | ToggleConfig
 
 
-init : Maybe String -> (Model, Cmd Msg)
-init midiFile =
-  ( Model Nothing False 0 0 [] Nothing False NoError
-  , midiFile
-      |> Maybe.map (\file -> Task.attempt ReadBuffer (File.fetchArrayBuffer file))
-      |> Maybe.withDefault Cmd.none
+init : (Model, Cmd Msg)
+init =
+  ( Model initialMidiCountents Nothing 0 0 [] Nothing False NoError
+  , Cmd.none
   )
 
 
@@ -101,16 +81,21 @@ andThen f (model, cmd) =
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    GotFile file ->
+    TriggerLoadFile fileName ->
       ( model
-      , Task.attempt ReadBuffer (File.readFileAsArrayBuffer file |> Task.mapError toString)
+      , File.fetchArrayBuffer fileName
+          |> Task.attempt ( ReadBuffer fileName )
       )
 
-    ReadBuffer (Ok buf) ->
+    ReadBuffer fileName (Ok buf) ->
       case Byte.decode SmfDecoder.smf buf of
         Ok smf ->
           ( { model
-              | midi = Just (Midi.fromSmf smf)
+              | midiContents =
+                  model.midiContents
+                    |> Dict.update fileName ( Maybe.map (\midiContent ->
+                      { midiContent | midi = Just (Midi.fromSmf smf) }
+                    ))
             }
           , Cmd.none
           )
@@ -120,17 +105,23 @@ update msg model =
              | error = DecodeError buf e
           }, Cmd.none)
 
-    ReadBuffer (Err s) ->
-      Debug.crash ("failed to read arrayBuffer: " ++ s)
+    ReadBuffer fileName (Err s) ->
+      Debug.crash ("failed to read arrayBuffer of file '" ++ fileName ++ "': " ++ s)
 
     Back ->
       ({ model
           | startTime = 0
           , currentTime = 0
-          , playing = False
+          , playing = Nothing
       }, Cmd.none )
 
-    Start currentTime ->
+    TriggerStart fileName midi ->
+      ( model
+      , Time.now
+          |> Task.perform ( Start fileName midi )
+      )
+
+    Start fileName midi currentTime ->
       let
         startTime =
           if model.currentTime > 0 then
@@ -141,8 +132,8 @@ update msg model =
         ( { model
             | startTime = startTime
             , currentTime = currentTime
-            , playing = True
-            , futureNotes = prepareFutureNotes (currentTime - startTime) (get .midi model)
+            , playing = Just fileName
+            , futureNotes = prepareFutureNotes (currentTime - startTime) midi
           }
         , start ()
         )
@@ -150,7 +141,7 @@ update msg model =
 
     Stop ->
       ( { model
-          | playing = False
+          | playing = Nothing
         }
       , stop ()
       )
@@ -160,11 +151,14 @@ update msg model =
           | currentTime = currentTime
       }, Cmd.none )
 
-    Timed toMsg ->
-      ( model, Task.perform toMsg Time.now )
-
-    ToggleTrack index ->
-      ( { model | midi = Just (Midi.toggleVisibility index <| get .midi model) }
+    ToggleTrack fileName index ->
+      ( { model
+          | midiContents =
+              model.midiContents
+                |> Dict.update fileName ( Maybe.map (\midiContent ->
+                  { midiContent | midi = Maybe.map (Midi.toggleVisibility index) midiContent.midi }
+                ))
+        }
       , Cmd.none
       )
 
@@ -210,90 +204,111 @@ splitWhile f taken list =
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch
-    [ if model.playing then
+    [ if model.playing /= Nothing then
         Time.every (1000 * Time.millisecond / 30) Tick
       else
         Sub.none
     ]
 
 
+contents : List Content
+contents =
+  [ Content "#summer" "Summer" (MidiAndMp3 "./assets/sample.mid" "")
+  , Content "#little-world" "Little World" (SoundCloud "306090165")
+  , Content "#kira-kira" "Kira Kira" (SoundCloud "278194362")
+  , Content "#candy" "Candy" (SoundCloud "240810123")
+  ]
+
+
+initialMidiCountents : Dict String MidiContent
+initialMidiCountents =
+  contents
+    |> List.filterMap (\content ->
+      case content.details of
+        MidiAndMp3 midiFile mp3File  ->
+          Just (midiFile, MidiContent midiFile mp3File False Nothing)
+
+        _ ->
+          Nothing
+      )
+    |> Dict.fromList
+
+
+type alias Content =
+  { hash : String
+  , title : String
+  , details : Details
+  }
+
+
+type Details
+  = MidiAndMp3 FileName FileName
+  | SoundCloud String
+
+
+type alias MidiContent =
+  { midiFile : String
+  , mp3File : String
+  , opened : Bool
+  , midi : Maybe Midi
+  }
+
+
 view : Model -> Html Msg
 view model =
-  div []
-  [ header [ class "header" ]
-      [ div
-          [ class "container" ]
-          [ h1 [] [ text "World Maker" ] ]
-      ]
-  , body [ class "body container" ]
-    [ h2 [] [ Shape.note, text "Music" ]
-    , ul []
-        [ li
-            [ class "contents-item" ]
-            [ title "#summer" "Summer"
-            , midi model
-            ]
-        , li
-            [ class "contents-item" ]
-            [ title "#little-world" "Little World"
-            , soundCloud "306090165"
-            ]
-        , li
-            [ class "contents-item" ]
-            [ title "#kira-kira" "Kira Kira"
-            , soundCloud "278194362"
-            ]
-        , li
-            [ class "contents-item" ]
-            [ title "#candy" "Candy"
-            , soundCloud "240810123"
-            ]
-        , li
-            [ class "contents-item" ]
-            [ title "#little-world" "Little World"
-            , soundCloud "306090165"
-            ]
-        , li
-            [ class "contents-item" ]
-            [ title "#kira-kira" "Kira Kira"
-            , soundCloud "278194362"
-            ]
-        , li
-            [ class "contents-item" ]
-            [ title "#candy" "Candy"
-            , soundCloud "240810123"
-            ]
+  div
+    []
+    [ header [ class "header" ]
+        [ div
+            [ class "container" ]
+            [ h1 [] [ text "World Maker" ] ]
         ]
-    , case model.error of
-        NoError ->
-          text ""
+    , body [ class "body container" ]
+      [ h2 [] [ Shape.note, text "Music" ]
+      , ul [] ( List.map ( viewContent model ) contents )
+      , case model.error of
+          NoError ->
+            text ""
 
-        DecodeError buf e ->
-          text (toString e)
+          DecodeError buf e ->
+            text (toString e)
+      ]
     ]
-  ]
+
+
+viewContent : Model -> Content -> Html Msg
+viewContent model content =
+  li [ class "contents-item" ] <|
+    case content.details of
+      MidiAndMp3 midiFile mp3File ->
+        case Dict.get midiFile model.midiContents |> Maybe.andThen .midi of
+          Just midi ->
+            [ title content.hash content.title
+            , MidiPlayer.view
+                { onBack = Back
+                , onStart = TriggerStart midiFile midi
+                , onStop = Stop
+                , onToggleTrack = ToggleTrack midiFile
+                }
+                ( model.playing == Just midiFile )
+                ( model.currentTime - model.startTime )
+                midi
+            ]
+
+          Nothing ->
+            [ title content.hash content.title
+            , button [ onClick (TriggerLoadFile midiFile) ] [ text "Play" ]
+            ]
+
+      SoundCloud id ->
+        [ title content.hash content.title
+        , soundCloud id
+        ]
+
 
 title : String -> String -> Html msg
 title hash s =
   a [ class "contents-item-link", href hash ] [ text s ]
-
-
-midi : Model -> Html Msg
-midi model =
-  case model.midi of
-    Just midi ->
-      MidiPlayer.view
-        { onBack = Back
-        , onStart = Timed Start
-        , onStop = Stop
-        , onToggleTrack = ToggleTrack
-        }
-        model.playing
-        (model.currentTime - model.startTime)
-        midi
-
-    _ ->
-      text ""
 
 
 soundCloud : String -> Html msg
