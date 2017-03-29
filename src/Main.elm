@@ -264,8 +264,9 @@ view model =
             [ h1 [] [ text "World Maker" ] ]
         ]
     , body [ class "body container" ]
-      [ p [] [ text "ジンジャーのホームページ" ]
+      [ p [] [ text "ジンジャー と Yosuke Torii のホームページ" ]
       , h2 [] [ Shape.note, text "Music" ]
+      , p [] [ text "世界を創る音楽" ]
       , ul [] ( List.map ( viewContent model ) contents )
       , case model.error of
           NoError ->
@@ -273,7 +274,12 @@ view model =
 
           DecodeError buf e ->
             text (toString e)
+      , h2 [] [ Shape.note, text "Development" ]
+      , p [] [ text "プログラミングは芸術" ]
+      , h2 [] [ Shape.note, text "Paintings" ]
+      , p [] [ text "ペイントでお絵かき" ]
       , h2 [] [ Shape.note, text "Links" ]
+      , p [] [ text "" ]
       , ul []
           [ li [] [ a [ href "https://soundcloud.com/jinjor" ] [ text "SoundCloud" ] ]
           , li [] [ a [ href "https://github.com/jinjor" ] [ text "GitHub" ] ]

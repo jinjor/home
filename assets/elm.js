@@ -12277,7 +12277,7 @@ var _user$project$Main$view = function (model) {
 							{ctor: '[]'},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('ジンジャーのホームページ'),
+								_0: _elm_lang$html$Html$text('ジンジャー と Yosuke Torii のホームページ'),
 								_1: {ctor: '[]'}
 							}),
 						_1: {
@@ -12297,132 +12297,206 @@ var _user$project$Main$view = function (model) {
 							_1: {
 								ctor: '::',
 								_0: A2(
-									_elm_lang$html$Html$ul,
+									_elm_lang$html$Html$p,
 									{ctor: '[]'},
-									A2(
-										_elm_lang$core$List$map,
-										_user$project$Main$viewContent(model),
-										_user$project$Main$contents)),
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('世界を創る音楽'),
+										_1: {ctor: '[]'}
+									}),
 								_1: {
 									ctor: '::',
-									_0: function () {
-										var _p21 = model.error;
-										if (_p21.ctor === 'NoError') {
-											return _elm_lang$html$Html$text('');
-										} else {
-											return _elm_lang$html$Html$text(
-												_elm_lang$core$Basics$toString(_p21._1));
-										}
-									}(),
+									_0: A2(
+										_elm_lang$html$Html$ul,
+										{ctor: '[]'},
+										A2(
+											_elm_lang$core$List$map,
+											_user$project$Main$viewContent(model),
+											_user$project$Main$contents)),
 									_1: {
 										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$h2,
-											{ctor: '[]'},
-											{
-												ctor: '::',
-												_0: _user$project$Shape$note,
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('Links'),
-													_1: {ctor: '[]'}
-												}
-											}),
+										_0: function () {
+											var _p21 = model.error;
+											if (_p21.ctor === 'NoError') {
+												return _elm_lang$html$Html$text('');
+											} else {
+												return _elm_lang$html$Html$text(
+													_elm_lang$core$Basics$toString(_p21._1));
+											}
+										}(),
 										_1: {
 											ctor: '::',
 											_0: A2(
-												_elm_lang$html$Html$ul,
+												_elm_lang$html$Html$h2,
 												{ctor: '[]'},
 												{
 													ctor: '::',
+													_0: _user$project$Shape$note,
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('Development'),
+														_1: {ctor: '[]'}
+													}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$p,
+													{ctor: '[]'},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('プログラミングは芸術'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
 													_0: A2(
-														_elm_lang$html$Html$li,
+														_elm_lang$html$Html$h2,
 														{ctor: '[]'},
 														{
 															ctor: '::',
-															_0: A2(
-																_elm_lang$html$Html$a,
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html_Attributes$href('https://soundcloud.com/jinjor'),
-																	_1: {ctor: '[]'}
-																},
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html$text('SoundCloud'),
-																	_1: {ctor: '[]'}
-																}),
-															_1: {ctor: '[]'}
+															_0: _user$project$Shape$note,
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('Paintings'),
+																_1: {ctor: '[]'}
+															}
 														}),
 													_1: {
 														ctor: '::',
 														_0: A2(
-															_elm_lang$html$Html$li,
+															_elm_lang$html$Html$p,
 															{ctor: '[]'},
 															{
 																ctor: '::',
-																_0: A2(
-																	_elm_lang$html$Html$a,
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html_Attributes$href('https://github.com/jinjor'),
-																		_1: {ctor: '[]'}
-																	},
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html$text('GitHub'),
-																		_1: {ctor: '[]'}
-																	}),
+																_0: _elm_lang$html$Html$text('ペイントでお絵かき'),
 																_1: {ctor: '[]'}
 															}),
 														_1: {
 															ctor: '::',
 															_0: A2(
-																_elm_lang$html$Html$li,
+																_elm_lang$html$Html$h2,
 																{ctor: '[]'},
 																{
 																	ctor: '::',
-																	_0: A2(
-																		_elm_lang$html$Html$a,
-																		{
-																			ctor: '::',
-																			_0: _elm_lang$html$Html_Attributes$href('https://twitter.com/jinjor'),
-																			_1: {ctor: '[]'}
-																		},
-																		{
-																			ctor: '::',
-																			_0: _elm_lang$html$Html$text('Twitter'),
-																			_1: {ctor: '[]'}
-																		}),
-																	_1: {ctor: '[]'}
+																	_0: _user$project$Shape$note,
+																	_1: {
+																		ctor: '::',
+																		_0: _elm_lang$html$Html$text('Links'),
+																		_1: {ctor: '[]'}
+																	}
 																}),
 															_1: {
 																ctor: '::',
 																_0: A2(
-																	_elm_lang$html$Html$li,
+																	_elm_lang$html$Html$p,
 																	{ctor: '[]'},
 																	{
 																		ctor: '::',
-																		_0: A2(
-																			_elm_lang$html$Html$a,
-																			{
-																				ctor: '::',
-																				_0: _elm_lang$html$Html_Attributes$href('http://jinjor-labo.hatenablog.com/'),
-																				_1: {ctor: '[]'}
-																			},
-																			{
-																				ctor: '::',
-																				_0: _elm_lang$html$Html$text('Blog'),
-																				_1: {ctor: '[]'}
-																			}),
+																		_0: _elm_lang$html$Html$text(''),
 																		_1: {ctor: '[]'}
 																	}),
-																_1: {ctor: '[]'}
+																_1: {
+																	ctor: '::',
+																	_0: A2(
+																		_elm_lang$html$Html$ul,
+																		{ctor: '[]'},
+																		{
+																			ctor: '::',
+																			_0: A2(
+																				_elm_lang$html$Html$li,
+																				{ctor: '[]'},
+																				{
+																					ctor: '::',
+																					_0: A2(
+																						_elm_lang$html$Html$a,
+																						{
+																							ctor: '::',
+																							_0: _elm_lang$html$Html_Attributes$href('https://soundcloud.com/jinjor'),
+																							_1: {ctor: '[]'}
+																						},
+																						{
+																							ctor: '::',
+																							_0: _elm_lang$html$Html$text('SoundCloud'),
+																							_1: {ctor: '[]'}
+																						}),
+																					_1: {ctor: '[]'}
+																				}),
+																			_1: {
+																				ctor: '::',
+																				_0: A2(
+																					_elm_lang$html$Html$li,
+																					{ctor: '[]'},
+																					{
+																						ctor: '::',
+																						_0: A2(
+																							_elm_lang$html$Html$a,
+																							{
+																								ctor: '::',
+																								_0: _elm_lang$html$Html_Attributes$href('https://github.com/jinjor'),
+																								_1: {ctor: '[]'}
+																							},
+																							{
+																								ctor: '::',
+																								_0: _elm_lang$html$Html$text('GitHub'),
+																								_1: {ctor: '[]'}
+																							}),
+																						_1: {ctor: '[]'}
+																					}),
+																				_1: {
+																					ctor: '::',
+																					_0: A2(
+																						_elm_lang$html$Html$li,
+																						{ctor: '[]'},
+																						{
+																							ctor: '::',
+																							_0: A2(
+																								_elm_lang$html$Html$a,
+																								{
+																									ctor: '::',
+																									_0: _elm_lang$html$Html_Attributes$href('https://twitter.com/jinjor'),
+																									_1: {ctor: '[]'}
+																								},
+																								{
+																									ctor: '::',
+																									_0: _elm_lang$html$Html$text('Twitter'),
+																									_1: {ctor: '[]'}
+																								}),
+																							_1: {ctor: '[]'}
+																						}),
+																					_1: {
+																						ctor: '::',
+																						_0: A2(
+																							_elm_lang$html$Html$li,
+																							{ctor: '[]'},
+																							{
+																								ctor: '::',
+																								_0: A2(
+																									_elm_lang$html$Html$a,
+																									{
+																										ctor: '::',
+																										_0: _elm_lang$html$Html_Attributes$href('http://jinjor-labo.hatenablog.com/'),
+																										_1: {ctor: '[]'}
+																									},
+																									{
+																										ctor: '::',
+																										_0: _elm_lang$html$Html$text('Blog'),
+																										_1: {ctor: '[]'}
+																									}),
+																								_1: {ctor: '[]'}
+																							}),
+																						_1: {ctor: '[]'}
+																					}
+																				}
+																			}
+																		}),
+																	_1: {ctor: '[]'}
+																}
 															}
 														}
 													}
-												}),
-											_1: {ctor: '[]'}
+												}
+											}
 										}
 									}
 								}
