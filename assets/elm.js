@@ -12818,7 +12818,7 @@ var _user$project$Main$view = function (model) {
 																					_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
 																					_1: {
 																						ctor: '::',
-																						_0: _elm_lang$html$Html_Attributes$src('/contents/paintings/cafe.png'),
+																						_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/cafe.png'),
 																						_1: {ctor: '[]'}
 																					}
 																				},
@@ -12850,7 +12850,7 @@ var _user$project$Main$view = function (model) {
 																						_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
 																						_1: {
 																							ctor: '::',
-																							_0: _elm_lang$html$Html_Attributes$src('/contents/paintings/rain.png'),
+																							_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/rain.png'),
 																							_1: {ctor: '[]'}
 																						}
 																					},
@@ -12882,7 +12882,7 @@ var _user$project$Main$view = function (model) {
 																							_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
 																							_1: {
 																								ctor: '::',
-																								_0: _elm_lang$html$Html_Attributes$src('/contents/paintings/hanabi.png'),
+																								_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/hanabi.png'),
 																								_1: {ctor: '[]'}
 																							}
 																						},
@@ -12903,7 +12903,7 @@ var _user$project$Main$view = function (model) {
 																								_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
 																								_1: {
 																									ctor: '::',
-																									_0: _elm_lang$html$Html_Attributes$src('/contents/paintings/totoro.png'),
+																									_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/totoro.png'),
 																									_1: {ctor: '[]'}
 																								}
 																							},
@@ -12936,7 +12936,7 @@ var _user$project$Main$view = function (model) {
 																								_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
 																								_1: {
 																									ctor: '::',
-																									_0: _elm_lang$html$Html_Attributes$src('/contents/paintings/clock.png'),
+																									_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/clock.png'),
 																									_1: {ctor: '[]'}
 																								}
 																							},
@@ -12957,7 +12957,7 @@ var _user$project$Main$view = function (model) {
 																									_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
 																									_1: {
 																										ctor: '::',
-																										_0: _elm_lang$html$Html_Attributes$src('/contents/paintings/strong-zero.png'),
+																										_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/strong-zero.png'),
 																										_1: {ctor: '[]'}
 																									}
 																								},
@@ -12978,7 +12978,7 @@ var _user$project$Main$view = function (model) {
 																										_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
 																										_1: {
 																											ctor: '::',
-																											_0: _elm_lang$html$Html_Attributes$src('/contents/paintings/orange.png'),
+																											_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/orange.png'),
 																											_1: {ctor: '[]'}
 																										}
 																									},
