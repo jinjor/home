@@ -13,6 +13,7 @@ import BinaryDecoder.Byte as Byte exposing (ArrayBuffer, Error)
 import SmfDecoder exposing (Smf)
 import Midi exposing (Midi, Note, Detailed)
 import MidiPlayer
+import GitHub
 
 
 port start : () -> Cmd msg
