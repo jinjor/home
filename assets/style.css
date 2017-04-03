@@ -11,6 +11,7 @@ h2 {
   font-size: 1.5em;
   border-bottom: solid 1px;
   font-weight: normal;
+  clear: both;
 }
 ul {
   list-style-type: none;
@@ -46,4 +47,16 @@ a {
   max-width: 480px;
   margin-left: auto;
   margin-right: auto;
+}
+.paintings-container {
+  display: flex;
+  justify-content: space-between;
+  /*margin-bottom: 5px;*/
+}
+.paintings-container.paintings-container-small .paintings-image {
+  height: 150px;
+}
+.paintings-image {
+  max-width: 100%;
+  vertical-align: bottom;
 }
