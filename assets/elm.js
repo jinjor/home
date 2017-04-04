@@ -11179,12 +11179,175 @@ var _user$project$Colors$depth = function (n) {
 		_user$project$Colors$all);
 };
 
-var _user$project$GitHub$repositoryCard = function (repos) {
-	return _elm_lang$html$Html$text('');
+var _user$project$GitHub$emptyRepositoryCard = function (fullName) {
+	return A2(
+		_elm_lang$html$Html$li,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('repository-card'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$a,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('repository-card-name'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$href(
+							A2(_elm_lang$core$Basics_ops['++'], 'https://github.com/', fullName)),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(fullName),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$GitHub$repositoryCardHelp = function (repos) {
+	return A2(
+		_elm_lang$html$Html$li,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('repository-card'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$a,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('repository-card-name'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$href(
+							A2(_elm_lang$core$Basics_ops['++'], 'https://github.com/', repos.fullName)),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(repos.name),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('repository-card-description'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(repos.description),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('repository-card-language'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(repos.language),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('repository-card-stargazers'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(repos.stargazersCount)),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('repository-card-forks'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(
+										_elm_lang$core$Basics$toString(repos.forks)),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$GitHub$repositoryCard = function (_p0) {
+	var _p1 = _p0;
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		_user$project$GitHub$emptyRepositoryCard(_p1._0),
+		A2(_elm_lang$core$Maybe$map, _user$project$GitHub$repositoryCardHelp, _p1._1));
+};
+var _user$project$GitHub$repositoryCards = function (repositories) {
+	return A2(
+		_elm_lang$html$Html$ul,
+		{ctor: '[]'},
+		A2(_elm_lang$core$List$map, _user$project$GitHub$repositoryCard, repositories));
 };
 var _user$project$GitHub$userCard = function (user) {
 	return _elm_lang$html$Html$text('');
 };
+var _user$project$GitHub$getSortedRepositories = F2(
+	function (names, gitHub) {
+		return A2(
+			_elm_lang$core$List$map,
+			function (name) {
+				return {
+					ctor: '_Tuple2',
+					_0: name,
+					_1: A2(_elm_lang$core$Dict$get, name, gitHub.repos)
+				};
+			},
+			names);
+	});
+var _user$project$GitHub$update = F2(
+	function (msg, gitHub) {
+		var _p2 = msg;
+		if (_p2.ctor === 'ReceiveUser') {
+			return _elm_lang$core$Native_Utils.update(
+				gitHub,
+				{
+					user: _elm_lang$core$Maybe$Just(_p2._0)
+				});
+		} else {
+			var _p3 = _p2._0;
+			return _elm_lang$core$Native_Utils.update(
+				gitHub,
+				{
+					repos: A3(_elm_lang$core$Dict$insert, _p3.fullName, _p3, gitHub.repos)
+				});
+		}
+	});
 var _user$project$GitHub$User = F8(
 	function (a, b, c, d, e, f, g, h) {
 		return {avatarUrl: a, bio: b, followers: c, following: d, htmlUrl: e, location: f, name: g, publicRepos: h};
@@ -11200,7 +11363,7 @@ var _user$project$GitHub$decodeUser = A9(
 	A2(_elm_lang$core$Json_Decode$field, 'location', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'public_repos', _elm_lang$core$Json_Decode$int));
-var _user$project$GitHub$getUser = F2(
+var _user$project$GitHub$fetchUser = F2(
 	function (tagger, name) {
 		return A2(
 			_elm_lang$http$Http$send,
@@ -11210,21 +11373,22 @@ var _user$project$GitHub$getUser = F2(
 				A2(_elm_lang$core$Basics_ops['++'], 'https://api.github.com/users/', name),
 				_user$project$GitHub$decodeUser));
 	});
-var _user$project$GitHub$Repository = F7(
-	function (a, b, c, d, e, f, g) {
-		return {description: a, forks: b, homepage: c, language: d, name: e, stargazersCount: f, watchers: g};
+var _user$project$GitHub$Repository = F8(
+	function (a, b, c, d, e, f, g, h) {
+		return {description: a, forks: b, fullName: c, homepage: d, language: e, name: f, stargazersCount: g, watchers: h};
 	});
-var _user$project$GitHub$decodeRepository = A8(
-	_elm_lang$core$Json_Decode$map7,
+var _user$project$GitHub$decodeRepository = A9(
+	_elm_lang$core$Json_Decode$map8,
 	_user$project$GitHub$Repository,
 	A2(_elm_lang$core$Json_Decode$field, 'description', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'forks', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'full_name', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'homepage', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'language', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'stargazers_count', _elm_lang$core$Json_Decode$int),
 	A2(_elm_lang$core$Json_Decode$field, 'watchers', _elm_lang$core$Json_Decode$int));
-var _user$project$GitHub$getRepository = F3(
+var _user$project$GitHub$fetchRepository = F3(
 	function (tagger, userName, reposName) {
 		return A2(
 			_elm_lang$http$Http$send,
@@ -11240,6 +11404,17 @@ var _user$project$GitHub$getRepository = F3(
 						A2(_elm_lang$core$Basics_ops['++'], '/', reposName))),
 				_user$project$GitHub$decodeRepository));
 	});
+var _user$project$GitHub$GitHub = F2(
+	function (a, b) {
+		return {user: a, repos: b};
+	});
+var _user$project$GitHub$init = A2(_user$project$GitHub$GitHub, _elm_lang$core$Maybe$Nothing, _elm_lang$core$Dict$empty);
+var _user$project$GitHub$ReceiveRepository = function (a) {
+	return {ctor: 'ReceiveRepository', _0: a};
+};
+var _user$project$GitHub$ReceiveUser = function (a) {
+	return {ctor: 'ReceiveUser', _0: a};
+};
 
 var _user$project$Shape$note = A2(
 	_elm_lang$svg$Svg$svg,
