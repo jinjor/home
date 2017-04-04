@@ -53,6 +53,12 @@ a {
   justify-content: space-between;
   /*margin-bottom: 5px;*/
 }
+.paintings-container.paintings-container-single > div {
+  width: 100%;
+}
+.paintings-container.paintings-container-single > div > img {
+  width: 100%;
+}
 .paintings-container.paintings-container-small .paintings-image {
   height: 150px;
 }
