@@ -54,35 +54,60 @@ type alias Repository =
 
 
 type alias GitHub =
-  { user : Maybe User
-  , repos : Dict String Repository
+  { user : Maybe (String, Maybe User)
+  , repos : List (String, Maybe Repository)
   }
 
 
 type Msg
-  = ReceiveUser User
-  | ReceiveRepository Repository
+  = ReceiveUser (Result Http.Error User)
+  | ReceiveRepository (Result Http.Error Repository)
 
 
-init : GitHub
-init =
-  GitHub Nothing Dict.empty
+init : (Msg -> msg) -> Maybe String -> List String -> (GitHub, Cmd msg)
+init tagger maybeUserName reposNames =
+  let
+    gitHub =
+      GitHub
+        ( maybeUserName |> Maybe.map (flip (,) Nothing) )
+        ( reposNames |> List.map (flip (,) Nothing) )
+
+    u =
+      maybeUserName
+        |> Maybe.map (fetchUser (ReceiveUser >> tagger))
+        |> Maybe.withDefault Cmd.none
+
+    r =
+      reposNames
+        |> List.map (fetchRepository (ReceiveRepository >> tagger))
+  in
+    ( gitHub, Cmd.batch (u :: r) )
 
 
 update : Msg -> GitHub -> GitHub
 update msg gitHub =
   case msg of
-    ReceiveUser user ->
-      { gitHub | user = Just user }
+    ReceiveUser (Ok user) ->
+      { gitHub
+          | user =
+              gitHub.user
+                |> Maybe.map (Tuple.mapSecond (always (Just user)))
+      }
 
-    ReceiveRepository repos ->
-      { gitHub | repos = Dict.insert repos.fullName repos gitHub.repos }
+    ReceiveRepository (Ok repos) ->
+      { gitHub
+          | repos =
+              gitHub.repos
+                |> List.map (\(name, r) ->
+                  if repos.fullName == name then
+                    (name, Just repos)
+                  else
+                    (name, r)
+                )
+      }
 
-
-getSortedRepositories : List String -> GitHub -> List (String, Maybe Repository)
-getSortedRepositories names gitHub =
-  names
-    |> List.map (\name -> (name, Dict.get name gitHub.repos))
+    _ ->
+      gitHub
 
 
 fetchUser : (Result Http.Error User -> msg) -> String -> Cmd msg
@@ -104,9 +129,9 @@ decodeUser =
     (Decode.field "public_repos" Decode.int)
 
 
-fetchRepository : (Result Http.Error Repository -> msg) -> String -> String -> Cmd msg
-fetchRepository tagger userName reposName =
-  Http.get ("https://api.github.com/repos/" ++ userName ++ "/" ++ reposName) decodeRepository
+fetchRepository : (Result Http.Error Repository -> msg) -> String -> Cmd msg
+fetchRepository tagger fullName =
+  Http.get ("https://api.github.com/repos/" ++ fullName) decodeRepository
     |> Http.send tagger
 
 
@@ -127,16 +152,27 @@ decodeRepository =
 -- "https://api.github.com/repos/jinjor/elm-diff/languages"
 
 
+view : GitHub -> (Html msg, List (Html msg))
+view gitHub =
+  ( gitHub.user
+      |> Maybe.andThen (Tuple.second)
+      |> Maybe.map userCard
+      |> Maybe.withDefault (text "")
+  , gitHub.repos
+      |> List.map repositoryCard
+  )
+
+
 userCard : User -> Html msg
 userCard user =
   text ""
 
 
-repositoryCards : List (String, Maybe Repository) -> Html msg
-repositoryCards repositories =
-  repositories
-    |> List.map repositoryCard
-    |> ul []
+-- repositoryCards : List (String, Maybe Repository) -> Html msg
+-- repositoryCards repositories =
+--   repositories
+--     |> List.map repositoryCard
+--     |> ul []
 
 
 repositoryCard : (String, Maybe Repository) -> Html msg

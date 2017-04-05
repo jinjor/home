@@ -13,7 +13,7 @@ import BinaryDecoder.Byte as Byte exposing (ArrayBuffer, Error)
 import SmfDecoder exposing (Smf)
 import Midi exposing (Midi, Note, Detailed)
 import MidiPlayer
-import GitHub
+import GitHub exposing (GitHub)
 
 
 port start : () -> Cmd msg
@@ -38,6 +38,7 @@ type alias Model =
   , futureNotes : List (Detailed Note)
   , selectedMidiOut : Maybe String
   , showConfig : Bool
+  , gitHub : GitHub
   , error : Error
   }
 
@@ -61,13 +62,25 @@ type Msg
   | Tick Time
   | ToggleTrack FileName Int
   | ToggleConfig
+  | GitHubMsg GitHub.Msg
 
 
 init : (Model, Cmd Msg)
 init =
-  ( Model initialMidiCountents Nothing 0 0 [] Nothing False NoError
-  , Cmd.none
-  )
+  let
+    (gitHub, cmd) =
+      GitHub.init GitHubMsg (Just "jinjor")
+        [ "jinjor/elm-diff"
+        , "jinjor/elm-time-travel"
+        , "jinjor/elm-html-parser"
+        , "jinjor/elm-contextmenu"
+        , "jinjor/elm-inline-hover"
+        , "WorksApplications/office-maker"
+        ]
+  in
+    ( Model initialMidiCountents Nothing 0 0 [] Nothing False gitHub NoError
+    , cmd
+    )
 
 
 andThen : (model -> (model, Cmd msg)) -> (model, Cmd msg) -> (model, Cmd msg)
@@ -165,6 +178,11 @@ update msg model =
 
     ToggleConfig ->
       ( { model | showConfig = not model.showConfig }
+      , Cmd.none
+      )
+
+    GitHubMsg msg ->
+      ( { model | gitHub = GitHub.update msg model.gitHub }
       , Cmd.none
       )
 
@@ -277,6 +295,7 @@ view model =
             text (toString e)
       , h2 [] [ Shape.note, text "Development" ]
       , p [] [ text "プログラミングは芸術" ]
+      , div [] ( GitHub.view model.gitHub |> Tuple.second )
       , h2 [] [ Shape.note, text "Paintings" ]
       , p [] [ text "ペイントでお絵かき" ]
       , div [ class "paintings-container paintings-container-single" ]

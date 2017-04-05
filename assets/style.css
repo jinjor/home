@@ -48,6 +48,35 @@ a {
   margin-left: auto;
   margin-right: auto;
 }
+
+.repository-card {
+  list-style-type: none;
+  padding: 16px;
+  border: solid 1px #d1d5da;
+  border-radius: 3px;
+  width: 50%;
+  box-sizing: border-box;
+  float: left;
+  height: 120px;
+}
+.repository-card-name {
+  color: #0366d6;
+}
+.repository-card-description {
+
+}
+.repository-card-language {
+
+}
+.repository-card-stargazers {
+
+}
+.repository-card-forks {
+
+}
+
+
+
 .paintings-container {
   display: flex;
   justify-content: space-between;

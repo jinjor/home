@@ -11308,45 +11308,67 @@ var _user$project$GitHub$repositoryCard = function (_p0) {
 		_user$project$GitHub$emptyRepositoryCard(_p1._0),
 		A2(_elm_lang$core$Maybe$map, _user$project$GitHub$repositoryCardHelp, _p1._1));
 };
-var _user$project$GitHub$repositoryCards = function (repositories) {
-	return A2(
-		_elm_lang$html$Html$ul,
-		{ctor: '[]'},
-		A2(_elm_lang$core$List$map, _user$project$GitHub$repositoryCard, repositories));
-};
 var _user$project$GitHub$userCard = function (user) {
 	return _elm_lang$html$Html$text('');
 };
-var _user$project$GitHub$getSortedRepositories = F2(
-	function (names, gitHub) {
-		return A2(
-			_elm_lang$core$List$map,
-			function (name) {
-				return {
-					ctor: '_Tuple2',
-					_0: name,
-					_1: A2(_elm_lang$core$Dict$get, name, gitHub.repos)
-				};
-			},
-			names);
-	});
+var _user$project$GitHub$view = function (gitHub) {
+	return {
+		ctor: '_Tuple2',
+		_0: A2(
+			_elm_lang$core$Maybe$withDefault,
+			_elm_lang$html$Html$text(''),
+			A2(
+				_elm_lang$core$Maybe$map,
+				_user$project$GitHub$userCard,
+				A2(_elm_lang$core$Maybe$andThen, _elm_lang$core$Tuple$second, gitHub.user))),
+		_1: A2(_elm_lang$core$List$map, _user$project$GitHub$repositoryCard, gitHub.repos)
+	};
+};
 var _user$project$GitHub$update = F2(
 	function (msg, gitHub) {
 		var _p2 = msg;
-		if (_p2.ctor === 'ReceiveUser') {
-			return _elm_lang$core$Native_Utils.update(
-				gitHub,
-				{
-					user: _elm_lang$core$Maybe$Just(_p2._0)
-				});
-		} else {
-			var _p3 = _p2._0;
-			return _elm_lang$core$Native_Utils.update(
-				gitHub,
-				{
-					repos: A3(_elm_lang$core$Dict$insert, _p3.fullName, _p3, gitHub.repos)
-				});
-		}
+		_v1_2:
+		do {
+			if (_p2.ctor === 'ReceiveUser') {
+				if (_p2._0.ctor === 'Ok') {
+					return _elm_lang$core$Native_Utils.update(
+						gitHub,
+						{
+							user: A2(
+								_elm_lang$core$Maybe$map,
+								_elm_lang$core$Tuple$mapSecond(
+									_elm_lang$core$Basics$always(
+										_elm_lang$core$Maybe$Just(_p2._0._0))),
+								gitHub.user)
+						});
+				} else {
+					break _v1_2;
+				}
+			} else {
+				if (_p2._0.ctor === 'Ok') {
+					var _p6 = _p2._0._0;
+					return _elm_lang$core$Native_Utils.update(
+						gitHub,
+						{
+							repos: A2(
+								_elm_lang$core$List$map,
+								function (_p3) {
+									var _p4 = _p3;
+									var _p5 = _p4._0;
+									return _elm_lang$core$Native_Utils.eq(_p6.fullName, _p5) ? {
+										ctor: '_Tuple2',
+										_0: _p5,
+										_1: _elm_lang$core$Maybe$Just(_p6)
+									} : {ctor: '_Tuple2', _0: _p5, _1: _p4._1};
+								},
+								gitHub.repos)
+						});
+				} else {
+					break _v1_2;
+				}
+			}
+		} while(false);
+		return gitHub;
 	});
 var _user$project$GitHub$User = F8(
 	function (a, b, c, d, e, f, g, h) {
@@ -11388,33 +11410,76 @@ var _user$project$GitHub$decodeRepository = A9(
 	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'stargazers_count', _elm_lang$core$Json_Decode$int),
 	A2(_elm_lang$core$Json_Decode$field, 'watchers', _elm_lang$core$Json_Decode$int));
-var _user$project$GitHub$fetchRepository = F3(
-	function (tagger, userName, reposName) {
+var _user$project$GitHub$fetchRepository = F2(
+	function (tagger, fullName) {
 		return A2(
 			_elm_lang$http$Http$send,
 			tagger,
 			A2(
 				_elm_lang$http$Http$get,
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'https://api.github.com/repos/',
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						userName,
-						A2(_elm_lang$core$Basics_ops['++'], '/', reposName))),
+				A2(_elm_lang$core$Basics_ops['++'], 'https://api.github.com/repos/', fullName),
 				_user$project$GitHub$decodeRepository));
 	});
 var _user$project$GitHub$GitHub = F2(
 	function (a, b) {
 		return {user: a, repos: b};
 	});
-var _user$project$GitHub$init = A2(_user$project$GitHub$GitHub, _elm_lang$core$Maybe$Nothing, _elm_lang$core$Dict$empty);
 var _user$project$GitHub$ReceiveRepository = function (a) {
 	return {ctor: 'ReceiveRepository', _0: a};
 };
 var _user$project$GitHub$ReceiveUser = function (a) {
 	return {ctor: 'ReceiveUser', _0: a};
 };
+var _user$project$GitHub$init = F3(
+	function (tagger, maybeUserName, reposNames) {
+		var r = A2(
+			_elm_lang$core$List$map,
+			_user$project$GitHub$fetchRepository(
+				function (_p7) {
+					return tagger(
+						_user$project$GitHub$ReceiveRepository(_p7));
+				}),
+			reposNames);
+		var u = A2(
+			_elm_lang$core$Maybe$withDefault,
+			_elm_lang$core$Platform_Cmd$none,
+			A2(
+				_elm_lang$core$Maybe$map,
+				_user$project$GitHub$fetchUser(
+					function (_p8) {
+						return tagger(
+							_user$project$GitHub$ReceiveUser(_p8));
+					}),
+				maybeUserName));
+		var gitHub = A2(
+			_user$project$GitHub$GitHub,
+			A2(
+				_elm_lang$core$Maybe$map,
+				A2(
+					_elm_lang$core$Basics$flip,
+					F2(
+						function (v0, v1) {
+							return {ctor: '_Tuple2', _0: v0, _1: v1};
+						}),
+					_elm_lang$core$Maybe$Nothing),
+				maybeUserName),
+			A2(
+				_elm_lang$core$List$map,
+				A2(
+					_elm_lang$core$Basics$flip,
+					F2(
+						function (v0, v1) {
+							return {ctor: '_Tuple2', _0: v0, _1: v1};
+						}),
+					_elm_lang$core$Maybe$Nothing),
+				reposNames));
+		return {
+			ctor: '_Tuple2',
+			_0: gitHub,
+			_1: _elm_lang$core$Platform_Cmd$batch(
+				{ctor: '::', _0: u, _1: r})
+		};
+	});
 
 var _user$project$Shape$note = A2(
 	_elm_lang$svg$Svg$svg,
@@ -12468,9 +12533,9 @@ var _user$project$Main$stop = _elm_lang$core$Native_Platform.outgoingPort(
 	function (v) {
 		return null;
 	});
-var _user$project$Main$Model = F8(
-	function (a, b, c, d, e, f, g, h) {
-		return {midiContents: a, playing: b, startTime: c, currentTime: d, futureNotes: e, selectedMidiOut: f, showConfig: g, error: h};
+var _user$project$Main$Model = F9(
+	function (a, b, c, d, e, f, g, h, i) {
+		return {midiContents: a, playing: b, startTime: c, currentTime: d, futureNotes: e, selectedMidiOut: f, showConfig: g, gitHub: h, error: i};
 	});
 var _user$project$Main$Content = F3(
 	function (a, b, c) {
@@ -12485,6 +12550,9 @@ var _user$project$Main$DecodeError = F2(
 		return {ctor: 'DecodeError', _0: a, _1: b};
 	});
 var _user$project$Main$NoError = {ctor: 'NoError'};
+var _user$project$Main$GitHubMsg = function (a) {
+	return {ctor: 'GitHubMsg', _0: a};
+};
 var _user$project$Main$ToggleConfig = {ctor: 'ToggleConfig'};
 var _user$project$Main$ToggleTrack = F2(
 	function (a, b) {
@@ -12570,8 +12638,8 @@ var _user$project$Main$update = F2(
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Main',
 						{
-							start: {line: 84, column: 3},
-							end: {line: 169, column: 8}
+							start: {line: 97, column: 3},
+							end: {line: 187, column: 8}
 						},
 						_p9)(
 						A2(
@@ -12660,12 +12728,22 @@ var _user$project$Main$update = F2(
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
+			case 'ToggleConfig':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{showConfig: !model.showConfig}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							gitHub: A2(_user$project$GitHub$update, _p9._0, model.gitHub)
+						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 		}
@@ -12809,20 +12887,54 @@ var _user$project$Main$initialMidiCountents = _elm_lang$core$Dict$fromList(
 			}
 		},
 		_user$project$Main$contents));
-var _user$project$Main$init = {
-	ctor: '_Tuple2',
-	_0: A8(
-		_user$project$Main$Model,
-		_user$project$Main$initialMidiCountents,
-		_elm_lang$core$Maybe$Nothing,
-		0,
-		0,
-		{ctor: '[]'},
-		_elm_lang$core$Maybe$Nothing,
-		false,
-		_user$project$Main$NoError),
-	_1: _elm_lang$core$Platform_Cmd$none
-};
+var _user$project$Main$init = function () {
+	var _p21 = A3(
+		_user$project$GitHub$init,
+		_user$project$Main$GitHubMsg,
+		_elm_lang$core$Maybe$Just('jinjor'),
+		{
+			ctor: '::',
+			_0: 'jinjor/elm-diff',
+			_1: {
+				ctor: '::',
+				_0: 'jinjor/elm-time-travel',
+				_1: {
+					ctor: '::',
+					_0: 'jinjor/elm-html-parser',
+					_1: {
+						ctor: '::',
+						_0: 'jinjor/elm-contextmenu',
+						_1: {
+							ctor: '::',
+							_0: 'jinjor/elm-inline-hover',
+							_1: {
+								ctor: '::',
+								_0: 'WorksApplications/office-maker',
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		});
+	var gitHub = _p21._0;
+	var cmd = _p21._1;
+	return {
+		ctor: '_Tuple2',
+		_0: A9(
+			_user$project$Main$Model,
+			_user$project$Main$initialMidiCountents,
+			_elm_lang$core$Maybe$Nothing,
+			0,
+			0,
+			{ctor: '[]'},
+			_elm_lang$core$Maybe$Nothing,
+			false,
+			gitHub,
+			_user$project$Main$NoError),
+		_1: cmd
+	};
+}();
 var _user$project$Main$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -12914,12 +13026,12 @@ var _user$project$Main$view = function (model) {
 									_1: {
 										ctor: '::',
 										_0: function () {
-											var _p21 = model.error;
-											if (_p21.ctor === 'NoError') {
+											var _p22 = model.error;
+											if (_p22.ctor === 'NoError') {
 												return _elm_lang$html$Html$text('');
 											} else {
 												return _elm_lang$html$Html$text(
-													_elm_lang$core$Basics$toString(_p21._1));
+													_elm_lang$core$Basics$toString(_p22._1));
 											}
 										}(),
 										_1: {
@@ -12949,57 +13061,32 @@ var _user$project$Main$view = function (model) {
 												_1: {
 													ctor: '::',
 													_0: A2(
-														_elm_lang$html$Html$h2,
+														_elm_lang$html$Html$div,
 														{ctor: '[]'},
-														{
-															ctor: '::',
-															_0: _user$project$Shape$note,
-															_1: {
-																ctor: '::',
-																_0: _elm_lang$html$Html$text('Paintings'),
-																_1: {ctor: '[]'}
-															}
-														}),
+														_elm_lang$core$Tuple$second(
+															_user$project$GitHub$view(model.gitHub))),
 													_1: {
 														ctor: '::',
 														_0: A2(
-															_elm_lang$html$Html$p,
+															_elm_lang$html$Html$h2,
 															{ctor: '[]'},
 															{
 																ctor: '::',
-																_0: _elm_lang$html$Html$text('ペイントでお絵かき'),
-																_1: {ctor: '[]'}
+																_0: _user$project$Shape$note,
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html$text('Paintings'),
+																	_1: {ctor: '[]'}
+																}
 															}),
 														_1: {
 															ctor: '::',
 															_0: A2(
-																_elm_lang$html$Html$div,
+																_elm_lang$html$Html$p,
+																{ctor: '[]'},
 																{
 																	ctor: '::',
-																	_0: _elm_lang$html$Html_Attributes$class('paintings-container paintings-container-single'),
-																	_1: {ctor: '[]'}
-																},
-																{
-																	ctor: '::',
-																	_0: A2(
-																		_elm_lang$html$Html$div,
-																		{ctor: '[]'},
-																		{
-																			ctor: '::',
-																			_0: A2(
-																				_elm_lang$html$Html$img,
-																				{
-																					ctor: '::',
-																					_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
-																					_1: {
-																						ctor: '::',
-																						_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/trip.png'),
-																						_1: {ctor: '[]'}
-																					}
-																				},
-																				{ctor: '[]'}),
-																			_1: {ctor: '[]'}
-																		}),
+																	_0: _elm_lang$html$Html$text('ペイントでお絵かき'),
 																	_1: {ctor: '[]'}
 																}),
 															_1: {
@@ -13008,7 +13095,7 @@ var _user$project$Main$view = function (model) {
 																	_elm_lang$html$Html$div,
 																	{
 																		ctor: '::',
-																		_0: _elm_lang$html$Html_Attributes$class('paintings-container'),
+																		_0: _elm_lang$html$Html_Attributes$class('paintings-container paintings-container-single'),
 																		_1: {ctor: '[]'}
 																	},
 																	{
@@ -13025,7 +13112,7 @@ var _user$project$Main$view = function (model) {
 																						_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
 																						_1: {
 																							ctor: '::',
-																							_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/cafe.png'),
+																							_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/trip.png'),
 																							_1: {ctor: '[]'}
 																						}
 																					},
@@ -13057,7 +13144,7 @@ var _user$project$Main$view = function (model) {
 																							_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
 																							_1: {
 																								ctor: '::',
-																								_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/rain.png'),
+																								_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/cafe.png'),
 																								_1: {ctor: '[]'}
 																							}
 																						},
@@ -13089,36 +13176,14 @@ var _user$project$Main$view = function (model) {
 																								_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
 																								_1: {
 																									ctor: '::',
-																									_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/hanabi.png'),
+																									_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/rain.png'),
 																									_1: {ctor: '[]'}
 																								}
 																							},
 																							{ctor: '[]'}),
 																						_1: {ctor: '[]'}
 																					}),
-																				_1: {
-																					ctor: '::',
-																					_0: A2(
-																						_elm_lang$html$Html$div,
-																						{ctor: '[]'},
-																						{
-																							ctor: '::',
-																							_0: A2(
-																								_elm_lang$html$Html$img,
-																								{
-																									ctor: '::',
-																									_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
-																									_1: {
-																										ctor: '::',
-																										_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/totoro.png'),
-																										_1: {ctor: '[]'}
-																									}
-																								},
-																								{ctor: '[]'}),
-																							_1: {ctor: '[]'}
-																						}),
-																					_1: {ctor: '[]'}
-																				}
+																				_1: {ctor: '[]'}
 																			}),
 																		_1: {
 																			ctor: '::',
@@ -13126,7 +13191,7 @@ var _user$project$Main$view = function (model) {
 																				_elm_lang$html$Html$div,
 																				{
 																					ctor: '::',
-																					_0: _elm_lang$html$Html_Attributes$class('paintings-container paintings-container-small'),
+																					_0: _elm_lang$html$Html_Attributes$class('paintings-container'),
 																					_1: {ctor: '[]'}
 																				},
 																				{
@@ -13143,7 +13208,7 @@ var _user$project$Main$view = function (model) {
 																									_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
 																									_1: {
 																										ctor: '::',
-																										_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/clock.png'),
+																										_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/hanabi.png'),
 																										_1: {ctor: '[]'}
 																									}
 																								},
@@ -13164,7 +13229,40 @@ var _user$project$Main$view = function (model) {
 																										_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
 																										_1: {
 																											ctor: '::',
-																											_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/strong-zero.png'),
+																											_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/totoro.png'),
+																											_1: {ctor: '[]'}
+																										}
+																									},
+																									{ctor: '[]'}),
+																								_1: {ctor: '[]'}
+																							}),
+																						_1: {ctor: '[]'}
+																					}
+																				}),
+																			_1: {
+																				ctor: '::',
+																				_0: A2(
+																					_elm_lang$html$Html$div,
+																					{
+																						ctor: '::',
+																						_0: _elm_lang$html$Html_Attributes$class('paintings-container paintings-container-small'),
+																						_1: {ctor: '[]'}
+																					},
+																					{
+																						ctor: '::',
+																						_0: A2(
+																							_elm_lang$html$Html$div,
+																							{ctor: '[]'},
+																							{
+																								ctor: '::',
+																								_0: A2(
+																									_elm_lang$html$Html$img,
+																									{
+																										ctor: '::',
+																										_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
+																										_1: {
+																											ctor: '::',
+																											_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/clock.png'),
 																											_1: {ctor: '[]'}
 																										}
 																									},
@@ -13185,68 +13283,68 @@ var _user$project$Main$view = function (model) {
 																											_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
 																											_1: {
 																												ctor: '::',
-																												_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/orange.png'),
+																												_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/strong-zero.png'),
 																												_1: {ctor: '[]'}
 																											}
 																										},
 																										{ctor: '[]'}),
 																									_1: {ctor: '[]'}
 																								}),
-																							_1: {ctor: '[]'}
-																						}
-																					}
-																				}),
-																			_1: {
-																				ctor: '::',
-																				_0: A2(
-																					_elm_lang$html$Html$h2,
-																					{ctor: '[]'},
-																					{
-																						ctor: '::',
-																						_0: _user$project$Shape$note,
-																						_1: {
-																							ctor: '::',
-																							_0: _elm_lang$html$Html$text('Links'),
-																							_1: {ctor: '[]'}
+																							_1: {
+																								ctor: '::',
+																								_0: A2(
+																									_elm_lang$html$Html$div,
+																									{ctor: '[]'},
+																									{
+																										ctor: '::',
+																										_0: A2(
+																											_elm_lang$html$Html$img,
+																											{
+																												ctor: '::',
+																												_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
+																												_1: {
+																													ctor: '::',
+																													_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/orange.png'),
+																													_1: {ctor: '[]'}
+																												}
+																											},
+																											{ctor: '[]'}),
+																										_1: {ctor: '[]'}
+																									}),
+																								_1: {ctor: '[]'}
+																							}
 																						}
 																					}),
 																				_1: {
 																					ctor: '::',
 																					_0: A2(
-																						_elm_lang$html$Html$p,
+																						_elm_lang$html$Html$h2,
 																						{ctor: '[]'},
 																						{
 																							ctor: '::',
-																							_0: _elm_lang$html$Html$text(''),
-																							_1: {ctor: '[]'}
+																							_0: _user$project$Shape$note,
+																							_1: {
+																								ctor: '::',
+																								_0: _elm_lang$html$Html$text('Links'),
+																								_1: {ctor: '[]'}
+																							}
 																						}),
 																					_1: {
 																						ctor: '::',
 																						_0: A2(
-																							_elm_lang$html$Html$ul,
+																							_elm_lang$html$Html$p,
 																							{ctor: '[]'},
 																							{
 																								ctor: '::',
-																								_0: A2(
-																									_elm_lang$html$Html$li,
-																									{ctor: '[]'},
-																									{
-																										ctor: '::',
-																										_0: A2(
-																											_elm_lang$html$Html$a,
-																											{
-																												ctor: '::',
-																												_0: _elm_lang$html$Html_Attributes$href('https://soundcloud.com/jinjor'),
-																												_1: {ctor: '[]'}
-																											},
-																											{
-																												ctor: '::',
-																												_0: _elm_lang$html$Html$text('SoundCloud'),
-																												_1: {ctor: '[]'}
-																											}),
-																										_1: {ctor: '[]'}
-																									}),
-																								_1: {
+																								_0: _elm_lang$html$Html$text(''),
+																								_1: {ctor: '[]'}
+																							}),
+																						_1: {
+																							ctor: '::',
+																							_0: A2(
+																								_elm_lang$html$Html$ul,
+																								{ctor: '[]'},
+																								{
 																									ctor: '::',
 																									_0: A2(
 																										_elm_lang$html$Html$li,
@@ -13257,12 +13355,12 @@ var _user$project$Main$view = function (model) {
 																												_elm_lang$html$Html$a,
 																												{
 																													ctor: '::',
-																													_0: _elm_lang$html$Html_Attributes$href('https://github.com/jinjor'),
+																													_0: _elm_lang$html$Html_Attributes$href('https://soundcloud.com/jinjor'),
 																													_1: {ctor: '[]'}
 																												},
 																												{
 																													ctor: '::',
-																													_0: _elm_lang$html$Html$text('GitHub'),
+																													_0: _elm_lang$html$Html$text('SoundCloud'),
 																													_1: {ctor: '[]'}
 																												}),
 																											_1: {ctor: '[]'}
@@ -13278,12 +13376,12 @@ var _user$project$Main$view = function (model) {
 																													_elm_lang$html$Html$a,
 																													{
 																														ctor: '::',
-																														_0: _elm_lang$html$Html_Attributes$href('https://twitter.com/jinjor'),
+																														_0: _elm_lang$html$Html_Attributes$href('https://github.com/jinjor'),
 																														_1: {ctor: '[]'}
 																													},
 																													{
 																														ctor: '::',
-																														_0: _elm_lang$html$Html$text('Twitter'),
+																														_0: _elm_lang$html$Html$text('GitHub'),
 																														_1: {ctor: '[]'}
 																													}),
 																												_1: {ctor: '[]'}
@@ -13299,22 +13397,44 @@ var _user$project$Main$view = function (model) {
 																														_elm_lang$html$Html$a,
 																														{
 																															ctor: '::',
-																															_0: _elm_lang$html$Html_Attributes$href('http://jinjor-labo.hatenablog.com/'),
+																															_0: _elm_lang$html$Html_Attributes$href('https://twitter.com/jinjor'),
 																															_1: {ctor: '[]'}
 																														},
 																														{
 																															ctor: '::',
-																															_0: _elm_lang$html$Html$text('Blog'),
+																															_0: _elm_lang$html$Html$text('Twitter'),
 																															_1: {ctor: '[]'}
 																														}),
 																													_1: {ctor: '[]'}
 																												}),
-																											_1: {ctor: '[]'}
+																											_1: {
+																												ctor: '::',
+																												_0: A2(
+																													_elm_lang$html$Html$li,
+																													{ctor: '[]'},
+																													{
+																														ctor: '::',
+																														_0: A2(
+																															_elm_lang$html$Html$a,
+																															{
+																																ctor: '::',
+																																_0: _elm_lang$html$Html_Attributes$href('http://jinjor-labo.hatenablog.com/'),
+																																_1: {ctor: '[]'}
+																															},
+																															{
+																																ctor: '::',
+																																_0: _elm_lang$html$Html$text('Blog'),
+																																_1: {ctor: '[]'}
+																															}),
+																														_1: {ctor: '[]'}
+																													}),
+																												_1: {ctor: '[]'}
+																											}
 																										}
 																									}
-																								}
-																							}),
-																						_1: {ctor: '[]'}
+																								}),
+																							_1: {ctor: '[]'}
+																						}
 																					}
 																				}
 																			}
