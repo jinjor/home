@@ -295,7 +295,7 @@ view model =
             text (toString e)
       , h2 [] [ Shape.note, text "Development" ]
       , p [] [ text "プログラミングは芸術" ]
-      , div [] ( GitHub.view model.gitHub |> Tuple.second )
+      , div [ class "repository" ] ( GitHub.view model.gitHub |> Tuple.second )
       , h2 [] [ Shape.note, text "Paintings" ]
       , p [] [ text "ペイントでお絵かき" ]
       , div [ class "paintings-container paintings-container-single" ]

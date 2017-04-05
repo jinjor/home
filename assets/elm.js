@@ -13062,7 +13062,11 @@ var _user$project$Main$view = function (model) {
 													ctor: '::',
 													_0: A2(
 														_elm_lang$html$Html$div,
-														{ctor: '[]'},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('repository'),
+															_1: {ctor: '[]'}
+														},
 														_elm_lang$core$Tuple$second(
 															_user$project$GitHub$view(model.gitHub))),
 													_1: {

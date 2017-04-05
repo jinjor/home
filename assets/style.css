@@ -49,15 +49,19 @@ a {
   margin-right: auto;
 }
 
+.repository {
+  margin: -5px;
+}
 .repository-card {
   list-style-type: none;
   padding: 16px;
   border: solid 1px #d1d5da;
   border-radius: 3px;
-  width: 50%;
+  width: calc(50% - 10px);
   box-sizing: border-box;
   float: left;
   height: 120px;
+  margin: 5px;
 }
 .repository-card-name {
   color: #0366d6;
