@@ -75,7 +75,7 @@ init =
         , "jinjor/elm-html-parser"
         , "jinjor/elm-contextmenu"
         , "jinjor/elm-inline-hover"
-        , "WorksApplications/office-maker"
+        , "jinjor/elm-debounce"
         ]
   in
     ( Model initialMidiCountents Nothing 0 0 [] Nothing False gitHub NoError

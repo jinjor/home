@@ -60,25 +60,42 @@ a {
   width: calc(50% - 10px);
   box-sizing: border-box;
   float: left;
-  height: 120px;
+  /*height: 120px;*/
   margin: 5px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #586069;
 }
 .repository-card-name {
   color: #0366d6;
 }
+.repository-card-name:hover {
+  text-decoration: underline;
+}
 .repository-card-description {
+  font-size: 12px;
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+.repository-card-stats {
+  display: flex;
+  font-size: 12px;
+}
+.repository-card-stats-language {
 
 }
-.repository-card-language {
-
+.repository-card-stats-stargazers {
+  margin-left: 16px;
 }
-.repository-card-stargazers {
-
+.repository-card-stats-stargazers:hover {
+  color: #0366d6;
 }
-.repository-card-forks {
-
+.repository-card-stats-forks {
+  margin-left: 16px;
 }
-
+.repository-card-stats-forks:hover {
+  color: #0366d6;
+}
 
 
 .paintings-container {

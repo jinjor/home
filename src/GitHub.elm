@@ -187,9 +187,11 @@ repositoryCardHelp repos =
   li [ class "repository-card" ]
     [ a [ class "repository-card-name", href ("https://github.com/" ++ repos.fullName) ] [ text repos.name ]
     , div [ class "repository-card-description" ] [ text repos.description ]
-    , div [ class "repository-card-language" ] [ text repos.language ]
-    , div [ class "repository-card-stargazers" ] [ text (toString repos.stargazersCount) ]
-    , div [ class "repository-card-forks" ] [ text (toString repos.forks) ]
+    , div [ class "repository-card-stats" ]
+      [ div [ class "repository-card-stats-language" ] [ text repos.language ]
+      , div [ class "repository-card-stats-stargazers" ] [ text (toString repos.stargazersCount) ]
+      , div [ class "repository-card-stats-forks" ] [ text (toString repos.forks) ]
+      ]
     ]
 
 

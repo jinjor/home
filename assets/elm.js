@@ -11256,47 +11256,58 @@ var _user$project$GitHub$repositoryCardHelp = function (repos) {
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('repository-card-language'),
+							_0: _elm_lang$html$Html_Attributes$class('repository-card-stats'),
 							_1: {ctor: '[]'}
 						},
 						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(repos.language),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('repository-card-stargazers'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(
-									_elm_lang$core$Basics$toString(repos.stargazersCount)),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
 							ctor: '::',
 							_0: A2(
 								_elm_lang$html$Html$div,
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('repository-card-forks'),
+									_0: _elm_lang$html$Html_Attributes$class('repository-card-stats-language'),
 									_1: {ctor: '[]'}
 								},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text(
-										_elm_lang$core$Basics$toString(repos.forks)),
+									_0: _elm_lang$html$Html$text(repos.language),
 									_1: {ctor: '[]'}
 								}),
-							_1: {ctor: '[]'}
-						}
-					}
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('repository-card-stats-stargazers'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(
+											_elm_lang$core$Basics$toString(repos.stargazersCount)),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('repository-card-stats-forks'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text(
+												_elm_lang$core$Basics$toString(repos.forks)),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}
+						}),
+					_1: {ctor: '[]'}
 				}
 			}
 		});
@@ -12909,7 +12920,7 @@ var _user$project$Main$init = function () {
 							_0: 'jinjor/elm-inline-hover',
 							_1: {
 								ctor: '::',
-								_0: 'WorksApplications/office-maker',
+								_0: 'jinjor/elm-debounce',
 								_1: {ctor: '[]'}
 							}
 						}
