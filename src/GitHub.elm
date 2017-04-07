@@ -5,6 +5,7 @@ import Json.Decode as Decode exposing (Decoder)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Http
+import Icon
 
 
 type alias User =
@@ -185,12 +186,34 @@ repositoryCard (name, maybeRepos) =
 repositoryCardHelp : Repository -> Html msg
 repositoryCardHelp repos =
   li [ class "repository-card" ]
-    [ a [ class "repository-card-name", href ("https://github.com/" ++ repos.fullName) ] [ text repos.name ]
+    [ a
+      [ class "repository-card-name"
+      , href ("https://github.com/" ++ repos.fullName)
+      ]
+      [ text repos.name ]
     , div [ class "repository-card-description" ] [ text repos.description ]
     , div [ class "repository-card-stats" ]
-      [ div [ class "repository-card-stats-language" ] [ text repos.language ]
-      , div [ class "repository-card-stats-stargazers" ] [ text (toString repos.stargazersCount) ]
-      , div [ class "repository-card-stats-forks" ] [ text (toString repos.forks) ]
+      [ div
+          [ class "repository-card-stats-language" ]
+          [ span [ class "repository-card-stats-language-color" ] []
+          , text repos.language
+          ]
+      , a
+          [ class "repository-card-stats-stargazers"
+          , href ("https://github.com/" ++ repos.fullName ++ "/stargazers")
+          , target "_blank"
+          ]
+          [ Icon.star
+          , text (toString repos.stargazersCount)
+          ]
+      , a
+          [ class "repository-card-stats-forks"
+          , href ("https://github.com/" ++ repos.fullName ++ "/network")
+          , target "_blank"
+          ]
+          [ Icon.fork
+          , text (toString repos.forks)
+          ]
       ]
     ]
 
@@ -198,5 +221,8 @@ repositoryCardHelp repos =
 emptyRepositoryCard : String -> Html msg
 emptyRepositoryCard fullName =
   li [ class "repository-card" ]
-    [ a [ class "repository-card-name", href ("https://github.com/" ++ fullName) ] [ text fullName ]
+    [ a
+        [ class "repository-card-name"
+        , href ("https://github.com/" ++ fullName)
+        ] [ text fullName ]
     ]
