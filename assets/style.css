@@ -19,6 +19,7 @@ ul {
 a {
   color: #444;
   text-decoration: none;
+  cursor: pointer;
 }
 .contents-item {
   margin-top: 1em;
@@ -58,17 +59,16 @@ a {
 .repository-card {
   list-style-type: none;
   padding: 16px;
-  border: solid 1px #d1d5da;
-  border-radius: 3px;
   width: calc(50% - 10px);
   box-sizing: border-box;
   margin: 5px;
   font-size: 14px;
   line-height: 1.5;
-  color: #586069;
+  color: #ddd;
+  background-color: #223;
 }
 .repository-card-name {
-  color: #0366d6;
+  color: #cba;
 }
 .repository-card-name:hover {
   text-decoration: underline;
@@ -82,6 +82,12 @@ a {
   display: flex;
   font-size: 12px;
 }
+.repository-card-stats a {
+  color: #ddd;
+}
+.repository-card-stats a:hover {
+  color: #cba;
+}
 .repository-card-stats-icon {
   fill: currentColor;
 }
@@ -94,6 +100,9 @@ a {
   height: 12px;
   border-radius: 50%;
   background-color: #60B5CC;
+  position: relative;
+  top: 1px;
+  margin-right: 3px;
 }
 /*.repository-card-stats-language-color-elm {
   background-color: #60B5CC;
@@ -101,16 +110,9 @@ a {
 .repository-card-stats-stargazers {
   margin-left: 16px;
 }
-.repository-card-stats-stargazers:hover {
-  color: #0366d6;
-}
 .repository-card-stats-forks {
   margin-left: 16px;
 }
-.repository-card-stats-forks:hover {
-  color: #0366d6;
-}
-
 
 .paintings-container {
   display: flex;

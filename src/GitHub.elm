@@ -5,7 +5,6 @@ import Json.Decode as Decode exposing (Decoder)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Http
-import Icon
 
 
 type alias User =
@@ -203,16 +202,16 @@ repositoryCardHelp repos =
           , href ("https://github.com/" ++ repos.fullName ++ "/stargazers")
           , target "_blank"
           ]
-          [ Icon.star
-          , text (toString repos.stargazersCount)
+          [ text (toString repos.stargazersCount)
+          , text " stars"
           ]
       , a
           [ class "repository-card-stats-forks"
           , href ("https://github.com/" ++ repos.fullName ++ "/network")
           , target "_blank"
           ]
-          [ Icon.fork
-          , text (toString repos.forks)
+          [ text (toString repos.forks)
+          , text " forks"
           ]
       ]
     ]
