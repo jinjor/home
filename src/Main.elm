@@ -282,7 +282,7 @@ view model =
             [ class "container" ]
             [ h1 [] [ text "World Maker" ] ]
         ]
-    , body [ class "body container" ]
+    , main_ [ class "body container" ]
       [ p [] [ text "ジンジャー と Yosuke Torii のホームページ" ]
       , h2 [] [ Shape.note, text "Music" ]
       , p [] [ text "世界を創る音楽" ]
