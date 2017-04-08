@@ -3,9 +3,9 @@ body {
   font-family: 'Noto Sans Japanese', sans-serif;
   font-size: 95%;
 
-  background: repeating-linear-gradient(30deg, transparent, rgba(255,255,255,0.8) 80px, #fff 160px, transparent 220px)
+  /*background: repeating-linear-gradient(30deg, transparent, rgba(255,255,255,0.8) 80px, #fff 160px, transparent 220px)
             , repeating-linear-gradient(48deg, transparent, transparent 100px, rgba(200,255,200,0.5) 380px, transparent 700px, transparent 1440px);
-  background-attachment:fixed;
+  background-attachment:fixed;*/
   /*background-position: 0 -700px;*/
 }
 h1 {
@@ -73,6 +73,11 @@ a {
   color: #ddd;
   background-color: #223;
 }
+@media screen and (max-width:480px) {
+  .repository-card {
+    width: 100%
+  }
+}
 .repository-card-name {
   color: #cba;
 }
@@ -131,6 +136,9 @@ a {
 .paintings-container.paintings-container-single > div > img {
   width: 100%;
 }
+/*.paintings-container.paintings-container-small > div {
+  flex-grow: 1;
+}*/
 .paintings-container.paintings-container-small .paintings-image {
   height: 150px;
 }

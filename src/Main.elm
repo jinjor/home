@@ -236,6 +236,10 @@ contents =
   , Content "#little-world" "Little World" (SoundCloud "306090165")
   , Content "#kira-kira" "Kira Kira" (SoundCloud "278194362")
   , Content "#candy" "Candy" (SoundCloud "240810123")
+  , Content "#megalopolis" "Megalopolis" (SoundCloud "236197155")
+  , Content "#voice-of-water" "Voice of Water" (SoundCloud "233781385")
+  , Content "#wedding-march" "Wedding March" (SoundCloud "228037751")
+  , Content "#glass-city" "Glass City" (SoundCloud "200427994")
   ]
 
 
