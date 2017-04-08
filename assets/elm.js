@@ -12918,7 +12918,39 @@ var _user$project$Main$contents = {
 					'#candy',
 					'Candy',
 					_user$project$Main$SoundCloud('240810123')),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: A3(
+						_user$project$Main$Content,
+						'#megalopolis',
+						'Megalopolis',
+						_user$project$Main$SoundCloud('236197155')),
+					_1: {
+						ctor: '::',
+						_0: A3(
+							_user$project$Main$Content,
+							'#voice-of-water',
+							'Voice of Water',
+							_user$project$Main$SoundCloud('233781385')),
+						_1: {
+							ctor: '::',
+							_0: A3(
+								_user$project$Main$Content,
+								'#wedding-march',
+								'Wedding March',
+								_user$project$Main$SoundCloud('228037751')),
+							_1: {
+								ctor: '::',
+								_0: A3(
+									_user$project$Main$Content,
+									'#glass-city',
+									'Glass City',
+									_user$project$Main$SoundCloud('200427994')),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
