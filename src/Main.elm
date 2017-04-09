@@ -232,14 +232,44 @@ subscriptions model =
 
 contents : List Content
 contents =
-  [ Content "#summer" "Summer" (MidiAndMp3 "./assets/sample.mid" "")
-  , Content "#little-world" "Little World" (SoundCloud "306090165")
+  -- 2017
+  [ Content "#little-world" "Little World" (SoundCloud "306090165")
+  -- 2016
+  , Content "#hokora" "ほこら" (MidiAndMp3 "./contents/music/2016/hokora.mid" "./contents/music/2016/hokora.mp3")
+  , Content "#hokora-fc" "ほこら（FCアレンジ by ハイデンさん）" (Mp3 "./contents/music/2016/hokora-fc.mp3")
   , Content "#kira-kira" "Kira Kira" (SoundCloud "278194362")
   , Content "#candy" "Candy" (SoundCloud "240810123")
+  -- block
+  , Content "#ancient" "ancient" (Mp3 "./contents/music/2016/ancient.mp3")
+  , Content "#beach" "beach" (Mp3 "./contents/music/2016/beach.mp3")
+  , Content "#cloud" "cloud" (Mp3 "./contents/music/2016/cloud.mp3")
+  , Content "#ice" "ice" (Mp3 "./contents/music/2016/ice.mp3")
+  , Content "#jungle" "jungle" (Mp3 "./contents/music/2016/jungle.mp3")
+  , Content "#kingdom" "kingdom" (Mp3 "./contents/music/2016/kingdom.mp3")
+  , Content "#night" "night" (Mp3 "./contents/music/2016/night.mp3")
+  , Content "#ninja" "ninja" (Mp3 "./contents/music/2016/ancient.mp3")
+  , Content "#volcano" "volcano" (Mp3 "./contents/music/2016/volcano.mp3")
+  -- 2015
   , Content "#megalopolis" "Megalopolis" (SoundCloud "236197155")
   , Content "#voice-of-water" "Voice of Water" (SoundCloud "233781385")
   , Content "#wedding-march" "Wedding March" (SoundCloud "228037751")
   , Content "#glass-city" "Glass City" (SoundCloud "200427994")
+  -- 2014
+  , Content "#summer" "Summer" (MidiAndMp3 "./contents/music/2014/summer.mid" "./contents/music/2014/summer.mp3")
+  , Content "#sakura" "桜舞う" (MidiAndMp3 "./contents/music/2014/sakura.mid" "./contents/music/2014/sakura.mp3")
+  , Content "#midnight" "真夜中の暇つぶし" (MidiAndMp3 "./contents/music/2014/midnight.mid" "./contents/music/2014/midnight.mp3")
+  -- 2013
+  , Content "#string" "糸" (MidiAndMp3 "./contents/music/2013/string.mid" "./contents/music/2013/string.mp3")
+  , Content "#autumn" "秋風" (MidiAndMp3 "./contents/music/2013/autumn.mid" "./contents/music/2013/autumn.mp3")
+  , Content "#afternoon-caos" "午後のカオス" (MidiAndMp3 "./contents/music/2013/afternoon_caos.mid" "./contents/music/2013/afternoon_caos.mp3")
+  , Content "#michikusa" "道草" (MidiAndMp3 "./contents/music/2013/michikusa.mid" "./contents/music/2013/michikusa.mp3")
+  , Content "#tmp" "Temporary" (MidiAndMp3 "./contents/music/2013/tmp.mid" "./contents/music/2013/tmp.mp3")
+  , Content "#hallucination" "幻覚" (MidiAndMp3 "./contents/music/2013/hallucination.mid" "./contents/music/2013/hallucination.mp3")
+  , Content "#blue" "BLUE" (MidiAndMp3 "./contents/music/2013/blue.mid" "./contents/music/2013/blue.mp3")
+  -- 2012
+  , Content "#painter" "変人" (MidiAndMp3 "./contents/music/2012/painter.mid" "./contents/music/2012/painter.mp3")
+  , Content "#uploar" "大騒ぎ" (MidiAndMp3 "./contents/music/2012/uploar.mid" "./contents/music/2012/uploar.mp3")
+  -- , Content "#air" "" (MidiAndMp3 "./contents/music/2012/air.mid" "./contents/music/2012/air.mp3")
   ]
 
 
