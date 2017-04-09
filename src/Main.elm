@@ -247,7 +247,7 @@ contents =
   , Content "#jungle" "jungle" (Mp3 "./contents/music/2016/jungle.mp3")
   , Content "#kingdom" "kingdom" (Mp3 "./contents/music/2016/kingdom.mp3")
   , Content "#night" "night" (Mp3 "./contents/music/2016/night.mp3")
-  , Content "#ninja" "ninja" (Mp3 "./contents/music/2016/ancient.mp3")
+  , Content "#ninja" "ninja" (Mp3 "./contents/music/2016/ninja.mp3")
   , Content "#volcano" "volcano" (Mp3 "./contents/music/2016/volcano.mp3")
   -- 2015
   , Content "#megalopolis" "Megalopolis" (SoundCloud "236197155")
@@ -265,11 +265,11 @@ contents =
   , Content "#michikusa" "道草" (MidiAndMp3 "./contents/music/2013/michikusa.mid" "./contents/music/2013/michikusa.mp3")
   , Content "#tmp" "Temporary" (MidiAndMp3 "./contents/music/2013/tmp.mid" "./contents/music/2013/tmp.mp3")
   , Content "#hallucination" "幻覚" (MidiAndMp3 "./contents/music/2013/hallucination.mid" "./contents/music/2013/hallucination.mp3")
-  , Content "#blue" "BLUE" (MidiAndMp3 "./contents/music/2013/blue.mid" "./contents/music/2013/blue.mp3")
+  , Content "#blue" "Blue" (MidiAndMp3 "./contents/music/2013/blue.mid" "./contents/music/2013/blue.mp3")
   -- 2012
   , Content "#painter" "変人" (MidiAndMp3 "./contents/music/2012/painter.mid" "./contents/music/2012/painter.mp3")
   , Content "#uploar" "大騒ぎ" (MidiAndMp3 "./contents/music/2012/uploar.mid" "./contents/music/2012/uploar.mp3")
-  -- , Content "#air" "" (MidiAndMp3 "./contents/music/2012/air.mid" "./contents/music/2012/air.mp3")
+  , Content "#air" "air" (MidiAndMp3 "./contents/music/2012/air.mid" "./contents/music/2012/air.mp3")
   ]
 
 
