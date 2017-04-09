@@ -1,7 +1,6 @@
 module MidiPlayer exposing (Options, view)
 
 import Time exposing (Time)
-import Dict exposing (Dict)
 import Html as H exposing (..)
 import Html.Attributes as HA exposing (..)
 import Html.Events exposing (..)
@@ -122,7 +121,13 @@ trackButtons options tracks =
   tracks
     |> List.map2 (,) colors
     |> List.indexedMap (trackButton options)
-    |> div [ HA.style [ "display" => "flex", "margin-left" => "auto", "padding-right" => "10px" ] ]
+    |> div
+      [ HA.style
+          [ "display" => "flex"
+          , "margin-left" => "auto"
+          , "padding-right" => "10px"
+          ]
+      ]
 
 
 trackButton : Options msg -> Int -> (NoteColor, Track) -> Html msg
@@ -208,6 +213,7 @@ viewNote color note =
     []
 
 
+(=>) : a -> b -> ( a, b )
 (=>) = (,)
 
 

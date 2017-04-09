@@ -295,7 +295,8 @@ type alias Content =
 
 
 type Details
-  = MidiAndMp3 FileName FileName
+  = Mp3 FileName
+  | MidiAndMp3 FileName FileName
   | SoundCloud String
 
 
@@ -366,6 +367,11 @@ viewContent : Model -> Content -> Html Msg
 viewContent model content =
   li [ class "contents-item" ] <|
     case content.details of
+      Mp3 mp3File ->
+        [ title content.hash content.title
+        , audio [ class "mp3", src mp3File, controls True ] []
+        ]
+
       MidiAndMp3 midiFile mp3File ->
         case Dict.get midiFile model.midiContents |> Maybe.andThen .midi of
           Just midi ->
@@ -383,12 +389,12 @@ viewContent model content =
 
           Nothing ->
             [ title content.hash content.title
-            , button [ onClick (TriggerLoadFile midiFile) ] [ text "Play" ]
+            , div [ class "midi-player-empty", onClick (TriggerLoadFile midiFile) ] [ text "Play" ]
             ]
 
       SoundCloud id ->
         [ title content.hash content.title
-        , soundCloud id
+        , div [ class "soundcloud" ] [ soundCloud id ]
         ]
 
 

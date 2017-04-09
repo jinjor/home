@@ -56,6 +56,20 @@ a {
   margin-right: auto;
 }
 
+.midi-player-empty {
+  background-color: rgb(51, 0, 17);
+  padding: 10px;
+  color: #eee;
+}
+.mp3 {
+  display: block;
+  width: 100%;
+}
+.soundcloud {
+  padding: 10px;
+  background-color: #ffc;
+}
+
 .repository {
   margin: -5px;
   display: flex;
