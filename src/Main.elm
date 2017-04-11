@@ -1,4 +1,4 @@
-port module Main exposing (..)
+module Main exposing (..)
 
 import Dict exposing (Dict)
 import Task
@@ -14,10 +14,7 @@ import SmfDecoder exposing (Smf)
 import Midi exposing (Midi, Note, Detailed)
 import MidiPlayer
 import GitHub exposing (GitHub)
-
-
-port start : () -> Cmd msg
-port stop : () -> Cmd msg
+import WebAudioApi exposing (AudioBuffer)
 
 
 main : Program Never Model Msg
@@ -53,12 +50,12 @@ type alias FileName
 
 
 type Msg
-  = TriggerLoadFile FileName
-  | ReadBuffer FileName (Result String ArrayBuffer)
+  = TriggerLoadMidiAndMp3 FileName FileName
+  | LoadedMidiAndMp3 FileName FileName (Result String (AudioBuffer, ArrayBuffer))
   | Back
-  | TriggerStart FileName Midi
-  | Start FileName Midi Time
-  | Stop
+  | TriggerStart FileName Midi AudioBuffer
+  | Start FileName Midi AudioBuffer Time
+  | Stop FileName
   | Tick Time
   | ToggleTrack FileName Int
   | ToggleConfig
@@ -95,20 +92,27 @@ andThen f (model, cmd) =
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    TriggerLoadFile fileName ->
+    TriggerLoadMidiAndMp3 midiFile mp3File ->
       ( model
-      , File.fetchArrayBuffer fileName
-          |> Task.attempt ( ReadBuffer fileName )
+      , File.fetchArrayBuffer mp3File
+          |> Task.andThen WebAudioApi.decodeAudioData
+          |> Task.andThen (\mp3AudioBuf ->
+            File.fetchArrayBuffer midiFile
+              |> Task.map ((,) mp3AudioBuf)
+          )
+          |> Task.attempt (LoadedMidiAndMp3 midiFile mp3File)
       )
 
-    ReadBuffer fileName (Ok buf) ->
-      case Byte.decode SmfDecoder.smf buf of
+    LoadedMidiAndMp3 midiFile _ (Ok (mp3AudioBuffer, smfBuffer)) ->
+      case Byte.decode SmfDecoder.smf smfBuffer of
         Ok smf ->
           ( { model
               | midiContents =
                   model.midiContents
-                    |> Dict.update fileName ( Maybe.map (\midiContent ->
-                      { midiContent | midi = Just (Midi.fromSmf smf) }
+                    |> Dict.update midiFile ( Maybe.map (\midiContent ->
+                      { midiContent
+                        | midiAndMp3 = Just (Midi.fromSmf smf, mp3AudioBuffer)
+                      }
                     ))
             }
           , Cmd.none
@@ -116,11 +120,13 @@ update msg model =
 
         Err e ->
           ({ model
-             | error = DecodeError buf e
+             | error = DecodeError smfBuffer e
           }, Cmd.none)
 
-    ReadBuffer fileName (Err s) ->
-      Debug.crash ("failed to read arrayBuffer of file '" ++ fileName ++ "': " ++ s)
+    LoadedMidiAndMp3 mp3File midiFile (Err s) ->
+      Debug.crash <|
+        "failed to load file '" ++ midiFile ++
+        " or file " ++ mp3File ++ "': " ++ s
 
     Back ->
       ({ model
@@ -129,13 +135,13 @@ update msg model =
           , playing = Nothing
       }, Cmd.none )
 
-    TriggerStart fileName midi ->
+    TriggerStart fileName midi mp3AudioBuffer ->
       ( model
       , Time.now
-          |> Task.perform ( Start fileName midi )
+          |> Task.perform ( Start fileName midi mp3AudioBuffer)
       )
 
-    Start fileName midi currentTime ->
+    Start fileName midi mp3AudioBuffer currentTime ->
       let
         startTime =
           if model.currentTime > 0 then
@@ -149,15 +155,15 @@ update msg model =
             , playing = Just fileName
             , futureNotes = prepareFutureNotes (currentTime - startTime) midi
           }
-        , start ()
+        , WebAudioApi.play fileName mp3AudioBuffer
         )
           |> andThen (update (Tick currentTime))
 
-    Stop ->
+    Stop fileName ->
       ( { model
           | playing = Nothing
         }
-      , stop ()
+      , WebAudioApi.stop fileName
       )
 
     Tick currentTime ->
@@ -170,7 +176,11 @@ update msg model =
           | midiContents =
               model.midiContents
                 |> Dict.update fileName ( Maybe.map (\midiContent ->
-                  { midiContent | midi = Maybe.map (Midi.toggleVisibility index) midiContent.midi }
+                  { midiContent
+                    | midiAndMp3 =
+                        midiContent.midiAndMp3
+                          |> Maybe.map (Tuple.mapFirst (Midi.toggleVisibility index) )
+                  }
                 ))
         }
       , Cmd.none
@@ -304,7 +314,7 @@ type alias MidiContent =
   { midiFile : String
   , mp3File : String
   , opened : Bool
-  , midi : Maybe Midi
+  , midiAndMp3 : Maybe (Midi, AudioBuffer)
   }
 
 
@@ -373,13 +383,13 @@ viewContent model content =
         ]
 
       MidiAndMp3 midiFile mp3File ->
-        case Dict.get midiFile model.midiContents |> Maybe.andThen .midi of
-          Just midi ->
+        case Dict.get midiFile model.midiContents |> Maybe.andThen .midiAndMp3 of
+          Just (midi, mp3) ->
             [ title content.hash content.title
             , MidiPlayer.view
                 { onBack = Back
-                , onStart = TriggerStart midiFile midi
-                , onStop = Stop
+                , onStart = TriggerStart midiFile midi mp3
+                , onStop = Stop midiFile
                 , onToggleTrack = ToggleTrack midiFile
                 }
                 ( model.playing == Just midiFile )
@@ -389,7 +399,11 @@ viewContent model content =
 
           Nothing ->
             [ title content.hash content.title
-            , div [ class "midi-player-empty", onClick (TriggerLoadFile midiFile) ] [ text "Play" ]
+            , div
+                [ class "midi-player-empty"
+                , onClick (TriggerLoadMidiAndMp3 midiFile mp3File)
+                ]
+                [ text "Play" ]
             ]
 
       SoundCloud id ->

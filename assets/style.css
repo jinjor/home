@@ -61,6 +61,14 @@ a {
   padding: 10px;
   color: #eee;
 }
+
+.midi-player-playing {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+}
+
 .mp3 {
   display: block;
   width: 100%;

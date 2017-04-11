@@ -4,7 +4,22 @@ window.onerror = (message, url, line) => {
   return false;
 };
 let app = Elm.Main.fullscreen();
-app.ports.start.subscribe(() => {
+let AudioContext = window.AudioContext || window.webkitAudioContext;
+let context = new AudioContext();
+let sources = {};
+app.ports.webAudioApiPlay.subscribe(data => {
+  let id = data[0];
+  let buffer = data[1];
+  let source = context.createBufferSource();
+  source.buffer = buffer;
+  source.connect(context.destination);
+  source.start(0);
+  sources[id] = source;
 });
-app.ports.stop.subscribe(() => {
+app.ports.webAudioApiStop.subscribe(id => {
+  let source = sources[id];
+  if(source) {
+    source.stop();
+    sources[id] = null;
+  }
 });
