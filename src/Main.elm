@@ -94,10 +94,10 @@ update msg model =
   case msg of
     TriggerLoadMidiAndMp3 midiFile mp3File ->
       ( model
-      , File.fetchArrayBuffer mp3File
+      , File.fetchArrayBuffer ("./contents/music/" ++ mp3File)
           |> Task.andThen WebAudioApi.decodeAudioData
           |> Task.andThen (\mp3AudioBuf ->
-            File.fetchArrayBuffer midiFile
+            File.fetchArrayBuffer ("./contents/music/" ++ midiFile)
               |> Task.map ((,) mp3AudioBuf)
           )
           |> Task.attempt (LoadedMidiAndMp3 midiFile mp3File)
@@ -245,41 +245,41 @@ contents =
   -- 2017
   [ Content "#little-world" "Little World" (SoundCloud "306090165")
   -- 2016
-  , Content "#hokora" "ほこら" (MidiAndMp3 "./contents/music/2016/hokora.mid" "./contents/music/2016/hokora.mp3")
-  , Content "#hokora-fc" "ほこら（FCアレンジ by ハイデンさん）" (Mp3 "./contents/music/2016/hokora-fc.mp3")
+  , Content "#hokora" "ほこら" (MidiAndMp3 "2016/hokora.mid" "2016/hokora.mp3")
+  , Content "#hokora-fc" "ほこら（FCアレンジ by ハイデンさん）" (Mp3 "2016/hokora-fc.mp3")
   , Content "#kira-kira" "Kira Kira" (SoundCloud "278194362")
   , Content "#candy" "Candy" (SoundCloud "240810123")
   -- block
-  , Content "#ancient" "ancient" (Mp3 "./contents/music/2016/ancient.mp3")
-  , Content "#beach" "beach" (Mp3 "./contents/music/2016/beach.mp3")
-  , Content "#cloud" "cloud" (Mp3 "./contents/music/2016/cloud.mp3")
-  , Content "#ice" "ice" (Mp3 "./contents/music/2016/ice.mp3")
-  , Content "#jungle" "jungle" (Mp3 "./contents/music/2016/jungle.mp3")
-  , Content "#kingdom" "kingdom" (Mp3 "./contents/music/2016/kingdom.mp3")
-  , Content "#night" "night" (Mp3 "./contents/music/2016/night.mp3")
-  , Content "#ninja" "ninja" (Mp3 "./contents/music/2016/ninja.mp3")
-  , Content "#volcano" "volcano" (Mp3 "./contents/music/2016/volcano.mp3")
+  , Content "#ancient" "ancient" (Mp3 "2016/ancient.mp3")
+  , Content "#beach" "beach" (Mp3 "2016/beach.mp3")
+  , Content "#cloud" "cloud" (Mp3 "2016/cloud.mp3")
+  , Content "#ice" "ice" (Mp3 "2016/ice.mp3")
+  , Content "#jungle" "jungle" (Mp3 "2016/jungle.mp3")
+  , Content "#kingdom" "kingdom" (Mp3 "2016/kingdom.mp3")
+  , Content "#night" "night" (Mp3 "2016/night.mp3")
+  , Content "#ninja" "ninja" (Mp3 "2016/ninja.mp3")
+  , Content "#volcano" "volcano" (Mp3 "2016/volcano.mp3")
   -- 2015
   , Content "#megalopolis" "Megalopolis" (SoundCloud "236197155")
   , Content "#voice-of-water" "Voice of Water" (SoundCloud "233781385")
   , Content "#wedding-march" "Wedding March" (SoundCloud "228037751")
   , Content "#glass-city" "Glass City" (SoundCloud "200427994")
   -- 2014
-  , Content "#summer" "Summer" (MidiAndMp3 "./contents/music/2014/summer.mid" "./contents/music/2014/summer.mp3")
-  , Content "#sakura" "桜舞う" (MidiAndMp3 "./contents/music/2014/sakura.mid" "./contents/music/2014/sakura.mp3")
-  , Content "#midnight" "真夜中の暇つぶし" (MidiAndMp3 "./contents/music/2014/midnight.mid" "./contents/music/2014/midnight.mp3")
+  , Content "#summer" "Summer" (MidiAndMp3 "2014/summer.mid" "2014/summer.mp3")
+  , Content "#sakura" "桜舞う" (MidiAndMp3 "2014/sakura.mid" "2014/sakura.mp3")
+  , Content "#midnight" "真夜中の暇つぶし" (MidiAndMp3 "2014/midnight.mid" "2014/midnight.mp3")
   -- 2013
-  , Content "#string" "糸" (MidiAndMp3 "./contents/music/2013/string.mid" "./contents/music/2013/string.mp3")
-  , Content "#autumn" "秋風" (MidiAndMp3 "./contents/music/2013/autumn.mid" "./contents/music/2013/autumn.mp3")
-  , Content "#afternoon-caos" "午後のカオス" (MidiAndMp3 "./contents/music/2013/afternoon_caos.mid" "./contents/music/2013/afternoon_caos.mp3")
-  , Content "#michikusa" "道草" (MidiAndMp3 "./contents/music/2013/michikusa.mid" "./contents/music/2013/michikusa.mp3")
-  , Content "#tmp" "Temporary" (MidiAndMp3 "./contents/music/2013/tmp.mid" "./contents/music/2013/tmp.mp3")
-  , Content "#hallucination" "幻覚" (MidiAndMp3 "./contents/music/2013/hallucination.mid" "./contents/music/2013/hallucination.mp3")
-  , Content "#blue" "Blue" (MidiAndMp3 "./contents/music/2013/blue.mid" "./contents/music/2013/blue.mp3")
+  , Content "#string" "糸" (MidiAndMp3 "2013/string.mid" "2013/string.mp3")
+  , Content "#autumn" "秋風" (MidiAndMp3 "2013/autumn.mid" "2013/autumn.mp3")
+  , Content "#afternoon-caos" "午後のカオス" (MidiAndMp3 "2013/afternoon_caos.mid" "2013/afternoon_caos.mp3")
+  , Content "#michikusa" "道草" (MidiAndMp3 "2013/michikusa.mid" "2013/michikusa.mp3")
+  , Content "#tmp" "Temporary" (MidiAndMp3 "2013/tmp.mid" "2013/tmp.mp3")
+  , Content "#hallucination" "幻覚" (MidiAndMp3 "2013/hallucination.mid" "2013/hallucination.mp3")
+  , Content "#blue" "Blue" (MidiAndMp3 "2013/blue.mid" "2013/blue.mp3")
   -- 2012
-  , Content "#painter" "変人" (MidiAndMp3 "./contents/music/2012/painter.mid" "./contents/music/2012/painter.mp3")
-  , Content "#uploar" "大騒ぎ" (MidiAndMp3 "./contents/music/2012/uploar.mid" "./contents/music/2012/uploar.mp3")
-  , Content "#air" "air" (MidiAndMp3 "./contents/music/2012/air.mid" "./contents/music/2012/air.mp3")
+  , Content "#painter" "変人" (MidiAndMp3 "2012/painter.mid" "2012/painter.mp3")
+  , Content "#uploar" "大騒ぎ" (MidiAndMp3 "2012/uploar.mid" "2012/uploar.mp3")
+  , Content "#air" "air" (MidiAndMp3 "2012/air.mid" "2012/air.mp3")
   ]
 
 
@@ -322,11 +322,7 @@ view : Model -> Html Msg
 view model =
   div
     []
-    [ header [ class "header" ]
-        [ div
-            [ class "container" ]
-            [ h1 [] [ text "World Maker" ] ]
-        ]
+    [ viewHeader
     , main_ [ class "body container" ]
       [ p [] [ text "ジンジャー と Yosuke Torii のホームページ" ]
       , h2 [] [ Shape.note, text "Music" ]
@@ -343,33 +339,21 @@ view model =
       , div [ class "repository" ] ( GitHub.view model.gitHub |> Tuple.second )
       , h2 [] [ Shape.note, text "Paintings" ]
       , p [] [ text "ペイントでお絵かき" ]
-      , div [ class "paintings-container paintings-container-single" ]
-          [ div [] [ img [ class "paintings-image", src "./contents/paintings/trip.png" ] [] ]
-          ]
-      , div [ class "paintings-container" ]
-          [ div [] [ img [ class "paintings-image", src "./contents/paintings/cafe.png" ] [] ]
-          ]
-      , div [ class "paintings-container" ]
-          [ div [] [ img [ class "paintings-image", src "./contents/paintings/rain.png" ] [] ]
-          ]
-      , div [ class "paintings-container" ]
-          [ div [] [ img [ class "paintings-image", src "./contents/paintings/hanabi.png" ] [] ]
-          , div [] [ img [ class "paintings-image", src "./contents/paintings/totoro.png" ] [] ]
-          ]
-      , div [ class "paintings-container paintings-container-small" ]
-          [ div [] [ img [ class "paintings-image", src "./contents/paintings/clock.png" ] [] ]
-          , div [] [ img [ class "paintings-image", src "./contents/paintings/strong-zero.png" ] [] ]
-          , div [] [ img [ class "paintings-image", src "./contents/paintings/orange.png" ] [] ]
-          ]
+      , viewPaintings
       , h2 [] [ Shape.note, text "Links" ]
       , p [] [ text "" ]
-      , ul []
-          [ li [] [ a [ href "https://soundcloud.com/jinjor" ] [ text "SoundCloud" ] ]
-          , li [] [ a [ href "https://github.com/jinjor" ] [ text "GitHub" ] ]
-          , li [] [ a [ href "https://twitter.com/jinjor" ] [ text "Twitter" ] ]
-          , li [] [ a [ href "http://jinjor-labo.hatenablog.com/" ] [ text "Blog" ] ]
-          ]
+      , viewLink
       ]
+    ]
+
+
+viewHeader : Html msg
+viewHeader =
+  header
+    [ class "header" ]
+    [ div
+        [ class "container" ]
+        [ h1 [] [ text "World Maker" ] ]
     ]
 
 
@@ -379,7 +363,7 @@ viewContent model content =
     case content.details of
       Mp3 mp3File ->
         [ title content.hash content.title
-        , audio [ class "mp3", src mp3File, controls True ] []
+        , audio [ class "mp3", src ("./contents/music/" ++ mp3File), controls True ] []
         ]
 
       MidiAndMp3 midiFile mp3File ->
@@ -429,3 +413,38 @@ soundCloud id =
         "&amp;color=ff5500&amp;inverse=false&amp;auto_play=false&amp;show_user=true"
     ]
     []
+
+
+viewPaintings : Html msg
+viewPaintings =
+  div
+    []
+    [ div [ class "paintings-container paintings-container-single" ]
+        [ div [] [ img [ class "paintings-image", src "./contents/paintings/trip.png" ] [] ]
+        ]
+    , div [ class "paintings-container" ]
+        [ div [] [ img [ class "paintings-image", src "./contents/paintings/cafe.png" ] [] ]
+        ]
+    , div [ class "paintings-container" ]
+        [ div [] [ img [ class "paintings-image", src "./contents/paintings/rain.png" ] [] ]
+        ]
+    , div [ class "paintings-container" ]
+        [ div [] [ img [ class "paintings-image", src "./contents/paintings/hanabi.png" ] [] ]
+        , div [] [ img [ class "paintings-image", src "./contents/paintings/totoro.png" ] [] ]
+        ]
+    , div [ class "paintings-container paintings-container-small" ]
+        [ div [] [ img [ class "paintings-image", src "./contents/paintings/clock.png" ] [] ]
+        , div [] [ img [ class "paintings-image", src "./contents/paintings/strong-zero.png" ] [] ]
+        , div [] [ img [ class "paintings-image", src "./contents/paintings/orange.png" ] [] ]
+        ]
+    ]
+
+
+viewLink : Html msg
+viewLink =
+  ul []
+    [ li [] [ a [ href "https://soundcloud.com/jinjor" ] [ text "SoundCloud" ] ]
+    , li [] [ a [ href "https://github.com/jinjor" ] [ text "GitHub" ] ]
+    , li [] [ a [ href "https://twitter.com/jinjor" ] [ text "Twitter" ] ]
+    , li [] [ a [ href "http://jinjor-labo.hatenablog.com/" ] [ text "Blog" ] ]
+    ]

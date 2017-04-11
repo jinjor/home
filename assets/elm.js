@@ -12480,6 +12480,333 @@ var _user$project$WebAudioApi$decodeAudioData = function (_p2) {
 		_user$project$Native_WebAudioApi.decodeAudioData(_p2));
 };
 
+var _user$project$Main$viewLink = A2(
+	_elm_lang$html$Html$ul,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$li,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$a,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$href('https://soundcloud.com/jinjor'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('SoundCloud'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$li,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$a,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$href('https://github.com/jinjor'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('GitHub'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$li,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$a,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$href('https://twitter.com/jinjor'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Twitter'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$li,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$a,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$href('http://jinjor-labo.hatenablog.com/'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Blog'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	});
+var _user$project$Main$viewPaintings = A2(
+	_elm_lang$html$Html$div,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('paintings-container paintings-container-single'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$img,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/trip.png'),
+									_1: {ctor: '[]'}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('paintings-container'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$img,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/cafe.png'),
+										_1: {ctor: '[]'}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('paintings-container'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$img,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/rain.png'),
+											_1: {ctor: '[]'}
+										}
+									},
+									{ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('paintings-container'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$img,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/hanabi.png'),
+												_1: {ctor: '[]'}
+											}
+										},
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$img,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/totoro.png'),
+													_1: {ctor: '[]'}
+												}
+											},
+											{ctor: '[]'}),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('paintings-container paintings-container-small'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$img,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/clock.png'),
+													_1: {ctor: '[]'}
+												}
+											},
+											{ctor: '[]'}),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$img,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/strong-zero.png'),
+														_1: {ctor: '[]'}
+													}
+												},
+												{ctor: '[]'}),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$img,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/orange.png'),
+															_1: {ctor: '[]'}
+														}
+													},
+													{ctor: '[]'}),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		}
+	});
 var _user$project$Main$soundCloud = function (id) {
 	return A2(
 		_elm_lang$html$Html$iframe,
@@ -12528,6 +12855,36 @@ var _user$project$Main$title = F2(
 				_0: _elm_lang$html$Html$text(s),
 				_1: {ctor: '[]'}
 			});
+	});
+var _user$project$Main$viewHeader = A2(
+	_elm_lang$html$Html$header,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('header'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('container'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$h1,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('World Maker'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
 	});
 var _user$project$Main$splitWhile = F3(
 	function (f, taken, list) {
@@ -12701,12 +13058,14 @@ var _user$project$Main$update = F2(
 										function (v0, v1) {
 											return {ctor: '_Tuple2', _0: v0, _1: v1};
 										})(mp3AudioBuf),
-									_user$project$BinaryDecoder_File$fetchArrayBuffer(_p10));
+									_user$project$BinaryDecoder_File$fetchArrayBuffer(
+										A2(_elm_lang$core$Basics_ops['++'], './contents/music/', _p10)));
 							},
 							A2(
 								_elm_lang$core$Task$andThen,
 								_user$project$WebAudioApi$decodeAudioData,
-								_user$project$BinaryDecoder_File$fetchArrayBuffer(_p11))))
+								_user$project$BinaryDecoder_File$fetchArrayBuffer(
+									A2(_elm_lang$core$Basics_ops['++'], './contents/music/', _p11)))))
 				};
 			case 'LoadedMidiAndMp3':
 				if (_p9._2.ctor === 'Ok') {
@@ -12898,7 +13257,8 @@ var _user$project$Main$viewContent = F2(
 										_0: _elm_lang$html$Html_Attributes$class('mp3'),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$src(_p17._0),
+											_0: _elm_lang$html$Html_Attributes$src(
+												A2(_elm_lang$core$Basics_ops['++'], './contents/music/', _p17._0)),
 											_1: {
 												ctor: '::',
 												_0: _elm_lang$html$Html_Attributes$controls(true),
@@ -13015,14 +13375,14 @@ var _user$project$Main$contents = {
 			_user$project$Main$Content,
 			'#hokora',
 			'ほこら',
-			A2(_user$project$Main$MidiAndMp3, './contents/music/2016/hokora.mid', './contents/music/2016/hokora.mp3')),
+			A2(_user$project$Main$MidiAndMp3, '2016/hokora.mid', '2016/hokora.mp3')),
 		_1: {
 			ctor: '::',
 			_0: A3(
 				_user$project$Main$Content,
 				'#hokora-fc',
 				'ほこら（FCアレンジ by ハイデンさん）',
-				_user$project$Main$Mp3('./contents/music/2016/hokora-fc.mp3')),
+				_user$project$Main$Mp3('2016/hokora-fc.mp3')),
 			_1: {
 				ctor: '::',
 				_0: A3(
@@ -13043,63 +13403,63 @@ var _user$project$Main$contents = {
 							_user$project$Main$Content,
 							'#ancient',
 							'ancient',
-							_user$project$Main$Mp3('./contents/music/2016/ancient.mp3')),
+							_user$project$Main$Mp3('2016/ancient.mp3')),
 						_1: {
 							ctor: '::',
 							_0: A3(
 								_user$project$Main$Content,
 								'#beach',
 								'beach',
-								_user$project$Main$Mp3('./contents/music/2016/beach.mp3')),
+								_user$project$Main$Mp3('2016/beach.mp3')),
 							_1: {
 								ctor: '::',
 								_0: A3(
 									_user$project$Main$Content,
 									'#cloud',
 									'cloud',
-									_user$project$Main$Mp3('./contents/music/2016/cloud.mp3')),
+									_user$project$Main$Mp3('2016/cloud.mp3')),
 								_1: {
 									ctor: '::',
 									_0: A3(
 										_user$project$Main$Content,
 										'#ice',
 										'ice',
-										_user$project$Main$Mp3('./contents/music/2016/ice.mp3')),
+										_user$project$Main$Mp3('2016/ice.mp3')),
 									_1: {
 										ctor: '::',
 										_0: A3(
 											_user$project$Main$Content,
 											'#jungle',
 											'jungle',
-											_user$project$Main$Mp3('./contents/music/2016/jungle.mp3')),
+											_user$project$Main$Mp3('2016/jungle.mp3')),
 										_1: {
 											ctor: '::',
 											_0: A3(
 												_user$project$Main$Content,
 												'#kingdom',
 												'kingdom',
-												_user$project$Main$Mp3('./contents/music/2016/kingdom.mp3')),
+												_user$project$Main$Mp3('2016/kingdom.mp3')),
 											_1: {
 												ctor: '::',
 												_0: A3(
 													_user$project$Main$Content,
 													'#night',
 													'night',
-													_user$project$Main$Mp3('./contents/music/2016/night.mp3')),
+													_user$project$Main$Mp3('2016/night.mp3')),
 												_1: {
 													ctor: '::',
 													_0: A3(
 														_user$project$Main$Content,
 														'#ninja',
 														'ninja',
-														_user$project$Main$Mp3('./contents/music/2016/ninja.mp3')),
+														_user$project$Main$Mp3('2016/ninja.mp3')),
 													_1: {
 														ctor: '::',
 														_0: A3(
 															_user$project$Main$Content,
 															'#volcano',
 															'volcano',
-															_user$project$Main$Mp3('./contents/music/2016/volcano.mp3')),
+															_user$project$Main$Mp3('2016/volcano.mp3')),
 														_1: {
 															ctor: '::',
 															_0: A3(
@@ -13134,91 +13494,91 @@ var _user$project$Main$contents = {
 																				_user$project$Main$Content,
 																				'#summer',
 																				'Summer',
-																				A2(_user$project$Main$MidiAndMp3, './contents/music/2014/summer.mid', './contents/music/2014/summer.mp3')),
+																				A2(_user$project$Main$MidiAndMp3, '2014/summer.mid', '2014/summer.mp3')),
 																			_1: {
 																				ctor: '::',
 																				_0: A3(
 																					_user$project$Main$Content,
 																					'#sakura',
 																					'桜舞う',
-																					A2(_user$project$Main$MidiAndMp3, './contents/music/2014/sakura.mid', './contents/music/2014/sakura.mp3')),
+																					A2(_user$project$Main$MidiAndMp3, '2014/sakura.mid', '2014/sakura.mp3')),
 																				_1: {
 																					ctor: '::',
 																					_0: A3(
 																						_user$project$Main$Content,
 																						'#midnight',
 																						'真夜中の暇つぶし',
-																						A2(_user$project$Main$MidiAndMp3, './contents/music/2014/midnight.mid', './contents/music/2014/midnight.mp3')),
+																						A2(_user$project$Main$MidiAndMp3, '2014/midnight.mid', '2014/midnight.mp3')),
 																					_1: {
 																						ctor: '::',
 																						_0: A3(
 																							_user$project$Main$Content,
 																							'#string',
 																							'糸',
-																							A2(_user$project$Main$MidiAndMp3, './contents/music/2013/string.mid', './contents/music/2013/string.mp3')),
+																							A2(_user$project$Main$MidiAndMp3, '2013/string.mid', '2013/string.mp3')),
 																						_1: {
 																							ctor: '::',
 																							_0: A3(
 																								_user$project$Main$Content,
 																								'#autumn',
 																								'秋風',
-																								A2(_user$project$Main$MidiAndMp3, './contents/music/2013/autumn.mid', './contents/music/2013/autumn.mp3')),
+																								A2(_user$project$Main$MidiAndMp3, '2013/autumn.mid', '2013/autumn.mp3')),
 																							_1: {
 																								ctor: '::',
 																								_0: A3(
 																									_user$project$Main$Content,
 																									'#afternoon-caos',
 																									'午後のカオス',
-																									A2(_user$project$Main$MidiAndMp3, './contents/music/2013/afternoon_caos.mid', './contents/music/2013/afternoon_caos.mp3')),
+																									A2(_user$project$Main$MidiAndMp3, '2013/afternoon_caos.mid', '2013/afternoon_caos.mp3')),
 																								_1: {
 																									ctor: '::',
 																									_0: A3(
 																										_user$project$Main$Content,
 																										'#michikusa',
 																										'道草',
-																										A2(_user$project$Main$MidiAndMp3, './contents/music/2013/michikusa.mid', './contents/music/2013/michikusa.mp3')),
+																										A2(_user$project$Main$MidiAndMp3, '2013/michikusa.mid', '2013/michikusa.mp3')),
 																									_1: {
 																										ctor: '::',
 																										_0: A3(
 																											_user$project$Main$Content,
 																											'#tmp',
 																											'Temporary',
-																											A2(_user$project$Main$MidiAndMp3, './contents/music/2013/tmp.mid', './contents/music/2013/tmp.mp3')),
+																											A2(_user$project$Main$MidiAndMp3, '2013/tmp.mid', '2013/tmp.mp3')),
 																										_1: {
 																											ctor: '::',
 																											_0: A3(
 																												_user$project$Main$Content,
 																												'#hallucination',
 																												'幻覚',
-																												A2(_user$project$Main$MidiAndMp3, './contents/music/2013/hallucination.mid', './contents/music/2013/hallucination.mp3')),
+																												A2(_user$project$Main$MidiAndMp3, '2013/hallucination.mid', '2013/hallucination.mp3')),
 																											_1: {
 																												ctor: '::',
 																												_0: A3(
 																													_user$project$Main$Content,
 																													'#blue',
 																													'Blue',
-																													A2(_user$project$Main$MidiAndMp3, './contents/music/2013/blue.mid', './contents/music/2013/blue.mp3')),
+																													A2(_user$project$Main$MidiAndMp3, '2013/blue.mid', '2013/blue.mp3')),
 																												_1: {
 																													ctor: '::',
 																													_0: A3(
 																														_user$project$Main$Content,
 																														'#painter',
 																														'変人',
-																														A2(_user$project$Main$MidiAndMp3, './contents/music/2012/painter.mid', './contents/music/2012/painter.mp3')),
+																														A2(_user$project$Main$MidiAndMp3, '2012/painter.mid', '2012/painter.mp3')),
 																													_1: {
 																														ctor: '::',
 																														_0: A3(
 																															_user$project$Main$Content,
 																															'#uploar',
 																															'大騒ぎ',
-																															A2(_user$project$Main$MidiAndMp3, './contents/music/2012/uploar.mid', './contents/music/2012/uploar.mp3')),
+																															A2(_user$project$Main$MidiAndMp3, '2012/uploar.mid', '2012/uploar.mp3')),
 																														_1: {
 																															ctor: '::',
 																															_0: A3(
 																																_user$project$Main$Content,
 																																'#air',
 																																'air',
-																																A2(_user$project$Main$MidiAndMp3, './contents/music/2012/air.mid', './contents/music/2012/air.mp3')),
+																																A2(_user$project$Main$MidiAndMp3, '2012/air.mid', '2012/air.mp3')),
 																															_1: {ctor: '[]'}
 																														}
 																													}
@@ -13323,36 +13683,7 @@ var _user$project$Main$view = function (model) {
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$header,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('header'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('container'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$h1,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('World Maker'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}),
+			_0: _user$project$Main$viewHeader,
 			_1: {
 				ctor: '::',
 				_0: A2(
@@ -13477,353 +13808,35 @@ var _user$project$Main$view = function (model) {
 																}),
 															_1: {
 																ctor: '::',
-																_0: A2(
-																	_elm_lang$html$Html$div,
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html_Attributes$class('paintings-container paintings-container-single'),
-																		_1: {ctor: '[]'}
-																	},
-																	{
-																		ctor: '::',
-																		_0: A2(
-																			_elm_lang$html$Html$div,
-																			{ctor: '[]'},
-																			{
-																				ctor: '::',
-																				_0: A2(
-																					_elm_lang$html$Html$img,
-																					{
-																						ctor: '::',
-																						_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
-																						_1: {
-																							ctor: '::',
-																							_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/trip.png'),
-																							_1: {ctor: '[]'}
-																						}
-																					},
-																					{ctor: '[]'}),
-																				_1: {ctor: '[]'}
-																			}),
-																		_1: {ctor: '[]'}
-																	}),
+																_0: _user$project$Main$viewPaintings,
 																_1: {
 																	ctor: '::',
 																	_0: A2(
-																		_elm_lang$html$Html$div,
+																		_elm_lang$html$Html$h2,
+																		{ctor: '[]'},
 																		{
 																			ctor: '::',
-																			_0: _elm_lang$html$Html_Attributes$class('paintings-container'),
-																			_1: {ctor: '[]'}
-																		},
-																		{
-																			ctor: '::',
-																			_0: A2(
-																				_elm_lang$html$Html$div,
-																				{ctor: '[]'},
-																				{
-																					ctor: '::',
-																					_0: A2(
-																						_elm_lang$html$Html$img,
-																						{
-																							ctor: '::',
-																							_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
-																							_1: {
-																								ctor: '::',
-																								_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/cafe.png'),
-																								_1: {ctor: '[]'}
-																							}
-																						},
-																						{ctor: '[]'}),
-																					_1: {ctor: '[]'}
-																				}),
-																			_1: {ctor: '[]'}
+																			_0: _user$project$Shape$note,
+																			_1: {
+																				ctor: '::',
+																				_0: _elm_lang$html$Html$text('Links'),
+																				_1: {ctor: '[]'}
+																			}
 																		}),
 																	_1: {
 																		ctor: '::',
 																		_0: A2(
-																			_elm_lang$html$Html$div,
+																			_elm_lang$html$Html$p,
+																			{ctor: '[]'},
 																			{
 																				ctor: '::',
-																				_0: _elm_lang$html$Html_Attributes$class('paintings-container'),
-																				_1: {ctor: '[]'}
-																			},
-																			{
-																				ctor: '::',
-																				_0: A2(
-																					_elm_lang$html$Html$div,
-																					{ctor: '[]'},
-																					{
-																						ctor: '::',
-																						_0: A2(
-																							_elm_lang$html$Html$img,
-																							{
-																								ctor: '::',
-																								_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
-																								_1: {
-																									ctor: '::',
-																									_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/rain.png'),
-																									_1: {ctor: '[]'}
-																								}
-																							},
-																							{ctor: '[]'}),
-																						_1: {ctor: '[]'}
-																					}),
+																				_0: _elm_lang$html$Html$text(''),
 																				_1: {ctor: '[]'}
 																			}),
 																		_1: {
 																			ctor: '::',
-																			_0: A2(
-																				_elm_lang$html$Html$div,
-																				{
-																					ctor: '::',
-																					_0: _elm_lang$html$Html_Attributes$class('paintings-container'),
-																					_1: {ctor: '[]'}
-																				},
-																				{
-																					ctor: '::',
-																					_0: A2(
-																						_elm_lang$html$Html$div,
-																						{ctor: '[]'},
-																						{
-																							ctor: '::',
-																							_0: A2(
-																								_elm_lang$html$Html$img,
-																								{
-																									ctor: '::',
-																									_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
-																									_1: {
-																										ctor: '::',
-																										_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/hanabi.png'),
-																										_1: {ctor: '[]'}
-																									}
-																								},
-																								{ctor: '[]'}),
-																							_1: {ctor: '[]'}
-																						}),
-																					_1: {
-																						ctor: '::',
-																						_0: A2(
-																							_elm_lang$html$Html$div,
-																							{ctor: '[]'},
-																							{
-																								ctor: '::',
-																								_0: A2(
-																									_elm_lang$html$Html$img,
-																									{
-																										ctor: '::',
-																										_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
-																										_1: {
-																											ctor: '::',
-																											_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/totoro.png'),
-																											_1: {ctor: '[]'}
-																										}
-																									},
-																									{ctor: '[]'}),
-																								_1: {ctor: '[]'}
-																							}),
-																						_1: {ctor: '[]'}
-																					}
-																				}),
-																			_1: {
-																				ctor: '::',
-																				_0: A2(
-																					_elm_lang$html$Html$div,
-																					{
-																						ctor: '::',
-																						_0: _elm_lang$html$Html_Attributes$class('paintings-container paintings-container-small'),
-																						_1: {ctor: '[]'}
-																					},
-																					{
-																						ctor: '::',
-																						_0: A2(
-																							_elm_lang$html$Html$div,
-																							{ctor: '[]'},
-																							{
-																								ctor: '::',
-																								_0: A2(
-																									_elm_lang$html$Html$img,
-																									{
-																										ctor: '::',
-																										_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
-																										_1: {
-																											ctor: '::',
-																											_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/clock.png'),
-																											_1: {ctor: '[]'}
-																										}
-																									},
-																									{ctor: '[]'}),
-																								_1: {ctor: '[]'}
-																							}),
-																						_1: {
-																							ctor: '::',
-																							_0: A2(
-																								_elm_lang$html$Html$div,
-																								{ctor: '[]'},
-																								{
-																									ctor: '::',
-																									_0: A2(
-																										_elm_lang$html$Html$img,
-																										{
-																											ctor: '::',
-																											_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
-																											_1: {
-																												ctor: '::',
-																												_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/strong-zero.png'),
-																												_1: {ctor: '[]'}
-																											}
-																										},
-																										{ctor: '[]'}),
-																									_1: {ctor: '[]'}
-																								}),
-																							_1: {
-																								ctor: '::',
-																								_0: A2(
-																									_elm_lang$html$Html$div,
-																									{ctor: '[]'},
-																									{
-																										ctor: '::',
-																										_0: A2(
-																											_elm_lang$html$Html$img,
-																											{
-																												ctor: '::',
-																												_0: _elm_lang$html$Html_Attributes$class('paintings-image'),
-																												_1: {
-																													ctor: '::',
-																													_0: _elm_lang$html$Html_Attributes$src('./contents/paintings/orange.png'),
-																													_1: {ctor: '[]'}
-																												}
-																											},
-																											{ctor: '[]'}),
-																										_1: {ctor: '[]'}
-																									}),
-																								_1: {ctor: '[]'}
-																							}
-																						}
-																					}),
-																				_1: {
-																					ctor: '::',
-																					_0: A2(
-																						_elm_lang$html$Html$h2,
-																						{ctor: '[]'},
-																						{
-																							ctor: '::',
-																							_0: _user$project$Shape$note,
-																							_1: {
-																								ctor: '::',
-																								_0: _elm_lang$html$Html$text('Links'),
-																								_1: {ctor: '[]'}
-																							}
-																						}),
-																					_1: {
-																						ctor: '::',
-																						_0: A2(
-																							_elm_lang$html$Html$p,
-																							{ctor: '[]'},
-																							{
-																								ctor: '::',
-																								_0: _elm_lang$html$Html$text(''),
-																								_1: {ctor: '[]'}
-																							}),
-																						_1: {
-																							ctor: '::',
-																							_0: A2(
-																								_elm_lang$html$Html$ul,
-																								{ctor: '[]'},
-																								{
-																									ctor: '::',
-																									_0: A2(
-																										_elm_lang$html$Html$li,
-																										{ctor: '[]'},
-																										{
-																											ctor: '::',
-																											_0: A2(
-																												_elm_lang$html$Html$a,
-																												{
-																													ctor: '::',
-																													_0: _elm_lang$html$Html_Attributes$href('https://soundcloud.com/jinjor'),
-																													_1: {ctor: '[]'}
-																												},
-																												{
-																													ctor: '::',
-																													_0: _elm_lang$html$Html$text('SoundCloud'),
-																													_1: {ctor: '[]'}
-																												}),
-																											_1: {ctor: '[]'}
-																										}),
-																									_1: {
-																										ctor: '::',
-																										_0: A2(
-																											_elm_lang$html$Html$li,
-																											{ctor: '[]'},
-																											{
-																												ctor: '::',
-																												_0: A2(
-																													_elm_lang$html$Html$a,
-																													{
-																														ctor: '::',
-																														_0: _elm_lang$html$Html_Attributes$href('https://github.com/jinjor'),
-																														_1: {ctor: '[]'}
-																													},
-																													{
-																														ctor: '::',
-																														_0: _elm_lang$html$Html$text('GitHub'),
-																														_1: {ctor: '[]'}
-																													}),
-																												_1: {ctor: '[]'}
-																											}),
-																										_1: {
-																											ctor: '::',
-																											_0: A2(
-																												_elm_lang$html$Html$li,
-																												{ctor: '[]'},
-																												{
-																													ctor: '::',
-																													_0: A2(
-																														_elm_lang$html$Html$a,
-																														{
-																															ctor: '::',
-																															_0: _elm_lang$html$Html_Attributes$href('https://twitter.com/jinjor'),
-																															_1: {ctor: '[]'}
-																														},
-																														{
-																															ctor: '::',
-																															_0: _elm_lang$html$Html$text('Twitter'),
-																															_1: {ctor: '[]'}
-																														}),
-																													_1: {ctor: '[]'}
-																												}),
-																											_1: {
-																												ctor: '::',
-																												_0: A2(
-																													_elm_lang$html$Html$li,
-																													{ctor: '[]'},
-																													{
-																														ctor: '::',
-																														_0: A2(
-																															_elm_lang$html$Html$a,
-																															{
-																																ctor: '::',
-																																_0: _elm_lang$html$Html_Attributes$href('http://jinjor-labo.hatenablog.com/'),
-																																_1: {ctor: '[]'}
-																															},
-																															{
-																																ctor: '::',
-																																_0: _elm_lang$html$Html$text('Blog'),
-																																_1: {ctor: '[]'}
-																															}),
-																														_1: {ctor: '[]'}
-																													}),
-																												_1: {ctor: '[]'}
-																											}
-																										}
-																									}
-																								}),
-																							_1: {ctor: '[]'}
-																						}
-																					}
-																				}
-																			}
+																			_0: _user$project$Main$viewLink,
+																			_1: {ctor: '[]'}
 																		}
 																	}
 																}
