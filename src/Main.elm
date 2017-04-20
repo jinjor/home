@@ -5,7 +5,6 @@ import Task
 import Time exposing (Time)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (..)
 import Html.Lazy exposing (..)
 import Shape
 import BinaryDecoder.File as File exposing (File)
@@ -29,7 +28,8 @@ main =
 
 type alias Model =
   { midiContents : Dict String MidiContent
-  , playing : Maybe String
+  , selected : Maybe String
+  , playing : Bool
   , startTime : Time
   , currentTime : Time
   , futureNotes : List (Detailed Note)
@@ -56,8 +56,8 @@ type Msg
   | TriggerStart FileName Midi AudioBuffer
   | Start FileName Midi AudioBuffer Time
   | Stop FileName
+  | Close
   | Tick Time
-  | ToggleTrack FileName Int
   | ToggleConfig
   | GitHubMsg GitHub.Msg
 
@@ -75,7 +75,7 @@ init =
         , "jinjor/elm-debounce"
         ]
   in
-    ( Model initialMidiCountents Nothing 0 0 [] Nothing False gitHub NoError
+    ( Model initialMidiCountents Nothing False 0 0 [] Nothing False gitHub NoError
     , cmd
     )
 
@@ -93,7 +93,7 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     TriggerLoadMidiAndMp3 midiFile mp3File ->
-      ( model
+      ( { model | selected = Just midiFile }
       , File.fetchArrayBuffer ("./contents/music/" ++ mp3File)
           |> Task.andThen WebAudioApi.decodeAudioData
           |> Task.andThen (\mp3AudioBuf ->
@@ -132,7 +132,7 @@ update msg model =
       ({ model
           | startTime = 0
           , currentTime = 0
-          , playing = Nothing
+          , playing = False
       }, Cmd.none )
 
     TriggerStart fileName midi mp3AudioBuffer ->
@@ -152,7 +152,7 @@ update msg model =
         ( { model
             | startTime = startTime
             , currentTime = currentTime
-            , playing = Just fileName
+            , playing = True
             , futureNotes = prepareFutureNotes (currentTime - startTime) midi
           }
         , WebAudioApi.play fileName mp3AudioBuffer
@@ -161,30 +161,18 @@ update msg model =
 
     Stop fileName ->
       ( { model
-          | playing = Nothing
+          | playing = False
         }
       , WebAudioApi.stop fileName
       )
+
+    Close ->
+      ( { model | selected = Nothing }, Cmd.none )
 
     Tick currentTime ->
       ({ model
           | currentTime = currentTime
       }, Cmd.none )
-
-    ToggleTrack fileName index ->
-      ( { model
-          | midiContents =
-              model.midiContents
-                |> Dict.update fileName ( Maybe.map (\midiContent ->
-                  { midiContent
-                    | midiAndMp3 =
-                        midiContent.midiAndMp3
-                          |> Maybe.map (Tuple.mapFirst (Midi.toggleVisibility index) )
-                  }
-                ))
-        }
-      , Cmd.none
-      )
 
     ToggleConfig ->
       ( { model | showConfig = not model.showConfig }
@@ -233,7 +221,7 @@ splitWhile f taken list =
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch
-    [ if model.playing /= Nothing then
+    [ if model.playing then
         Time.every (1000 * Time.millisecond / 30) Tick
       else
         Sub.none
@@ -289,7 +277,7 @@ initialMidiCountents =
     |> List.filterMap (\content ->
       case content.details of
         MidiAndMp3 midiFile mp3File  ->
-          Just (midiFile, MidiContent midiFile mp3File False Nothing)
+          Just (midiFile, MidiContent midiFile mp3File Nothing)
 
         _ ->
           Nothing
@@ -313,7 +301,6 @@ type Details
 type alias MidiContent =
   { midiFile : String
   , mp3File : String
-  , opened : Bool
   , midiAndMp3 : Maybe (Midi, AudioBuffer)
   }
 
@@ -367,27 +354,36 @@ viewContent model content =
         ]
 
       MidiAndMp3 midiFile mp3File ->
-        case Dict.get midiFile model.midiContents |> Maybe.andThen .midiAndMp3 of
-          Just (midi, mp3) ->
+        Dict.get midiFile model.midiContents
+          |> Maybe.andThen (\midiContent ->
+            if Just midiContent.midiFile == model.selected then
+              midiContent.midiAndMp3
+                |> Maybe.map (\(midi, mp3) ->
+                  [ title content.hash content.title
+                  , MidiPlayer.viewClosed Close
+                  , MidiPlayer.view
+                      { onBack = Back
+                      , onStart = TriggerStart midiFile midi mp3
+                      , onStop = Stop midiFile
+                      , onClose = Close
+                      }
+                      model.playing
+                      ( model.currentTime - model.startTime )
+                      midi
+                  ]
+                )
+                |> Maybe.withDefault
+                  [ title content.hash content.title
+                  , MidiPlayer.viewClosed Close
+                  , MidiPlayer.viewLoading Close
+                  ]
+                |> Just
+            else
+              Nothing
+          )
+          |> Maybe.withDefault
             [ title content.hash content.title
-            , MidiPlayer.view
-                { onBack = Back
-                , onStart = TriggerStart midiFile midi mp3
-                , onStop = Stop midiFile
-                , onToggleTrack = ToggleTrack midiFile
-                }
-                ( model.playing == Just midiFile )
-                ( model.currentTime - model.startTime )
-                midi
-            ]
-
-          Nothing ->
-            [ title content.hash content.title
-            , div
-                [ class "midi-player-empty"
-                , onClick (TriggerLoadMidiAndMp3 midiFile mp3File)
-                ]
-                [ text "Play" ]
+            , MidiPlayer.viewClosed (TriggerLoadMidiAndMp3 midiFile mp3File)
             ]
 
       SoundCloud id ->
