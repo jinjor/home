@@ -56,6 +56,43 @@ a {
   margin-right: auto;
 }
 
+.midi-player {
+  position: relative;
+  width: 480px;
+  max-width: 100%;
+}
+
+.midi-player-empty {
+  background-color: rgb(51, 0, 17);
+  padding: 10px;
+  color: #eee;
+}
+
+.midi-player-selected {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.midi-player-control {
+  width: 100%;
+  max-width: 100%;
+  height: 30px;
+  background-color: rgb(51, 0, 17);
+  display: flex;
+}
+
+.mp3 {
+  display: block;
+  width: 100%;
+}
+.soundcloud {
+  padding: 10px;
+  background-color: #ffc;
+}
+
 .repository {
   margin: -5px;
   display: flex;

@@ -1,11 +1,10 @@
-port module Main exposing (..)
+module Main exposing (..)
 
 import Dict exposing (Dict)
 import Task
 import Time exposing (Time)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (..)
 import Html.Lazy exposing (..)
 import Shape
 import BinaryDecoder.File as File exposing (File)
@@ -14,10 +13,7 @@ import SmfDecoder exposing (Smf)
 import Midi exposing (Midi, Note, Detailed)
 import MidiPlayer
 import GitHub exposing (GitHub)
-
-
-port start : () -> Cmd msg
-port stop : () -> Cmd msg
+import WebAudioApi exposing (AudioBuffer)
 
 
 main : Program Never Model Msg
@@ -32,7 +28,8 @@ main =
 
 type alias Model =
   { midiContents : Dict String MidiContent
-  , playing : Maybe String
+  , selected : Maybe String
+  , playing : Bool
   , startTime : Time
   , currentTime : Time
   , futureNotes : List (Detailed Note)
@@ -53,14 +50,14 @@ type alias FileName
 
 
 type Msg
-  = TriggerLoadFile FileName
-  | ReadBuffer FileName (Result String ArrayBuffer)
+  = TriggerLoadMidiAndMp3 FileName FileName
+  | LoadedMidiAndMp3 FileName FileName (Result String (AudioBuffer, ArrayBuffer))
   | Back
-  | TriggerStart FileName Midi
-  | Start FileName Midi Time
-  | Stop
+  | TriggerStart FileName Midi AudioBuffer
+  | Start FileName Midi AudioBuffer Time
+  | Stop FileName
+  | Close
   | Tick Time
-  | ToggleTrack FileName Int
   | ToggleConfig
   | GitHubMsg GitHub.Msg
 
@@ -78,7 +75,7 @@ init =
         , "jinjor/elm-debounce"
         ]
   in
-    ( Model initialMidiCountents Nothing 0 0 [] Nothing False gitHub NoError
+    ( Model initialMidiCountents Nothing False 0 0 [] Nothing False gitHub NoError
     , cmd
     )
 
@@ -95,20 +92,27 @@ andThen f (model, cmd) =
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    TriggerLoadFile fileName ->
-      ( model
-      , File.fetchArrayBuffer fileName
-          |> Task.attempt ( ReadBuffer fileName )
+    TriggerLoadMidiAndMp3 midiFile mp3File ->
+      ( { model | selected = Just midiFile }
+      , File.fetchArrayBuffer ("./contents/music/" ++ mp3File)
+          |> Task.andThen WebAudioApi.decodeAudioData
+          |> Task.andThen (\mp3AudioBuf ->
+            File.fetchArrayBuffer ("./contents/music/" ++ midiFile)
+              |> Task.map ((,) mp3AudioBuf)
+          )
+          |> Task.attempt (LoadedMidiAndMp3 midiFile mp3File)
       )
 
-    ReadBuffer fileName (Ok buf) ->
-      case Byte.decode SmfDecoder.smf buf of
+    LoadedMidiAndMp3 midiFile _ (Ok (mp3AudioBuffer, smfBuffer)) ->
+      case Byte.decode SmfDecoder.smf smfBuffer of
         Ok smf ->
           ( { model
               | midiContents =
                   model.midiContents
-                    |> Dict.update fileName ( Maybe.map (\midiContent ->
-                      { midiContent | midi = Just (Midi.fromSmf smf) }
+                    |> Dict.update midiFile ( Maybe.map (\midiContent ->
+                      { midiContent
+                        | midiAndMp3 = Just (Midi.fromSmf smf, mp3AudioBuffer)
+                      }
                     ))
             }
           , Cmd.none
@@ -116,26 +120,28 @@ update msg model =
 
         Err e ->
           ({ model
-             | error = DecodeError buf e
+             | error = DecodeError smfBuffer e
           }, Cmd.none)
 
-    ReadBuffer fileName (Err s) ->
-      Debug.crash ("failed to read arrayBuffer of file '" ++ fileName ++ "': " ++ s)
+    LoadedMidiAndMp3 mp3File midiFile (Err s) ->
+      Debug.crash <|
+        "failed to load file '" ++ midiFile ++
+        " or file " ++ mp3File ++ "': " ++ s
 
     Back ->
       ({ model
           | startTime = 0
           , currentTime = 0
-          , playing = Nothing
+          , playing = False
       }, Cmd.none )
 
-    TriggerStart fileName midi ->
+    TriggerStart fileName midi mp3AudioBuffer ->
       ( model
       , Time.now
-          |> Task.perform ( Start fileName midi )
+          |> Task.perform ( Start fileName midi mp3AudioBuffer)
       )
 
-    Start fileName midi currentTime ->
+    Start fileName midi mp3AudioBuffer currentTime ->
       let
         startTime =
           if model.currentTime > 0 then
@@ -146,35 +152,27 @@ update msg model =
         ( { model
             | startTime = startTime
             , currentTime = currentTime
-            , playing = Just fileName
+            , playing = True
             , futureNotes = prepareFutureNotes (currentTime - startTime) midi
           }
-        , start ()
+        , WebAudioApi.play fileName mp3AudioBuffer
         )
           |> andThen (update (Tick currentTime))
 
-    Stop ->
+    Stop fileName ->
       ( { model
-          | playing = Nothing
+          | playing = False
         }
-      , stop ()
+      , WebAudioApi.stop fileName
       )
+
+    Close ->
+      ( { model | selected = Nothing }, Cmd.none )
 
     Tick currentTime ->
       ({ model
           | currentTime = currentTime
       }, Cmd.none )
-
-    ToggleTrack fileName index ->
-      ( { model
-          | midiContents =
-              model.midiContents
-                |> Dict.update fileName ( Maybe.map (\midiContent ->
-                  { midiContent | midi = Maybe.map (Midi.toggleVisibility index) midiContent.midi }
-                ))
-        }
-      , Cmd.none
-      )
 
     ToggleConfig ->
       ( { model | showConfig = not model.showConfig }
@@ -223,7 +221,7 @@ splitWhile f taken list =
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch
-    [ if model.playing /= Nothing then
+    [ if model.playing then
         Time.every (1000 * Time.millisecond / 30) Tick
       else
         Sub.none
@@ -235,41 +233,41 @@ contents =
   -- 2017
   [ Content "#little-world" "Little World" (SoundCloud "306090165")
   -- 2016
-  , Content "#hokora" "ほこら" (MidiAndMp3 "./contents/music/2016/hokora.mid" "./contents/music/2016/hokora.mp3")
-  , Content "#hokora-fc" "ほこら（FCアレンジ by ハイデンさん）" (Mp3 "./contents/music/2016/hokora-fc.mp3")
+  , Content "#hokora" "ほこら" (MidiAndMp3 "2016/hokora.mid" "2016/hokora.mp3")
+  , Content "#hokora-fc" "ほこら（FCアレンジ by ハイデンさん）" (Mp3 "2016/hokora-fc.mp3")
   , Content "#kira-kira" "Kira Kira" (SoundCloud "278194362")
   , Content "#candy" "Candy" (SoundCloud "240810123")
   -- block
-  , Content "#ancient" "ancient" (Mp3 "./contents/music/2016/ancient.mp3")
-  , Content "#beach" "beach" (Mp3 "./contents/music/2016/beach.mp3")
-  , Content "#cloud" "cloud" (Mp3 "./contents/music/2016/cloud.mp3")
-  , Content "#ice" "ice" (Mp3 "./contents/music/2016/ice.mp3")
-  , Content "#jungle" "jungle" (Mp3 "./contents/music/2016/jungle.mp3")
-  , Content "#kingdom" "kingdom" (Mp3 "./contents/music/2016/kingdom.mp3")
-  , Content "#night" "night" (Mp3 "./contents/music/2016/night.mp3")
-  , Content "#ninja" "ninja" (Mp3 "./contents/music/2016/ancient.mp3")
-  , Content "#volcano" "volcano" (Mp3 "./contents/music/2016/volcano.mp3")
+  , Content "#ancient" "ancient" (Mp3 "2016/ancient.mp3")
+  , Content "#beach" "beach" (Mp3 "2016/beach.mp3")
+  , Content "#cloud" "cloud" (Mp3 "2016/cloud.mp3")
+  , Content "#ice" "ice" (Mp3 "2016/ice.mp3")
+  , Content "#jungle" "jungle" (Mp3 "2016/jungle.mp3")
+  , Content "#kingdom" "kingdom" (Mp3 "2016/kingdom.mp3")
+  , Content "#night" "night" (Mp3 "2016/night.mp3")
+  , Content "#ninja" "ninja" (Mp3 "2016/ninja.mp3")
+  , Content "#volcano" "volcano" (Mp3 "2016/volcano.mp3")
   -- 2015
   , Content "#megalopolis" "Megalopolis" (SoundCloud "236197155")
   , Content "#voice-of-water" "Voice of Water" (SoundCloud "233781385")
   , Content "#wedding-march" "Wedding March" (SoundCloud "228037751")
   , Content "#glass-city" "Glass City" (SoundCloud "200427994")
   -- 2014
-  , Content "#summer" "Summer" (MidiAndMp3 "./contents/music/2014/summer.mid" "./contents/music/2014/summer.mp3")
-  , Content "#sakura" "桜舞う" (MidiAndMp3 "./contents/music/2014/sakura.mid" "./contents/music/2014/sakura.mp3")
-  , Content "#midnight" "真夜中の暇つぶし" (MidiAndMp3 "./contents/music/2014/midnight.mid" "./contents/music/2014/midnight.mp3")
+  , Content "#summer" "Summer" (MidiAndMp3 "2014/summer.mid" "2014/summer.mp3")
+  , Content "#sakura" "桜舞う" (MidiAndMp3 "2014/sakura.mid" "2014/sakura.mp3")
+  , Content "#midnight" "真夜中の暇つぶし" (MidiAndMp3 "2014/midnight.mid" "2014/midnight.mp3")
   -- 2013
-  , Content "#string" "糸" (MidiAndMp3 "./contents/music/2013/string.mid" "./contents/music/2013/string.mp3")
-  , Content "#autumn" "秋風" (MidiAndMp3 "./contents/music/2013/autumn.mid" "./contents/music/2013/autumn.mp3")
-  , Content "#afternoon-caos" "午後のカオス" (MidiAndMp3 "./contents/music/2013/afternoon_caos.mid" "./contents/music/2013/afternoon_caos.mp3")
-  , Content "#michikusa" "道草" (MidiAndMp3 "./contents/music/2013/michikusa.mid" "./contents/music/2013/michikusa.mp3")
-  , Content "#tmp" "Temporary" (MidiAndMp3 "./contents/music/2013/tmp.mid" "./contents/music/2013/tmp.mp3")
-  , Content "#hallucination" "幻覚" (MidiAndMp3 "./contents/music/2013/hallucination.mid" "./contents/music/2013/hallucination.mp3")
-  , Content "#blue" "BLUE" (MidiAndMp3 "./contents/music/2013/blue.mid" "./contents/music/2013/blue.mp3")
+  , Content "#string" "糸" (MidiAndMp3 "2013/string.mid" "2013/string.mp3")
+  , Content "#autumn" "秋風" (MidiAndMp3 "2013/autumn.mid" "2013/autumn.mp3")
+  , Content "#afternoon-caos" "午後のカオス" (MidiAndMp3 "2013/afternoon_caos.mid" "2013/afternoon_caos.mp3")
+  , Content "#michikusa" "道草" (MidiAndMp3 "2013/michikusa.mid" "2013/michikusa.mp3")
+  , Content "#tmp" "Temporary" (MidiAndMp3 "2013/tmp.mid" "2013/tmp.mp3")
+  , Content "#hallucination" "幻覚" (MidiAndMp3 "2013/hallucination.mid" "2013/hallucination.mp3")
+  , Content "#blue" "Blue" (MidiAndMp3 "2013/blue.mid" "2013/blue.mp3")
   -- 2012
-  , Content "#painter" "変人" (MidiAndMp3 "./contents/music/2012/painter.mid" "./contents/music/2012/painter.mp3")
-  , Content "#uploar" "大騒ぎ" (MidiAndMp3 "./contents/music/2012/uploar.mid" "./contents/music/2012/uploar.mp3")
-  -- , Content "#air" "" (MidiAndMp3 "./contents/music/2012/air.mid" "./contents/music/2012/air.mp3")
+  , Content "#painter" "変人" (MidiAndMp3 "2012/painter.mid" "2012/painter.mp3")
+  , Content "#uploar" "大騒ぎ" (MidiAndMp3 "2012/uploar.mid" "2012/uploar.mp3")
+  , Content "#air" "air" (MidiAndMp3 "2012/air.mid" "2012/air.mp3")
   ]
 
 
@@ -279,7 +277,7 @@ initialMidiCountents =
     |> List.filterMap (\content ->
       case content.details of
         MidiAndMp3 midiFile mp3File  ->
-          Just (midiFile, MidiContent midiFile mp3File False Nothing)
+          Just (midiFile, MidiContent midiFile mp3File Nothing)
 
         _ ->
           Nothing
@@ -295,15 +293,15 @@ type alias Content =
 
 
 type Details
-  = MidiAndMp3 FileName FileName
+  = Mp3 FileName
+  | MidiAndMp3 FileName FileName
   | SoundCloud String
 
 
 type alias MidiContent =
   { midiFile : String
   , mp3File : String
-  , opened : Bool
-  , midi : Maybe Midi
+  , midiAndMp3 : Maybe (Midi, AudioBuffer)
   }
 
 
@@ -311,11 +309,7 @@ view : Model -> Html Msg
 view model =
   div
     []
-    [ header [ class "header" ]
-        [ div
-            [ class "container" ]
-            [ h1 [] [ text "World Maker" ] ]
-        ]
+    [ viewHeader
     , main_ [ class "body container" ]
       [ p [] [ text "ジンジャー と Yosuke Torii のホームページ" ]
       , h2 [] [ Shape.note, text "Music" ]
@@ -332,33 +326,21 @@ view model =
       , div [ class "repository" ] ( GitHub.view model.gitHub |> Tuple.second )
       , h2 [] [ Shape.note, text "Paintings" ]
       , p [] [ text "ペイントでお絵かき" ]
-      , div [ class "paintings-container paintings-container-single" ]
-          [ div [] [ img [ class "paintings-image", src "./contents/paintings/trip.png" ] [] ]
-          ]
-      , div [ class "paintings-container" ]
-          [ div [] [ img [ class "paintings-image", src "./contents/paintings/cafe.png" ] [] ]
-          ]
-      , div [ class "paintings-container" ]
-          [ div [] [ img [ class "paintings-image", src "./contents/paintings/rain.png" ] [] ]
-          ]
-      , div [ class "paintings-container" ]
-          [ div [] [ img [ class "paintings-image", src "./contents/paintings/hanabi.png" ] [] ]
-          , div [] [ img [ class "paintings-image", src "./contents/paintings/totoro.png" ] [] ]
-          ]
-      , div [ class "paintings-container paintings-container-small" ]
-          [ div [] [ img [ class "paintings-image", src "./contents/paintings/clock.png" ] [] ]
-          , div [] [ img [ class "paintings-image", src "./contents/paintings/strong-zero.png" ] [] ]
-          , div [] [ img [ class "paintings-image", src "./contents/paintings/orange.png" ] [] ]
-          ]
+      , viewPaintings
       , h2 [] [ Shape.note, text "Links" ]
       , p [] [ text "" ]
-      , ul []
-          [ li [] [ a [ href "https://soundcloud.com/jinjor" ] [ text "SoundCloud" ] ]
-          , li [] [ a [ href "https://github.com/jinjor" ] [ text "GitHub" ] ]
-          , li [] [ a [ href "https://twitter.com/jinjor" ] [ text "Twitter" ] ]
-          , li [] [ a [ href "http://jinjor-labo.hatenablog.com/" ] [ text "Blog" ] ]
-          ]
+      , viewLink
       ]
+    ]
+
+
+viewHeader : Html msg
+viewHeader =
+  header
+    [ class "header" ]
+    [ div
+        [ class "container" ]
+        [ h1 [] [ text "World Maker" ] ]
     ]
 
 
@@ -366,29 +348,47 @@ viewContent : Model -> Content -> Html Msg
 viewContent model content =
   li [ class "contents-item" ] <|
     case content.details of
-      MidiAndMp3 midiFile mp3File ->
-        case Dict.get midiFile model.midiContents |> Maybe.andThen .midi of
-          Just midi ->
-            [ title content.hash content.title
-            , MidiPlayer.view
-                { onBack = Back
-                , onStart = TriggerStart midiFile midi
-                , onStop = Stop
-                , onToggleTrack = ToggleTrack midiFile
-                }
-                ( model.playing == Just midiFile )
-                ( model.currentTime - model.startTime )
-                midi
-            ]
+      Mp3 mp3File ->
+        [ title content.hash content.title
+        , audio [ class "mp3", src ("./contents/music/" ++ mp3File), controls True ] []
+        ]
 
-          Nothing ->
+      MidiAndMp3 midiFile mp3File ->
+        Dict.get midiFile model.midiContents
+          |> Maybe.andThen (\midiContent ->
+            if Just midiContent.midiFile == model.selected then
+              midiContent.midiAndMp3
+                |> Maybe.map (\(midi, mp3) ->
+                  [ title content.hash content.title
+                  , MidiPlayer.viewClosed Close
+                  , MidiPlayer.view
+                      { onBack = Back
+                      , onStart = TriggerStart midiFile midi mp3
+                      , onStop = Stop midiFile
+                      , onClose = Close
+                      }
+                      model.playing
+                      ( model.currentTime - model.startTime )
+                      midi
+                  ]
+                )
+                |> Maybe.withDefault
+                  [ title content.hash content.title
+                  , MidiPlayer.viewClosed Close
+                  , MidiPlayer.viewLoading Close
+                  ]
+                |> Just
+            else
+              Nothing
+          )
+          |> Maybe.withDefault
             [ title content.hash content.title
-            , button [ onClick (TriggerLoadFile midiFile) ] [ text "Play" ]
+            , MidiPlayer.viewClosed (TriggerLoadMidiAndMp3 midiFile mp3File)
             ]
 
       SoundCloud id ->
         [ title content.hash content.title
-        , soundCloud id
+        , div [ class "soundcloud" ] [ soundCloud id ]
         ]
 
 
@@ -409,3 +409,38 @@ soundCloud id =
         "&amp;color=ff5500&amp;inverse=false&amp;auto_play=false&amp;show_user=true"
     ]
     []
+
+
+viewPaintings : Html msg
+viewPaintings =
+  div
+    []
+    [ div [ class "paintings-container paintings-container-single" ]
+        [ div [] [ img [ class "paintings-image", src "./contents/paintings/trip.png" ] [] ]
+        ]
+    , div [ class "paintings-container" ]
+        [ div [] [ img [ class "paintings-image", src "./contents/paintings/cafe.png" ] [] ]
+        ]
+    , div [ class "paintings-container" ]
+        [ div [] [ img [ class "paintings-image", src "./contents/paintings/rain.png" ] [] ]
+        ]
+    , div [ class "paintings-container" ]
+        [ div [] [ img [ class "paintings-image", src "./contents/paintings/hanabi.png" ] [] ]
+        , div [] [ img [ class "paintings-image", src "./contents/paintings/totoro.png" ] [] ]
+        ]
+    , div [ class "paintings-container paintings-container-small" ]
+        [ div [] [ img [ class "paintings-image", src "./contents/paintings/clock.png" ] [] ]
+        , div [] [ img [ class "paintings-image", src "./contents/paintings/strong-zero.png" ] [] ]
+        , div [] [ img [ class "paintings-image", src "./contents/paintings/orange.png" ] [] ]
+        ]
+    ]
+
+
+viewLink : Html msg
+viewLink =
+  ul []
+    [ li [] [ a [ href "https://soundcloud.com/jinjor" ] [ text "SoundCloud" ] ]
+    , li [] [ a [ href "https://github.com/jinjor" ] [ text "GitHub" ] ]
+    , li [] [ a [ href "https://twitter.com/jinjor" ] [ text "Twitter" ] ]
+    , li [] [ a [ href "http://jinjor-labo.hatenablog.com/" ] [ text "Blog" ] ]
+    ]

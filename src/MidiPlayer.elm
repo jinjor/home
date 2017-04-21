@@ -1,7 +1,6 @@
-module MidiPlayer exposing (Options, view)
+module MidiPlayer exposing (Options, view, viewLoading, viewClosed)
 
 import Time exposing (Time)
-import Dict exposing (Dict)
 import Html as H exposing (..)
 import Html.Attributes as HA exposing (..)
 import Html.Events exposing (..)
@@ -17,7 +16,7 @@ type alias Options msg =
   { onBack : msg
   , onStart : msg
   , onStop : msg
-  , onToggleTrack : Int -> msg
+  , onClose : msg
   }
 
 
@@ -39,12 +38,7 @@ view options playing time midi =
       Midi.timeToPosition midi.timeBase time
   in
     div
-      [ HA.style
-          [ "position" => "relative"
-          , "width" => "480px"
-          , "max-width" => "100%"
-          ]
-      , HA.class "midi-player"
+      [ HA.class "midi-player midi-player-selected"
       ]
       [ midi.tracks
           |> List.map2 (viewTrack currentPosition) colors
@@ -52,6 +46,24 @@ view options playing time midi =
       , centerLine
       , lazy3 control options midi.tracks playing
       ]
+
+
+viewLoading : msg -> Html msg
+viewLoading onClose =
+  div
+    [ HA.class "midi-player midi-player-selected"
+    ]
+    [ disabledControl onClose
+    ]
+
+
+viewClosed : msg -> Html msg
+viewClosed onLoad =
+  div
+    [ HA.class "midi-player-empty"
+    , onClick onLoad
+    ]
+    [ H.text "Play" ]
 
 
 centerLine : Html msg
@@ -86,21 +98,18 @@ svgAttributes currentPosition =
 control : Options msg -> List Track -> Bool -> Html msg
 control options tracks playing =
   div
-    [ HA.style controlStyles ]
+    [ HA.class "midi-player-control" ]
     [ backButton options
     , playButton options playing
-    , trackButtons options tracks
+    , closeButton options.onClose
     ]
 
 
-controlStyles : List (String, String)
-controlStyles =
-  [ "width" => "480px"
-  , "max-width" => "100%"
-  , "height" => "30px"
-  , "background-color" => "#301"
-  , "display" => "flex"
-  ]
+disabledControl : msg -> Html msg
+disabledControl onClose =
+  div
+    [ HA.class "midi-player-control" ]
+    [ closeButton onClose ]
 
 
 backButton : Options msg -> Html msg
@@ -117,30 +126,11 @@ playButton options playing =
     ( S.path [ SA.fill "#ddd", if playing then stop else start ] [] )
 
 
-trackButtons : Options msg -> List Track -> Html msg
-trackButtons options tracks =
-  tracks
-    |> List.map2 (,) colors
-    |> List.indexedMap (trackButton options)
-    |> div [ HA.style [ "display" => "flex", "margin-left" => "auto", "padding-right" => "10px" ] ]
-
-
-trackButton : Options msg -> Int -> (NoteColor, Track) -> Html msg
-trackButton options index (color, track) =
-  div
-    [ onClick (options.onToggleTrack index)
-    , HA.style (trackButtonStyles track.isVisible)
-    ]
-    [ div [ HA.style [ "background-color" => color.normal, "height" => "100%" ] ] [] ]
-
-
-trackButtonStyles : Bool -> List (String, String)
-trackButtonStyles isVisible =
-  [ "padding" => (if isVisible then "9px 4px" else "13px 8px")
-  , "box-sizing" => "border-box"
-  , "width" => "20px"
-  , "height" => "30px"
-  ]
+closeButton : msg -> Html msg
+closeButton onClose =
+  controlButton
+    ( onClick onClose )
+    ( S.path [ SA.stroke "#ddd", SA.strokeWidth "2", close ] [] )
 
 
 controlButton : H.Attribute msg -> Svg msg -> Html msg
@@ -158,6 +148,11 @@ back =
 start : S.Attribute msg
 start =
   SA.d "M10,8v14l16,-7z"
+
+
+close : S.Attribute msg
+close =
+  SA.d "M11,9L25,21zM11,21L25,9z"
 
 
 stop : S.Attribute msg
@@ -208,6 +203,7 @@ viewNote color note =
     []
 
 
+(=>) : a -> b -> ( a, b )
 (=>) = (,)
 
 
