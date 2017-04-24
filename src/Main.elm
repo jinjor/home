@@ -249,7 +249,7 @@ subscriptions model =
 contents : List Content
 contents =
   -- 2017
-  [ Content "#monday-morning" "Monday Morning" (MidiAndMp3 "2017/monday-morning.mid" "2017/monday-morning.mp3" 500)
+  [ Content "#monday-morning" "Monday Morning" (MidiAndMp3 "2017/monday-morning.mid" "2017/monday-morning.mp3" 1250)
   -- TODO train, inn
   , Content "#little-world" "Little World" (SoundCloud "306090165")
   -- 2016
