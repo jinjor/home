@@ -176,9 +176,16 @@ update msg model =
       )
 
     Close ->
-      ( { model | selected = Nothing }
-      , Cmd.none
-      )
+      model.selected
+        |> Maybe.map (\fileName ->
+          update (Stop fileName) model
+        )
+        |> Maybe.withDefault (model, Cmd.none)
+        |> andThen (\model ->
+          ( { model | selected = Nothing }
+          , Cmd.none
+          )
+        )
 
     Tick currentTime ->
       ({ model

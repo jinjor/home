@@ -13206,7 +13206,7 @@ var _user$project$Main$update = F2(
 						'Main',
 						{
 							start: {line: 94, column: 3},
-							end: {line: 196, column: 8}
+							end: {line: 203, column: 8}
 						},
 						_p9)(
 						A2(
@@ -13268,13 +13268,29 @@ var _user$project$Main$update = F2(
 					_1: _user$project$WebAudioApi$stop(_p9._0)
 				};
 			case 'Close':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{selected: _elm_lang$core$Maybe$Nothing}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
+				return A2(
+					_user$project$Main$andThen,
+					function (model) {
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{selected: _elm_lang$core$Maybe$Nothing}),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					},
+					A2(
+						_elm_lang$core$Maybe$withDefault,
+						{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none},
+						A2(
+							_elm_lang$core$Maybe$map,
+							function (fileName) {
+								return A2(
+									_user$project$Main$update,
+									_user$project$Main$Stop(fileName),
+									model);
+							},
+							model.selected)));
 			case 'Tick':
 				return {
 					ctor: '_Tuple2',
