@@ -249,7 +249,9 @@ subscriptions model =
 contents : List Content
 contents =
   -- 2017
-  [ Content "#little-world" "Little World" (SoundCloud "306090165")
+  [ Content "#monday-morning" "Monday Morning" (MidiAndMp3 "2017/monday-morning.mid" "2017/monday-morning.mp3" 500)
+  -- TODO train, inn
+  , Content "#little-world" "Little World" (SoundCloud "306090165")
   -- 2016
   , Content "#hokora" "ほこら" (MidiAndMp3 "2016/hokora.mid" "2016/hokora.mp3" 2770)
   , Content "#hokora-fc" "ほこら（FCアレンジ by ハイデンさん）" (Mp3 "2016/hokora-fc.mp3")
