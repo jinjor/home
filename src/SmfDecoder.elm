@@ -38,6 +38,7 @@ type MidiEvent
   | ProgramChange Channel Int
   | ChannelPressure Channel Int
   | PitchWheelChange Channel Int
+  | Tempo Int
   | Meta Int
   | End
 
@@ -137,9 +138,13 @@ event status first =
 
 meta : Int -> Decoder MidiEvent
 meta tipe =
-  given uint8 (\length ->
+  uint8 |> andThen (\length ->
     if tipe == 0x2F then
       succeed End
+    else if tipe == 0x51 then
+      succeed (\i16 i8 -> Tempo (Bitwise.shiftLeftBy 8 i16 + i8))
+        |= uint16BE
+        |= uint8
     else
       succeed (Meta tipe)
         |. skip length

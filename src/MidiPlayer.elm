@@ -35,15 +35,18 @@ view : Options msg -> Bool -> Time -> Midi -> Html msg
 view options playing time midi =
   let
     currentPosition =
-      Midi.timeToPosition midi.timeBase time
+      Midi.timeToPosition midi.timeBase midi.tempo time
+
+    height =
+      180
   in
     div
       [ HA.class "midi-player midi-player-selected"
       ]
       [ midi.tracks
           |> List.map2 (viewTrack currentPosition) colors
-          |> svg (svgAttributes currentPosition)
-      , centerLine
+          |> svg (svgAttributes height currentPosition)
+      , centerLine height
       , lazy3 control options midi.tracks playing
       ]
 
@@ -66,12 +69,12 @@ viewClosed onLoad =
     [ H.text "Play" ]
 
 
-centerLine : Html msg
-centerLine =
+centerLine : Int -> Svg msg
+centerLine height =
   div
     [ HA.style
         [ "border-right" => "solid 1px #555"
-        , "height" => "270px"
+        , "height" => px height
         , "left" => "50%"
         , "top" => "0"
         , "position" => "absolute"
@@ -80,15 +83,15 @@ centerLine =
     []
 
 
-svgAttributes : Int -> List (S.Attribute msg)
-svgAttributes currentPosition =
+svgAttributes : Int -> Int -> List (S.Attribute msg)
+svgAttributes height currentPosition =
   [ SA.width "10000"
   , SA.height "90"
   , viewBox (String.join " " <| List.map toString [currentPosition - 5000, 0, 10000, 90])
   , preserveAspectRatio "none"
   , HA.style
       [ "width" => "100%"
-      , "height" => "270px"
+      , "height" => px height
       , "background-color" => "black"
       , "display" => "block"
       ]

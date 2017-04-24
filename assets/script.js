@@ -10,16 +10,17 @@ let sources = {};
 app.ports.webAudioApiPlay.subscribe(data => {
   let id = data[0];
   let buffer = data[1];
+  let time = data[2];
   let source = context.createBufferSource();
   source.buffer = buffer;
   source.connect(context.destination);
-  source.start(0);
+  source.start(0, time);
   sources[id] = source;
 });
 app.ports.webAudioApiStop.subscribe(id => {
   let source = sources[id];
   if(source) {
-    source.stop();
+    source.stop(0);
     sources[id] = null;
   }
 });

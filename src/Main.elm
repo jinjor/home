@@ -93,30 +93,41 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     TriggerLoadMidiAndMp3 midiFile mp3File ->
-      ( { model | selected = Just midiFile }
-      , File.fetchArrayBuffer ("./contents/music/" ++ mp3File)
-          |> Task.andThen WebAudioApi.decodeAudioData
-          |> Task.andThen (\mp3AudioBuf ->
-            File.fetchArrayBuffer ("./contents/music/" ++ midiFile)
-              |> Task.map ((,) mp3AudioBuf)
+      model.selected
+        |> Maybe.map (Stop >> flip update model)
+        |> Maybe.withDefault (model, Cmd.none)
+        |> andThen (update Back)
+        |> andThen (\model ->
+          ( { model | selected = Just midiFile }
+          , File.fetchArrayBuffer ("./contents/music/" ++ mp3File)
+              |> Task.andThen WebAudioApi.decodeAudioData
+              |> Task.andThen (\mp3AudioBuf ->
+                File.fetchArrayBuffer ("./contents/music/" ++ midiFile)
+                  |> Task.map ((,) mp3AudioBuf)
+              )
+              |> Task.attempt (LoadedMidiAndMp3 midiFile mp3File)
           )
-          |> Task.attempt (LoadedMidiAndMp3 midiFile mp3File)
-      )
+        )
 
     LoadedMidiAndMp3 midiFile _ (Ok (mp3AudioBuffer, smfBuffer)) ->
       case Byte.decode SmfDecoder.smf smfBuffer of
         Ok smf ->
-          ( { model
-              | midiContents =
-                  model.midiContents
-                    |> Dict.update midiFile ( Maybe.map (\midiContent ->
-                      { midiContent
-                        | midiAndMp3 = Just (Midi.fromSmf smf, mp3AudioBuffer)
-                      }
-                    ))
-            }
-          , Cmd.none
-          )
+          let
+            midi =
+              Midi.fromSmf smf
+          in
+            ( { model
+                | midiContents =
+                    model.midiContents
+                      |> Dict.update midiFile ( Maybe.map (\midiContent ->
+                        { midiContent
+                          | midiAndMp3 = Just (midi, mp3AudioBuffer)
+                        }
+                      ))
+              }
+            , Cmd.none
+            )
+            |> andThen (update (TriggerStart midiFile midi mp3AudioBuffer))
 
         Err e ->
           ({ model
@@ -155,19 +166,19 @@ update msg model =
             , playing = True
             , futureNotes = prepareFutureNotes (currentTime - startTime) midi
           }
-        , WebAudioApi.play fileName mp3AudioBuffer
+        , WebAudioApi.play fileName mp3AudioBuffer (currentTime - startTime)
         )
           |> andThen (update (Tick currentTime))
 
     Stop fileName ->
-      ( { model
-          | playing = False
-        }
+      ( { model | playing = False }
       , WebAudioApi.stop fileName
       )
 
     Close ->
-      ( { model | selected = Nothing }, Cmd.none )
+      ( { model | selected = Nothing }
+      , Cmd.none
+      )
 
     Tick currentTime ->
       ({ model
@@ -191,7 +202,7 @@ prepareFutureNotes time midi =
     |> List.indexedMap (,)
     |> List.concatMap (\(index, track) -> List.map (Midi.addDetails index track.channel) track.notes )
     |> List.sortBy .position
-    |> dropWhile (\note -> Midi.positionToTime midi.timeBase note.position < time)
+    |> dropWhile (\note -> Midi.positionToTime midi.timeBase midi.tempo note.position < time)
 
 
 dropWhile : (a -> Bool) -> List a -> List a
@@ -233,7 +244,7 @@ contents =
   -- 2017
   [ Content "#little-world" "Little World" (SoundCloud "306090165")
   -- 2016
-  , Content "#hokora" "ほこら" (MidiAndMp3 "2016/hokora.mid" "2016/hokora.mp3")
+  , Content "#hokora" "ほこら" (MidiAndMp3 "2016/hokora.mid" "2016/hokora.mp3" 2770)
   , Content "#hokora-fc" "ほこら（FCアレンジ by ハイデンさん）" (Mp3 "2016/hokora-fc.mp3")
   , Content "#kira-kira" "Kira Kira" (SoundCloud "278194362")
   , Content "#candy" "Candy" (SoundCloud "240810123")
@@ -253,21 +264,21 @@ contents =
   , Content "#wedding-march" "Wedding March" (SoundCloud "228037751")
   , Content "#glass-city" "Glass City" (SoundCloud "200427994")
   -- 2014
-  , Content "#summer" "Summer" (MidiAndMp3 "2014/summer.mid" "2014/summer.mp3")
-  , Content "#sakura" "桜舞う" (MidiAndMp3 "2014/sakura.mid" "2014/sakura.mp3")
-  , Content "#midnight" "真夜中の暇つぶし" (MidiAndMp3 "2014/midnight.mid" "2014/midnight.mp3")
+  , Content "#summer" "Summer" (MidiAndMp3 "2014/summer.mid" "2014/summer.mp3" 1420)
+  , Content "#sakura" "桜舞う" (MidiAndMp3 "2014/sakura.mid" "2014/sakura.mp3" 1600)
+  , Content "#midnight" "真夜中の暇つぶし" (MidiAndMp3 "2014/midnight.mid" "2014/midnight.mp3" 0)
   -- 2013
-  , Content "#string" "糸" (MidiAndMp3 "2013/string.mid" "2013/string.mp3")
-  , Content "#autumn" "秋風" (MidiAndMp3 "2013/autumn.mid" "2013/autumn.mp3")
-  , Content "#afternoon-caos" "午後のカオス" (MidiAndMp3 "2013/afternoon_caos.mid" "2013/afternoon_caos.mp3")
-  , Content "#michikusa" "道草" (MidiAndMp3 "2013/michikusa.mid" "2013/michikusa.mp3")
-  , Content "#tmp" "Temporary" (MidiAndMp3 "2013/tmp.mid" "2013/tmp.mp3")
-  , Content "#hallucination" "幻覚" (MidiAndMp3 "2013/hallucination.mid" "2013/hallucination.mp3")
-  , Content "#blue" "Blue" (MidiAndMp3 "2013/blue.mid" "2013/blue.mp3")
+  , Content "#string" "糸" (MidiAndMp3 "2013/string.mid" "2013/string.mp3" 0)
+  , Content "#autumn" "秋風" (MidiAndMp3 "2013/autumn.mid" "2013/autumn.mp3" 0)
+  , Content "#afternoon-caos" "午後のカオス" (MidiAndMp3 "2013/afternoon_caos.mid" "2013/afternoon_caos.mp3" 0)
+  , Content "#michikusa" "道草" (MidiAndMp3 "2013/michikusa.mid" "2013/michikusa.mp3" 0)
+  , Content "#tmp" "Temporary" (MidiAndMp3 "2013/tmp.mid" "2013/tmp.mp3" 0)
+  , Content "#hallucination" "幻覚" (MidiAndMp3 "2013/hallucination.mid" "2013/hallucination.mp3" 0)
+  , Content "#blue" "Blue" (MidiAndMp3 "2013/blue.mid" "2013/blue.mp3" 0)
   -- 2012
-  , Content "#painter" "変人" (MidiAndMp3 "2012/painter.mid" "2012/painter.mp3")
-  , Content "#uploar" "大騒ぎ" (MidiAndMp3 "2012/uploar.mid" "2012/uploar.mp3")
-  , Content "#air" "air" (MidiAndMp3 "2012/air.mid" "2012/air.mp3")
+  , Content "#painter" "変人" (MidiAndMp3 "2012/painter.mid" "2012/painter.mp3" 0)
+  , Content "#uploar" "大騒ぎ" (MidiAndMp3 "2012/uploar.mid" "2012/uploar.mp3" 0)
+  , Content "#air" "air" (MidiAndMp3 "2012/air.mid" "2012/air.mp3" 0)
   ]
 
 
@@ -276,7 +287,7 @@ initialMidiCountents =
   contents
     |> List.filterMap (\content ->
       case content.details of
-        MidiAndMp3 midiFile mp3File  ->
+        MidiAndMp3 midiFile mp3File delay ->
           Just (midiFile, MidiContent midiFile mp3File Nothing)
 
         _ ->
@@ -294,7 +305,7 @@ type alias Content =
 
 type Details
   = Mp3 FileName
-  | MidiAndMp3 FileName FileName
+  | MidiAndMp3 FileName FileName Time
   | SoundCloud String
 
 
@@ -353,7 +364,7 @@ viewContent model content =
         , audio [ class "mp3", src ("./contents/music/" ++ mp3File), controls True ] []
         ]
 
-      MidiAndMp3 midiFile mp3File ->
+      MidiAndMp3 midiFile mp3File delay ->
         Dict.get midiFile model.midiContents
           |> Maybe.andThen (\midiContent ->
             if Just midiContent.midiFile == model.selected then
@@ -368,7 +379,7 @@ viewContent model content =
                       , onClose = Close
                       }
                       model.playing
-                      ( model.currentTime - model.startTime )
+                      ( model.currentTime - model.startTime + delay)
                       midi
                   ]
                 )

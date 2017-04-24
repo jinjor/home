@@ -14,6 +14,7 @@ import SmfDecoder as Smf exposing (Smf, MidiEvent(..))
 
 type alias Midi =
   { timeBase : Int
+  , tempo : List (Int, Int)
   , tracks : List Track
   }
 
@@ -62,9 +63,25 @@ emptyTrack =
 
 fromSmf : Smf -> Midi
 fromSmf smf =
-  smf.tracks
-    |> List.map fromSmfTrack
-    |> Midi smf.header.timeBase
+  let
+    tracks =
+      smf.tracks
+        |> List.tail
+        |> Maybe.map (List.map fromSmfTrack)
+        |> Maybe.withDefault []
+
+    tempo =
+      smf.tracks
+        |> List.head
+        |> Maybe.map (
+             .events
+          >> List.foldl updateTrack (0, initContext)
+          >> Tuple.second
+          >> .tempo
+        )
+        |> Maybe.withDefault []
+  in
+    Midi smf.header.timeBase tempo tracks
 
 
 fromSmfTrack : Smf.Track -> Track
@@ -81,6 +98,11 @@ updateTrack : (Int, MidiEvent) -> (Int, Context) -> (Int, Context)
 updateTrack (dtime, e) (position, context) =
   ( position + dtime
   , case e of
+      Tempo tempo ->
+        { context
+          | tempo = (position + dtime, tempo) :: context.tempo
+        }
+
       NoteOn ch note vel ->
         { context
           | channel = max ch context.channel
@@ -111,22 +133,52 @@ type alias Context =
   { channel : Int
   , temporaryNotes : Dict Int (Int, Int)
   , notes : List Note
+  , tempo : List (Int, Int)
   }
 
 
 initContext : Context
 initContext =
-  Context 0 Dict.empty []
+  Context 0 Dict.empty [] []
 
 
-positionToTime : Int -> Int -> Time
-positionToTime timeBase position =
-  toFloat position * (1000.0 / (toFloat timeBase * 2.0))
+positionToTime : Int -> List (Int, Int) -> Int -> Time
+positionToTime timeBase tempoStack position =
+  tempoStack
+    |> List.foldl (\(from, tempo) (to, total) ->
+      if from > to then
+        (to, total)
+      else
+        (from, total + toFloat (to - from) / toFloat timeBase * toFloat tempo / 1000)
+    ) (position, 0.0)
+    |> Tuple.second
 
 
-timeToPosition : Int -> Time -> Int
-timeToPosition timeBase time =
-  floor <| (toFloat timeBase * 2.0 / 1000) * time
+tempoOfBpm : Int -> Int
+tempoOfBpm bpm =
+  60 * 1000 * 1000 // bpm
+
+
+timeToPosition : Int -> List (Int, Int) -> Time -> Int
+timeToPosition timeBase tempoStack time =
+  timeToPositionHelp timeBase (List.reverse tempoStack) time (0, tempoOfBpm 120)
+
+
+timeToPositionHelp : Int -> List (Int, Int) -> Time -> (Int, Int) -> Int
+timeToPositionHelp timeBase tempo time (from, currentTempo) =
+  case tempo of
+    [] ->
+      from + round (time * 1000 / toFloat currentTempo * toFloat timeBase)
+
+    (to, nextTempo) :: xs ->
+      let
+        nextTime =
+          toFloat (to - from) / toFloat timeBase * toFloat currentTempo / 1000
+      in
+        if nextTime > time then
+          from + round (time * 1000 / toFloat currentTempo * toFloat timeBase)
+        else
+          timeToPositionHelp timeBase xs (time - nextTime) (to, nextTempo)
 
 
 toggleVisibility : Int -> Midi -> Midi
