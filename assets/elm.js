@@ -12889,22 +12889,61 @@ var _user$project$Main$soundCloud = function (id) {
 		},
 		{ctor: '[]'});
 };
-var _user$project$Main$title = F2(
-	function (hash, s) {
+var _user$project$Main$viewMusicItemHelp = F6(
+	function (clickMsg, class_, hash, label, selected, icon) {
 		return A2(
-			_elm_lang$html$Html$a,
+			_elm_lang$html$Html$li,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('contents-item-link'),
+				_0: _elm_lang$html$Html_Attributes$classList(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'music-item', _1: true},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'music-item-selected', _1: selected},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: class_, _1: true},
+								_1: {ctor: '[]'}
+							}
+						}
+					}),
 				_1: {
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$href(hash),
+					_0: _elm_lang$html$Html_Events$onClick(clickMsg),
 					_1: {ctor: '[]'}
 				}
 			},
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html$text(s),
+				_0: A2(
+					_elm_lang$html$Html$a,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('music-item-link'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$href(hash),
+							_1: {ctor: '[]'}
+						}
+					},
+					{
+						ctor: '::',
+						_0: icon,
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(label),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}),
 				_1: {ctor: '[]'}
 			});
 	});
@@ -13142,6 +13181,8 @@ var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p12 = msg;
 		switch (_p12.ctor) {
+			case 'NoOp':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'TriggerLoadMidiAndMp3':
 				var _p15 = _p12._1;
 				var _p14 = _p12._0;
@@ -13241,8 +13282,8 @@ var _user$project$Main$update = F2(
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Main',
 						{
-							start: {line: 95, column: 5},
-							end: {line: 221, column: 14}
+							start: {line: 97, column: 5},
+							end: {line: 226, column: 14}
 						},
 						_p12)(
 						A2(
@@ -13359,98 +13400,67 @@ var _user$project$Main$TriggerLoadMidiAndMp3 = F2(
 	function (a, b) {
 		return {ctor: 'TriggerLoadMidiAndMp3', _0: a, _1: b};
 	});
-var _user$project$Main$viewContent = F2(
+var _user$project$Main$NoOp = {ctor: 'NoOp'};
+var _user$project$Main$viewMusicItem = F2(
 	function (model, content) {
-		return A2(
-			_elm_lang$html$Html$li,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('contents-item'),
-				_1: {ctor: '[]'}
-			},
-			function () {
-				var _p22 = content.details;
-				switch (_p22.ctor) {
-					case 'Mp3':
-						return {
+		var selected = _elm_lang$core$Native_Utils.eq(
+			_elm_lang$core$Maybe$Just(content.hash),
+			model.selected);
+		var _p22 = content.details;
+		switch (_p22.ctor) {
+			case 'Mp3':
+				return A6(
+					_user$project$Main$viewMusicItemHelp,
+					_user$project$Main$NoOp,
+					'music-item-mp3',
+					content.hash,
+					content.title,
+					selected,
+					A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
 							ctor: '::',
-							_0: A2(_user$project$Main$title, content.hash, content.title),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$audio,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('mp3'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$src(
-												A2(_elm_lang$core$Basics_ops['++'], './contents/music/', _p22._0)),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$controls(true),
-												_1: {ctor: '[]'}
-											}
-										}
-									},
-									{ctor: '[]'}),
-								_1: {ctor: '[]'}
-							}
-						};
-					case 'MidiAndMp3':
-						var _p23 = _p22._0;
-						return A2(
-							_elm_lang$core$Maybe$withDefault,
-							{
-								ctor: '::',
-								_0: A2(_user$project$Main$title, content.hash, content.title),
-								_1: {
-									ctor: '::',
-									_0: _user$project$MidiPlayer$viewClosed(
-										A2(_user$project$Main$TriggerLoadMidiAndMp3, _p23, _p22._1)),
-									_1: {ctor: '[]'}
-								}
-							},
-							A2(
-								_elm_lang$core$Maybe$andThen,
-								function (midiContent) {
-									return _elm_lang$core$Native_Utils.eq(
-										_elm_lang$core$Maybe$Just(midiContent.midiFile),
-										model.selected) ? _elm_lang$core$Maybe$Just(
-										{
-											ctor: '::',
-											_0: A2(_user$project$Main$title, content.hash, content.title),
-											_1: {
-												ctor: '::',
-												_0: _user$project$MidiPlayer$viewClosed(_user$project$Main$Close),
-												_1: {ctor: '[]'}
-											}
-										}) : _elm_lang$core$Maybe$Nothing;
-								},
-								A2(_elm_lang$core$Dict$get, _p23, model.midiContents)));
-					default:
-						return {
+							_0: _elm_lang$html$Html$text('MP3'),
+							_1: {ctor: '[]'}
+						}));
+			case 'MidiAndMp3':
+				var _p23 = _p22._0;
+				var clickMsg = _elm_lang$core$Native_Utils.eq(
+					_elm_lang$core$Maybe$Just(_p23),
+					model.selected) ? _user$project$Main$Close : A2(_user$project$Main$TriggerLoadMidiAndMp3, _p23, _p22._1);
+				return A6(
+					_user$project$Main$viewMusicItemHelp,
+					clickMsg,
+					'music-item-midi-and-mp3',
+					content.hash,
+					content.title,
+					selected,
+					A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
 							ctor: '::',
-							_0: A2(_user$project$Main$title, content.hash, content.title),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('soundcloud'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _user$project$Main$soundCloud(_p22._0),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
-						};
-				}
-			}());
+							_0: _elm_lang$html$Html$text('MidiAndMp3'),
+							_1: {ctor: '[]'}
+						}));
+			default:
+				return A6(
+					_user$project$Main$viewMusicItemHelp,
+					_user$project$Main$NoOp,
+					'music-item-soundcloud',
+					content.hash,
+					content.title,
+					selected,
+					A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('SoundCloud'),
+							_1: {ctor: '[]'}
+						}));
+		}
 	});
 var _user$project$Main$SoundCloud = function (a) {
 	return {ctor: 'SoundCloud', _0: a};
@@ -13822,10 +13832,14 @@ var _user$project$Main$view = function (model) {
 									ctor: '::',
 									_0: A2(
 										_elm_lang$html$Html$ul,
-										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('music-items'),
+											_1: {ctor: '[]'}
+										},
 										A2(
 											_elm_lang$core$List$map,
-											_user$project$Main$viewContent(model),
+											_user$project$Main$viewMusicItem(model),
 											_user$project$Main$contents)),
 									_1: {
 										ctor: '::',

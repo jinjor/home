@@ -34,14 +34,31 @@ a {
     cursor: pointer;
 }
 
-.contents-item {
-    margin-top: 1em;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+.music-items {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -4px;
 }
 
-.contents-item-link:hover::before {
-    color:
+.music-item {
+    box-sizing: border-box;
+    margin: 8px 4px;
+    padding: 1em;
+    text-align: center;
+    width: calc(33% - 12px);
+    height: 80px;
+}
+
+.music-item.music-item-midi-and-mp3 {
+    background-color: #6d9;
+}
+
+.music-item.music-item-mp3 {
+    background-color: #69d;
+}
+
+.music-item.music-item-soundcloud {
+    background-color: #d96;
 }
 
 .header {
@@ -214,4 +231,11 @@ a {
 .paintings-image {
     max-width: 100%;
     vertical-align: bottom;
+}
+
+ottom;
+
+}
+ottom;
+
 }

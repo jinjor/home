@@ -5,6 +5,7 @@ import Task
 import Time exposing (Time)
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 import Html.Lazy exposing (..)
 import Shape
 import BinaryDecoder.File as File exposing (File)
@@ -50,7 +51,8 @@ type alias FileName =
 
 
 type Msg
-    = TriggerLoadMidiAndMp3 FileName FileName
+    = NoOp
+    | TriggerLoadMidiAndMp3 FileName FileName
     | LoadedMidiAndMp3 FileName FileName (Result String ( AudioBuffer, ArrayBuffer ))
     | Back
     | TriggerStart FileName Midi AudioBuffer
@@ -93,6 +95,9 @@ andThen f ( model, cmd ) =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        NoOp ->
+            ( model, Cmd.none )
+
         TriggerLoadMidiAndMp3 midiFile mp3File ->
             model.selected
                 |> Maybe.map (Stop >> flip update model)
@@ -356,7 +361,7 @@ view model =
             [ p [] [ text "ジンジャー と Yosuke Torii のホームページ" ]
             , h2 [] [ Shape.note, text "Music" ]
             , p [] [ text "世界を創る音楽" ]
-            , ul [] (List.map (viewContent model) contents)
+            , ul [ class "music-items" ] (List.map (viewMusicItem model) contents)
             , case model.error of
                 NoError ->
                     text ""
@@ -414,32 +419,72 @@ viewPlayer model =
         |> Maybe.withDefault (text "")
 
 
-viewContent : Model -> Content -> Html Msg
-viewContent model content =
-    li [ class "contents-item" ] <|
+
+-- viewContent : Model -> Content -> Html Msg
+-- viewContent model content =
+--     li [ class "contents-item" ] <|
+--         case content.details of
+--             Mp3 mp3File ->
+--                 [ title content.hash content.title
+--                 , audio [ class "mp3", src ("./contents/music/" ++ mp3File), controls True ] []
+--                 ]
+--
+--             MidiAndMp3 midiFile mp3File delay ->
+--                 [ title content.hash content.title
+--                 , if Just midiFile == model.selected then
+--                     MidiPlayer.viewClosed Close
+--                   else
+--                     MidiPlayer.viewClosed (TriggerLoadMidiAndMp3 midiFile mp3File)
+--                 ]
+--
+--             SoundCloud id ->
+--                 [ title content.hash content.title
+--                 , div [ class "soundcloud" ] [ soundCloud id ]
+--                 ]
+
+
+viewMusicItem : Model -> Content -> Html Msg
+viewMusicItem model content =
+    let
+        selected =
+            Just content.hash == model.selected
+    in
         case content.details of
             Mp3 mp3File ->
-                [ title content.hash content.title
-                , audio [ class "mp3", src ("./contents/music/" ++ mp3File), controls True ] []
-                ]
+                viewMusicItemHelp NoOp "music-item-mp3" content.hash content.title selected <|
+                    div [] [ text "MP3" ]
 
             MidiAndMp3 midiFile mp3File delay ->
-                [ title content.hash content.title
-                , if Just midiFile == model.selected then
-                    MidiPlayer.viewClosed Close
-                  else
-                    MidiPlayer.viewClosed (TriggerLoadMidiAndMp3 midiFile mp3File)
-                ]
+                let
+                    clickMsg =
+                        if Just midiFile == model.selected then
+                            Close
+                        else
+                            (TriggerLoadMidiAndMp3 midiFile mp3File)
+                in
+                    viewMusicItemHelp clickMsg "music-item-midi-and-mp3" content.hash content.title selected <|
+                        div [] [ text "MidiAndMp3" ]
 
             SoundCloud id ->
-                [ title content.hash content.title
-                , div [ class "soundcloud" ] [ soundCloud id ]
-                ]
+                viewMusicItemHelp NoOp "music-item-soundcloud" content.hash content.title selected <|
+                    div [] [ text "SoundCloud" ]
 
 
-title : String -> String -> Html msg
-title hash s =
-    a [ class "contents-item-link", href hash ] [ text s ]
+viewMusicItemHelp : msg -> String -> String -> String -> Bool -> Html msg -> Html msg
+viewMusicItemHelp clickMsg class_ hash label selected icon =
+    li
+        [ classList
+            [ ( "music-item", True )
+            , ( "music-item-selected", selected )
+            , ( class_, True )
+            ]
+        , onClick clickMsg
+        ]
+        [ a [ class "music-item-link", href hash ]
+            [ icon
+            , div [] [ text label ]
+            ]
+        ]
 
 
 soundCloud : String -> Html msg
