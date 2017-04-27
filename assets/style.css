@@ -1,185 +1,217 @@
-html,head,body { padding:0; margin:0; }
-body {
-  font-family: 'Noto Sans Japanese', sans-serif;
-  font-size: 95%;
+html, head, body {
+    padding: 0;
+    margin: 0;
+}
 
-  /*background: repeating-linear-gradient(30deg, transparent, rgba(255,255,255,0.8) 80px, #fff 160px, transparent 220px)
+body {
+    font-family: 'Noto Sans Japanese', sans-serif;
+    font-size: 95%;
+    /*background: repeating-linear-gradient(30deg, transparent, rgba(255,255,255,0.8) 80px, #fff 160px, transparent 220px)
             , repeating-linear-gradient(48deg, transparent, transparent 100px, rgba(200,255,200,0.5) 380px, transparent 700px, transparent 1440px);
   background-attachment:fixed;*/
-  /*background-position: 0 -700px;*/
+    /*background-position: 0 -700px;*/
 }
+
 h1 {
-  font-family: 'Alegreya Sans SC', sans-serif;
+    font-family: 'Alegreya Sans SC', sans-serif;
 }
+
 h2 {
-  margin: 1em 0;
-  font-size: 1.5em;
-  border-bottom: solid 1px;
-  font-weight: normal;
-  clear: both;
+    margin: 1em 0;
+    font-size: 1.5em;
+    border-bottom: solid 1px;
+    font-weight: normal;
+    clear: both;
 }
+
 ul {
-  list-style-type: none;
+    list-style-type: none;
 }
+
 a {
-  color: #444;
-  text-decoration: none;
-  cursor: pointer;
+    color: #444;
+    text-decoration: none;
+    cursor: pointer;
 }
+
 .contents-item {
-  margin-top: 1em;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
+    margin-top: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
 }
+
 .contents-item-link:hover::before {
-  color:
+    color:
 }
+
 .header {
-  padding-top: 1.5em;
-  padding-bottom: 0.5em;
-  border-bottom: solid 1px #000;
-  background: rgba(255,255,255,0.5);
-  /*position: fixed;
+    padding-top: 1.5em;
+    padding-bottom: 0.5em;
+    border-bottom: solid 1px #000;
+    background: rgba(255, 255, 255, 0.5);
+    /*position: fixed;
   top: 0;
   left: 0;
   right: 0;
   mix-blend-mode: overlay;*/
 }
+
 .body {
-  /*margin-top: 9em;*/
-  margin-top: 2em;
+    /*margin-top: 9em;*/
+    margin-top: 2em;
 }
+
 .container {
-  width: 80%;
-  max-width: 480px;
-  margin-left: auto;
-  margin-right: auto;
+    width: 80%;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .midi-player {
-  position: relative;
-  width: 480px;
-  max-width: 100%;
+    position: relative;
+    width: 480px;
+    max-width: 100%;
 }
 
 .midi-player-empty {
-  background-color: rgb(51, 0, 17);
-  padding: 10px;
-  color: #eee;
+    background-color: rgb(51, 0, 17);
+    padding: 10px;
+    color: #eee;
 }
 
 .midi-player-selected {
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  width: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
 }
 
 .midi-player-control {
-  width: 100%;
-  max-width: 100%;
-  height: 30px;
-  background-color: rgb(51, 0, 17);
-  display: flex;
+    width: 100%;
+    max-width: 100%;
+    height: 30px;
+    background-color: rgb(51, 0, 17);
+    display: flex;
 }
 
 .mp3 {
-  display: block;
-  width: 100%;
+    display: block;
+    width: 100%;
 }
+
 .soundcloud {
-  padding: 10px;
-  background-color: #ffc;
+    padding: 10px;
+    background-color: #ffc;
 }
 
 .repository {
-  margin: -5px;
-  display: flex;
-  flex-wrap: wrap;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    margin: -5px;
+    display: flex;
+    flex-wrap: wrap;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
-.repository-card {
-  list-style-type: none;
-  padding: 16px;
-  width: calc(50% - 10px);
-  box-sizing: border-box;
-  margin: 5px;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #ddd;
-  background-color: #223;
-}
-@media screen and (max-width:480px) {
-  .repository-card {
-    width: 100%
-  }
-}
-.repository-card-name {
-  color: #cba;
-}
-.repository-card-name:hover {
-  text-decoration: underline;
-}
-.repository-card-description {
-  font-size: 12px;
-  margin-top: 8px;
-  margin-bottom: 16px;
-}
-.repository-card-stats {
-  display: flex;
-  font-size: 12px;
-}
-.repository-card-stats a {
-  color: #ddd;
-}
-.repository-card-stats a:hover {
-  color: #cba;
-}
-.repository-card-stats-icon {
-  fill: currentColor;
-}
-.repository-card-stats-language {
 
+.repository-card {
+    list-style-type: none;
+    padding: 16px;
+    width: calc(50% - 10px);
+    box-sizing: border-box;
+    margin: 5px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #ddd;
+    background-color: #223;
 }
+
+@media screen and (max-width:480px) {
+    .repository-card {
+        width: 100%
+    }
+}
+
+.repository-card-name {
+    color: #cba;
+}
+
+.repository-card-name:hover {
+    text-decoration: underline;
+}
+
+.repository-card-description {
+    font-size: 12px;
+    margin-top: 8px;
+    margin-bottom: 16px;
+}
+
+.repository-card-stats {
+    display: flex;
+    font-size: 12px;
+}
+
+.repository-card-stats a {
+    color: #ddd;
+}
+
+.repository-card-stats a:hover {
+    color: #cba;
+}
+
+.repository-card-stats-icon {
+    fill: currentColor;
+}
+
+.repository-card-stats-language {}
+
 .repository-card-stats-language-color {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #60B5CC;
-  position: relative;
-  top: 1px;
-  margin-right: 3px;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #60B5CC;
+    position: relative;
+    top: 1px;
+    margin-right: 3px;
 }
+
+
 /*.repository-card-stats-language-color-elm {
   background-color: #60B5CC;
 }*/
+
 .repository-card-stats-stargazers {
-  margin-left: 16px;
+    margin-left: 16px;
 }
+
 .repository-card-stats-forks {
-  margin-left: 16px;
+    margin-left: 16px;
 }
 
 .paintings-container {
-  display: flex;
-  justify-content: space-between;
-  /*margin-bottom: 5px;*/
+    display: flex;
+    justify-content: space-between;
+    /*margin-bottom: 5px;*/
 }
-.paintings-container.paintings-container-single > div {
-  width: 100%;
+
+.paintings-container.paintings-container-single>div {
+    width: 100%;
 }
-.paintings-container.paintings-container-single > div > img {
-  width: 100%;
+
+.paintings-container.paintings-container-single>div>img {
+    width: 100%;
 }
+
+
 /*.paintings-container.paintings-container-small > div {
   flex-grow: 1;
 }*/
+
 .paintings-container.paintings-container-small .paintings-image {
-  height: 150px;
+    height: 150px;
 }
+
 .paintings-image {
-  max-width: 100%;
-  vertical-align: bottom;
+    max-width: 100%;
+    vertical-align: bottom;
 }

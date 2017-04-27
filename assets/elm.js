@@ -13061,9 +13061,9 @@ var _user$project$Main$Content = F3(
 	function (a, b, c) {
 		return {hash: a, title: b, details: c};
 	});
-var _user$project$Main$MidiContent = F3(
-	function (a, b, c) {
-		return {midiFile: a, mp3File: b, midiAndMp3: c};
+var _user$project$Main$MidiContent = F4(
+	function (a, b, c, d) {
+		return {midiFile: a, mp3File: b, delay: c, midiAndMp3: d};
 	});
 var _user$project$Main$DecodeError = F2(
 	function (a, b) {
@@ -13098,17 +13098,53 @@ var _user$project$Main$TriggerStart = F3(
 		return {ctor: 'TriggerStart', _0: a, _1: b, _2: c};
 	});
 var _user$project$Main$Back = {ctor: 'Back'};
+var _user$project$Main$viewPlayer = function (model) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		_elm_lang$html$Html$text(''),
+		A2(
+			_elm_lang$core$Maybe$andThen,
+			function (midiFile) {
+				return A2(
+					_elm_lang$core$Maybe$map,
+					function (midiContent) {
+						return A2(
+							_elm_lang$core$Maybe$withDefault,
+							_user$project$MidiPlayer$viewLoading(_user$project$Main$Close),
+							A2(
+								_elm_lang$core$Maybe$map,
+								function (_p9) {
+									var _p10 = _p9;
+									var _p11 = _p10._0;
+									return A4(
+										_user$project$MidiPlayer$view,
+										{
+											onBack: _user$project$Main$Back,
+											onStart: A3(_user$project$Main$TriggerStart, midiFile, _p11, _p10._1),
+											onStop: _user$project$Main$Stop(midiFile),
+											onClose: _user$project$Main$Close
+										},
+										model.playing,
+										(model.currentTime - model.startTime) + midiContent.delay,
+										_p11);
+								},
+								midiContent.midiAndMp3));
+					},
+					A2(_elm_lang$core$Dict$get, midiFile, model.midiContents));
+			},
+			model.selected));
+};
 var _user$project$Main$LoadedMidiAndMp3 = F3(
 	function (a, b, c) {
 		return {ctor: 'LoadedMidiAndMp3', _0: a, _1: b, _2: c};
 	});
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p9 = msg;
-		switch (_p9.ctor) {
+		var _p12 = msg;
+		switch (_p12.ctor) {
 			case 'TriggerLoadMidiAndMp3':
-				var _p12 = _p9._1;
-				var _p11 = _p9._0;
+				var _p15 = _p12._1;
+				var _p14 = _p12._0;
 				return A2(
 					_user$project$Main$andThen,
 					function (model) {
@@ -13117,11 +13153,11 @@ var _user$project$Main$update = F2(
 							_0: _elm_lang$core$Native_Utils.update(
 								model,
 								{
-									selected: _elm_lang$core$Maybe$Just(_p11)
+									selected: _elm_lang$core$Maybe$Just(_p14)
 								}),
 							_1: A2(
 								_elm_lang$core$Task$attempt,
-								A2(_user$project$Main$LoadedMidiAndMp3, _p11, _p12),
+								A2(_user$project$Main$LoadedMidiAndMp3, _p14, _p15),
 								A2(
 									_elm_lang$core$Task$andThen,
 									function (mp3AudioBuf) {
@@ -13132,13 +13168,13 @@ var _user$project$Main$update = F2(
 													return {ctor: '_Tuple2', _0: v0, _1: v1};
 												})(mp3AudioBuf),
 											_user$project$BinaryDecoder_File$fetchArrayBuffer(
-												A2(_elm_lang$core$Basics_ops['++'], './contents/music/', _p11)));
+												A2(_elm_lang$core$Basics_ops['++'], './contents/music/', _p14)));
 									},
 									A2(
 										_elm_lang$core$Task$andThen,
 										_user$project$WebAudioApi$decodeAudioData,
 										_user$project$BinaryDecoder_File$fetchArrayBuffer(
-											A2(_elm_lang$core$Basics_ops['++'], './contents/music/', _p12)))))
+											A2(_elm_lang$core$Basics_ops['++'], './contents/music/', _p15)))))
 						};
 					},
 					A2(
@@ -13149,26 +13185,26 @@ var _user$project$Main$update = F2(
 							{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none},
 							A2(
 								_elm_lang$core$Maybe$map,
-								function (_p10) {
+								function (_p13) {
 									return A3(
 										_elm_lang$core$Basics$flip,
 										_user$project$Main$update,
 										model,
-										_user$project$Main$Stop(_p10));
+										_user$project$Main$Stop(_p13));
 								},
 								model.selected))));
 			case 'LoadedMidiAndMp3':
-				if (_p9._2.ctor === 'Ok') {
-					var _p16 = _p9._2._0._1;
-					var _p15 = _p9._2._0._0;
-					var _p14 = _p9._0;
-					var _p13 = A2(_user$project$BinaryDecoder_Byte$decode, _user$project$SmfDecoder$smf, _p16);
-					if (_p13.ctor === 'Ok') {
-						var midi = _user$project$Midi$fromSmf(_p13._0);
+				if (_p12._2.ctor === 'Ok') {
+					var _p19 = _p12._2._0._1;
+					var _p18 = _p12._2._0._0;
+					var _p17 = _p12._0;
+					var _p16 = A2(_user$project$BinaryDecoder_Byte$decode, _user$project$SmfDecoder$smf, _p19);
+					if (_p16.ctor === 'Ok') {
+						var midi = _user$project$Midi$fromSmf(_p16._0);
 						return A2(
 							_user$project$Main$andThen,
 							_user$project$Main$update(
-								A3(_user$project$Main$TriggerStart, _p14, midi, _p15)),
+								A3(_user$project$Main$TriggerStart, _p17, midi, _p18)),
 							{
 								ctor: '_Tuple2',
 								_0: _elm_lang$core$Native_Utils.update(
@@ -13176,14 +13212,14 @@ var _user$project$Main$update = F2(
 									{
 										midiContents: A3(
 											_elm_lang$core$Dict$update,
-											_p14,
+											_p17,
 											_elm_lang$core$Maybe$map(
 												function (midiContent) {
 													return _elm_lang$core$Native_Utils.update(
 														midiContent,
 														{
 															midiAndMp3: _elm_lang$core$Maybe$Just(
-																{ctor: '_Tuple2', _0: midi, _1: _p15})
+																{ctor: '_Tuple2', _0: midi, _1: _p18})
 														});
 												}),
 											model.midiContents)
@@ -13196,7 +13232,7 @@ var _user$project$Main$update = F2(
 							_0: _elm_lang$core$Native_Utils.update(
 								model,
 								{
-									error: A2(_user$project$Main$DecodeError, _p16, _p13._0)
+									error: A2(_user$project$Main$DecodeError, _p19, _p16._0)
 								}),
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
@@ -13205,23 +13241,23 @@ var _user$project$Main$update = F2(
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Main',
 						{
-							start: {line: 94, column: 3},
-							end: {line: 203, column: 8}
+							start: {line: 95, column: 5},
+							end: {line: 221, column: 14}
 						},
-						_p9)(
+						_p12)(
 						A2(
 							_elm_lang$core$Basics_ops['++'],
 							'failed to load file \'',
 							A2(
 								_elm_lang$core$Basics_ops['++'],
-								_p9._1,
+								_p12._1,
 								A2(
 									_elm_lang$core$Basics_ops['++'],
 									' or file ',
 									A2(
 										_elm_lang$core$Basics_ops['++'],
-										_p9._0,
-										A2(_elm_lang$core$Basics_ops['++'], '\': ', _p9._2._0))))));
+										_p12._0,
+										A2(_elm_lang$core$Basics_ops['++'], '\': ', _p12._2._0))))));
 				}
 			case 'Back':
 				return {
@@ -13237,27 +13273,27 @@ var _user$project$Main$update = F2(
 					_0: model,
 					_1: A2(
 						_elm_lang$core$Task$perform,
-						A3(_user$project$Main$Start, _p9._0, _p9._1, _p9._2),
+						A3(_user$project$Main$Start, _p12._0, _p12._1, _p12._2),
 						_elm_lang$core$Time$now)
 				};
 			case 'Start':
-				var _p18 = _p9._3;
-				var startTime = (_elm_lang$core$Native_Utils.cmp(model.currentTime, 0) > 0) ? (_p18 - (model.currentTime - model.startTime)) : _p18;
+				var _p21 = _p12._3;
+				var startTime = (_elm_lang$core$Native_Utils.cmp(model.currentTime, 0) > 0) ? (_p21 - (model.currentTime - model.startTime)) : _p21;
 				return A2(
 					_user$project$Main$andThen,
 					_user$project$Main$update(
-						_user$project$Main$Tick(_p18)),
+						_user$project$Main$Tick(_p21)),
 					{
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
 							{
 								startTime: startTime,
-								currentTime: _p18,
+								currentTime: _p21,
 								playing: true,
-								futureNotes: A2(_user$project$Main$prepareFutureNotes, _p18 - startTime, _p9._1)
+								futureNotes: A2(_user$project$Main$prepareFutureNotes, _p21 - startTime, _p12._1)
 							}),
-						_1: A3(_user$project$WebAudioApi$play, _p9._0, _p9._2, _p18 - startTime)
+						_1: A3(_user$project$WebAudioApi$play, _p12._0, _p12._2, _p21 - startTime)
 					});
 			case 'Stop':
 				return {
@@ -13265,7 +13301,7 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{playing: false}),
-					_1: _user$project$WebAudioApi$stop(_p9._0)
+					_1: _user$project$WebAudioApi$stop(_p12._0)
 				};
 			case 'Close':
 				return A2(
@@ -13296,7 +13332,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{currentTime: _p9._0}),
+						{currentTime: _p12._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ToggleConfig':
@@ -13313,7 +13349,7 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							gitHub: A2(_user$project$GitHub$update, _p9._0, model.gitHub)
+							gitHub: A2(_user$project$GitHub$update, _p12._0, model.gitHub)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -13333,8 +13369,8 @@ var _user$project$Main$viewContent = F2(
 				_1: {ctor: '[]'}
 			},
 			function () {
-				var _p19 = content.details;
-				switch (_p19.ctor) {
+				var _p22 = content.details;
+				switch (_p22.ctor) {
 					case 'Mp3':
 						return {
 							ctor: '::',
@@ -13349,7 +13385,7 @@ var _user$project$Main$viewContent = F2(
 										_1: {
 											ctor: '::',
 											_0: _elm_lang$html$Html_Attributes$src(
-												A2(_elm_lang$core$Basics_ops['++'], './contents/music/', _p19._0)),
+												A2(_elm_lang$core$Basics_ops['++'], './contents/music/', _p22._0)),
 											_1: {
 												ctor: '::',
 												_0: _elm_lang$html$Html_Attributes$controls(true),
@@ -13362,7 +13398,7 @@ var _user$project$Main$viewContent = F2(
 							}
 						};
 					case 'MidiAndMp3':
-						var _p23 = _p19._0;
+						var _p23 = _p22._0;
 						return A2(
 							_elm_lang$core$Maybe$withDefault,
 							{
@@ -13371,7 +13407,7 @@ var _user$project$Main$viewContent = F2(
 								_1: {
 									ctor: '::',
 									_0: _user$project$MidiPlayer$viewClosed(
-										A2(_user$project$Main$TriggerLoadMidiAndMp3, _p23, _p19._1)),
+										A2(_user$project$Main$TriggerLoadMidiAndMp3, _p23, _p22._1)),
 									_1: {ctor: '[]'}
 								}
 							},
@@ -13381,51 +13417,15 @@ var _user$project$Main$viewContent = F2(
 									return _elm_lang$core$Native_Utils.eq(
 										_elm_lang$core$Maybe$Just(midiContent.midiFile),
 										model.selected) ? _elm_lang$core$Maybe$Just(
-										A2(
-											_elm_lang$core$Maybe$withDefault,
-											{
+										{
+											ctor: '::',
+											_0: A2(_user$project$Main$title, content.hash, content.title),
+											_1: {
 												ctor: '::',
-												_0: A2(_user$project$Main$title, content.hash, content.title),
-												_1: {
-													ctor: '::',
-													_0: _user$project$MidiPlayer$viewClosed(_user$project$Main$Close),
-													_1: {
-														ctor: '::',
-														_0: _user$project$MidiPlayer$viewLoading(_user$project$Main$Close),
-														_1: {ctor: '[]'}
-													}
-												}
-											},
-											A2(
-												_elm_lang$core$Maybe$map,
-												function (_p20) {
-													var _p21 = _p20;
-													var _p22 = _p21._0;
-													return {
-														ctor: '::',
-														_0: A2(_user$project$Main$title, content.hash, content.title),
-														_1: {
-															ctor: '::',
-															_0: _user$project$MidiPlayer$viewClosed(_user$project$Main$Close),
-															_1: {
-																ctor: '::',
-																_0: A4(
-																	_user$project$MidiPlayer$view,
-																	{
-																		onBack: _user$project$Main$Back,
-																		onStart: A3(_user$project$Main$TriggerStart, _p23, _p22, _p21._1),
-																		onStop: _user$project$Main$Stop(_p23),
-																		onClose: _user$project$Main$Close
-																	},
-																	model.playing,
-																	(model.currentTime - model.startTime) + _p19._2,
-																	_p22),
-																_1: {ctor: '[]'}
-															}
-														}
-													};
-												},
-												midiContent.midiAndMp3))) : _elm_lang$core$Maybe$Nothing;
+												_0: _user$project$MidiPlayer$viewClosed(_user$project$Main$Close),
+												_1: {ctor: '[]'}
+											}
+										}) : _elm_lang$core$Maybe$Nothing;
 								},
 								A2(_elm_lang$core$Dict$get, _p23, model.midiContents)));
 					default:
@@ -13443,7 +13443,7 @@ var _user$project$Main$viewContent = F2(
 									},
 									{
 										ctor: '::',
-										_0: _user$project$Main$soundCloud(_p19._0),
+										_0: _user$project$Main$soundCloud(_p22._0),
 										_1: {ctor: '[]'}
 									}),
 								_1: {ctor: '[]'}
@@ -13615,63 +13615,63 @@ var _user$project$Main$contents = {
 																							_user$project$Main$Content,
 																							'#midnight',
 																							'真夜中の暇つぶし',
-																							A3(_user$project$Main$MidiAndMp3, '2014/midnight.mid', '2014/midnight.mp3', 0)),
+																							A3(_user$project$Main$MidiAndMp3, '2014/midnight.mid', '2014/midnight.mp3', 540)),
 																						_1: {
 																							ctor: '::',
 																							_0: A3(
 																								_user$project$Main$Content,
 																								'#string',
 																								'糸',
-																								A3(_user$project$Main$MidiAndMp3, '2013/string.mid', '2013/string.mp3', 0)),
+																								A3(_user$project$Main$MidiAndMp3, '2013/string.mid', '2013/string.mp3', 840)),
 																							_1: {
 																								ctor: '::',
 																								_0: A3(
 																									_user$project$Main$Content,
 																									'#autumn',
 																									'秋風',
-																									A3(_user$project$Main$MidiAndMp3, '2013/autumn.mid', '2013/autumn.mp3', 0)),
+																									A3(_user$project$Main$MidiAndMp3, '2013/autumn.mid', '2013/autumn.mp3', 1100)),
 																								_1: {
 																									ctor: '::',
 																									_0: A3(
 																										_user$project$Main$Content,
 																										'#afternoon-caos',
 																										'午後のカオス',
-																										A3(_user$project$Main$MidiAndMp3, '2013/afternoon_caos.mid', '2013/afternoon_caos.mp3', 0)),
+																										A3(_user$project$Main$MidiAndMp3, '2013/afternoon_caos.mid', '2013/afternoon_caos.mp3', 700)),
 																									_1: {
 																										ctor: '::',
 																										_0: A3(
 																											_user$project$Main$Content,
 																											'#michikusa',
 																											'道草',
-																											A3(_user$project$Main$MidiAndMp3, '2013/michikusa.mid', '2013/michikusa.mp3', 0)),
+																											A3(_user$project$Main$MidiAndMp3, '2013/michikusa.mid', '2013/michikusa.mp3', 860)),
 																										_1: {
 																											ctor: '::',
 																											_0: A3(
 																												_user$project$Main$Content,
 																												'#tmp',
 																												'Temporary',
-																												A3(_user$project$Main$MidiAndMp3, '2013/tmp.mid', '2013/tmp.mp3', 0)),
+																												A3(_user$project$Main$MidiAndMp3, '2013/tmp.mid', '2013/tmp.mp3', 1700)),
 																											_1: {
 																												ctor: '::',
 																												_0: A3(
 																													_user$project$Main$Content,
 																													'#hallucination',
 																													'幻覚',
-																													A3(_user$project$Main$MidiAndMp3, '2013/hallucination.mid', '2013/hallucination.mp3', 0)),
+																													A3(_user$project$Main$MidiAndMp3, '2013/hallucination.mid', '2013/hallucination.mp3', 1200)),
 																												_1: {
 																													ctor: '::',
 																													_0: A3(
 																														_user$project$Main$Content,
 																														'#blue',
 																														'Blue',
-																														A3(_user$project$Main$MidiAndMp3, '2013/blue.mid', '2013/blue.mp3', 0)),
+																														A3(_user$project$Main$MidiAndMp3, '2013/blue.mid', '2013/blue.mp3', 1660)),
 																													_1: {
 																														ctor: '::',
 																														_0: A3(
 																															_user$project$Main$Content,
 																															'#painter',
 																															'変人',
-																															A3(_user$project$Main$MidiAndMp3, '2012/painter.mid', '2012/painter.mp3', 0)),
+																															A3(_user$project$Main$MidiAndMp3, '2012/painter.mid', '2012/painter.mp3', 1800)),
 																														_1: {
 																															ctor: '::',
 																															_0: A3(
@@ -13679,15 +13679,7 @@ var _user$project$Main$contents = {
 																																'#uploar',
 																																'大騒ぎ',
 																																A3(_user$project$Main$MidiAndMp3, '2012/uploar.mid', '2012/uploar.mp3', 0)),
-																															_1: {
-																																ctor: '::',
-																																_0: A3(
-																																	_user$project$Main$Content,
-																																	'#air',
-																																	'air',
-																																	A3(_user$project$Main$MidiAndMp3, '2012/air.mid', '2012/air.mp3', 0)),
-																																_1: {ctor: '[]'}
-																															}
+																															_1: {ctor: '[]'}
 																														}
 																													}
 																												}
@@ -13730,7 +13722,7 @@ var _user$project$Main$initialMidiCountents = _elm_lang$core$Dict$fromList(
 					{
 						ctor: '_Tuple2',
 						_0: _p25,
-						_1: A3(_user$project$Main$MidiContent, _p25, _p24._1, _elm_lang$core$Maybe$Nothing)
+						_1: A4(_user$project$Main$MidiContent, _p25, _p24._1, _p24._2, _elm_lang$core$Maybe$Nothing)
 					});
 			} else {
 				return _elm_lang$core$Maybe$Nothing;
@@ -13935,7 +13927,11 @@ var _user$project$Main$view = function (model) {
 																		_1: {
 																			ctor: '::',
 																			_0: _user$project$Main$viewLink,
-																			_1: {ctor: '[]'}
+																			_1: {
+																				ctor: '::',
+																				_0: _user$project$Main$viewPlayer(model),
+																				_1: {ctor: '[]'}
+																			}
 																		}
 																	}
 																}
