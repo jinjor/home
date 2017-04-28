@@ -15,26 +15,22 @@ type AudioBuffer
     = AudioBuffer Json
 
 
-type alias Id =
-    String
-
-
 decodeAudioData : ArrayBuffer -> Task String AudioBuffer
 decodeAudioData =
     Native.WebAudioApi.decodeAudioData >> Task.map AudioBuffer
 
 
-port webAudioApiPlay : ( Id, Json, Time ) -> Cmd msg
+port webAudioApiPlay : ( Json, Time ) -> Cmd msg
 
 
-port webAudioApiStop : Id -> Cmd msg
+port webAudioApiStop : () -> Cmd msg
 
 
-play : Id -> AudioBuffer -> Time -> Cmd msg
-play id (AudioBuffer buffer) time =
-    webAudioApiPlay ( id, buffer, time / 1000 )
+play : AudioBuffer -> Time -> Cmd msg
+play (AudioBuffer buffer) time =
+    webAudioApiPlay ( buffer, time / 1000 )
 
 
-stop : Id -> Cmd msg
-stop id =
-    webAudioApiStop id
+stop : Cmd msg
+stop =
+    webAudioApiStop ()

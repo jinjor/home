@@ -43,22 +43,59 @@ a {
 .music-item {
     box-sizing: border-box;
     margin: 8px 4px;
-    padding: 1em;
     text-align: center;
-    width: calc(33% - 12px);
-    height: 80px;
+    width: calc(33% - 8px);
+    height: 180px;
 }
 
-.music-item.music-item-midi-and-mp3 {
-    background-color: #6d9;
+.music-item>a {
+    padding: 0.5em;
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
 }
 
-.music-item.music-item-mp3 {
-    background-color: #69d;
+.music-item.music-item-midi-and-mp3 .music-item-image {
+    background-color: #786;
+    color: #efd;
 }
 
-.music-item.music-item-soundcloud {
-    background-color: #d96;
+.music-item.music-item-mp3 .music-item-image {
+    background-color: #678;
+    color: #def;
+}
+
+.music-item.music-item-soundcloud .music-item-image {
+    background-color: #876;
+    color: #fed;
+}
+
+.music-item .music-item-image {
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    margin-bottom: 10px;
+    line-height: 100px;
+    box-shadow: 0px 2px 6px 1px rgba(0, 0, 0, 0.4);
+}
+
+.music-item>a:active .music-item-image {
+    margin-top: 2px;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.4);
+}
+
+.music-item.music-item-selected.music-item-midi-and-mp3 .music-item-image {
+    box-shadow: 0px 2px 20px 6px rgb(200, 255, 180);
+}
+
+.music-item.music-item-selected.music-item-mp3 .music-item-image {
+    box-shadow: 0px 2px 20px 6px rgb(180, 200, 255);
+}
+
+.music-item.music-item-selected.music-item-soundcloud .music-item-image {
+    box-shadow: 0px 2px 20px 6px rgb(255, 200, 180);
 }
 
 .header {
@@ -79,7 +116,7 @@ a {
 }
 
 .container {
-    width: 80%;
+    width: 90%;
     max-width: 480px;
     margin-left: auto;
     margin-right: auto;
@@ -115,13 +152,25 @@ a {
 
 .mp3 {
     display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .soundcloud {
     padding: 10px;
-    background-color: #ffc;
+    background-color: #fb6;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
+
+
+/* Repositories */
 
 .repository {
     margin: -5px;
