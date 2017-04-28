@@ -372,9 +372,9 @@ view model =
         []
         [ viewHeader
         , main_ [ class "body container" ]
-            [ p [] [ text "ジンジャー と Yosuke Torii のホームページ" ]
+            [ introduction "ジンジャー と Yosuke Torii のホームページ"
             , h2 [] [ Shape.note, text "Music" ]
-            , p [] [ text "世界を創る音楽" ]
+            , introduction "世界を創る音楽"
             , ul [ class "music-items" ] (List.map (viewMusicItem model) contents)
             , case model.error of
                 NoError ->
@@ -383,17 +383,22 @@ view model =
                 DecodeError buf e ->
                     text (toString e)
             , h2 [] [ Shape.note, text "Development" ]
-            , p [] [ text "プログラミングは芸術" ]
+            , introduction "プログラミングは芸術"
             , div [ class "repository" ] (GitHub.view model.gitHub |> Tuple.second)
             , h2 [] [ Shape.note, text "Paintings" ]
-            , p [] [ text "ペイントでお絵かき" ]
+            , introduction "ペイントでお絵かき"
             , viewPaintings
             , h2 [] [ Shape.note, text "Links" ]
-            , p [] [ text "" ]
+            , introduction ""
             , viewLink
             , viewPlayer model
             ]
         ]
+
+
+introduction : String -> Html msg
+introduction s =
+    p [ class "introduction" ] [ text s ]
 
 
 viewHeader : Html msg

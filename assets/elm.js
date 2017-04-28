@@ -13015,6 +13015,20 @@ var _user$project$Main$viewHeader = A2(
 			}),
 		_1: {ctor: '[]'}
 	});
+var _user$project$Main$introduction = function (s) {
+	return A2(
+		_elm_lang$html$Html$p,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('introduction'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(s),
+			_1: {ctor: '[]'}
+		});
+};
 var _user$project$Main$splitWhile = F3(
 	function (f, taken, list) {
 		splitWhile:
@@ -13916,14 +13930,7 @@ var _user$project$Main$view = function (model) {
 					},
 					{
 						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$p,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('ジンジャー と Yosuke Torii のホームページ'),
-								_1: {ctor: '[]'}
-							}),
+						_0: _user$project$Main$introduction('ジンジャー と Yosuke Torii のホームページ'),
 						_1: {
 							ctor: '::',
 							_0: A2(
@@ -13940,14 +13947,7 @@ var _user$project$Main$view = function (model) {
 								}),
 							_1: {
 								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$p,
-									{ctor: '[]'},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('世界を創る音楽'),
-										_1: {ctor: '[]'}
-									}),
+								_0: _user$project$Main$introduction('世界を創る音楽'),
 								_1: {
 									ctor: '::',
 									_0: A2(
@@ -13988,14 +13988,7 @@ var _user$project$Main$view = function (model) {
 												}),
 											_1: {
 												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$p,
-													{ctor: '[]'},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('プログラミングは芸術'),
-														_1: {ctor: '[]'}
-													}),
+												_0: _user$project$Main$introduction('プログラミングは芸術'),
 												_1: {
 													ctor: '::',
 													_0: A2(
@@ -14023,14 +14016,7 @@ var _user$project$Main$view = function (model) {
 															}),
 														_1: {
 															ctor: '::',
-															_0: A2(
-																_elm_lang$html$Html$p,
-																{ctor: '[]'},
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html$text('ペイントでお絵かき'),
-																	_1: {ctor: '[]'}
-																}),
+															_0: _user$project$Main$introduction('ペイントでお絵かき'),
 															_1: {
 																ctor: '::',
 																_0: _user$project$Main$viewPaintings,
@@ -14050,14 +14036,7 @@ var _user$project$Main$view = function (model) {
 																		}),
 																	_1: {
 																		ctor: '::',
-																		_0: A2(
-																			_elm_lang$html$Html$p,
-																			{ctor: '[]'},
-																			{
-																				ctor: '::',
-																				_0: _elm_lang$html$Html$text(''),
-																				_1: {ctor: '[]'}
-																			}),
+																		_0: _user$project$Main$introduction(''),
 																		_1: {
 																			ctor: '::',
 																			_0: _user$project$Main$viewLink,

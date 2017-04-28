@@ -39,6 +39,10 @@ a {
     margin-top: 2em;
 }
 
+.introduction {
+    margin-bottom: 1em;
+}
+
 .container {
     width: 90%;
     max-width: 780px;
