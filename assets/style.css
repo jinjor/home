@@ -34,6 +34,29 @@ a {
     cursor: pointer;
 }
 
+.body {
+    /*margin-top: 9em;*/
+    margin-top: 2em;
+}
+
+.container {
+    width: 90%;
+    max-width: 780px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media screen and (max-width:480px) {
+    .container {
+        max-width: 480px;
+    }
+}
+
+.midi-player {
+    position: relative;
+    width: 100%;
+}
+
 .music-items {
     display: flex;
     flex-wrap: wrap;
@@ -44,8 +67,14 @@ a {
     box-sizing: border-box;
     margin: 8px 4px;
     text-align: center;
-    width: calc(33% - 8px);
+    width: calc(20% - 8px);
     height: 180px;
+}
+
+@media screen and (max-width:480px) {
+    .music-item {
+        width: calc(33% - 8px);
+    }
 }
 
 .music-item>a {
@@ -110,24 +139,6 @@ a {
   mix-blend-mode: overlay;*/
 }
 
-.body {
-    /*margin-top: 9em;*/
-    margin-top: 2em;
-}
-
-.container {
-    width: 90%;
-    max-width: 480px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.midi-player {
-    position: relative;
-    width: 480px;
-    max-width: 100%;
-}
-
 .midi-player-empty {
     background-color: rgb(51, 0, 17);
     padding: 10px;
@@ -182,7 +193,7 @@ a {
 .repository-card {
     list-style-type: none;
     padding: 16px;
-    width: calc(50% - 10px);
+    width: calc(33.3% - 10px);
     box-sizing: border-box;
     margin: 5px;
     font-size: 14px;
