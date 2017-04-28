@@ -90,17 +90,17 @@ a {
     box-sizing: border-box;
 }
 
-.music-item.music-item-midi-and-mp3 .music-item-image {
+.music-item.music-item-midi-and-mp3 div.music-item-image {
     background-color: #786;
     color: #efd;
 }
 
-.music-item.music-item-mp3 .music-item-image {
+.music-item.music-item-mp3 div.music-item-image {
     background-color: #678;
     color: #def;
 }
 
-.music-item.music-item-soundcloud .music-item-image {
+.music-item.music-item-soundcloud div.music-item-image {
     background-color: #876;
     color: #fed;
 }
