@@ -10,6 +10,10 @@ var source = null;
 app.ports.webAudioApiPlay.subscribe(data => {
   let buffer = data[0];
   let time = data[1];
+  if(source) {
+    source.stop(0);
+    source = null;
+  }
   source = context.createBufferSource();
   source.buffer = buffer;
   source.connect(context.destination);
