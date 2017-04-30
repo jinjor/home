@@ -1,4 +1,4 @@
-module MidiPlayer exposing (Options, view, viewLoading, viewClosed)
+module MidiPlayer exposing (Options, view, viewLoading)
 
 import Time exposing (Time)
 import Html as H exposing (..)
@@ -16,6 +16,8 @@ type alias Options msg =
     { onBack : msg
     , onStart : msg
     , onStop : msg
+    , onFullscreen : msg
+    , onMinimize : msg
     , onClose : msg
     }
 
@@ -31,79 +33,59 @@ colors =
     List.map2 NoteColor (Colors.depth 1) (Colors.depth 5)
 
 
-view : Options msg -> Bool -> Time -> Midi -> Html msg
-view options playing time midi =
+view : Options msg -> Bool -> Bool -> Time -> Midi -> Html msg
+view options fullscreen playing time midi =
     let
         currentPosition =
             Midi.timeToPosition midi.timeBase midi.tempo time
-
-        height =
-            180
     in
         div
-            [ HA.class "midi-player midi-player-selected"
+            [ HA.class "midi-player"
             ]
             [ midi.tracks
                 |> List.map2 (viewTrack currentPosition) colors
-                |> svg (svgAttributes height currentPosition)
-            , centerLine height
-            , lazy3 control options midi.tracks playing
+                |> svg (svgAttributes currentPosition)
+            , centerLine
+            , control options fullscreen midi.tracks playing
             ]
 
 
 viewLoading : msg -> Html msg
 viewLoading onClose =
     div
-        [ HA.class "midi-player midi-player-selected"
+        [ HA.class "midi-player"
         ]
-        [ disabledControl onClose
+        [ svg (svgAttributes 0) []
+        , disabledControl onClose
         ]
 
 
-viewClosed : msg -> Html msg
-viewClosed onLoad =
-    div
-        [ HA.class "midi-player-empty"
-        , onClick onLoad
-        ]
-        [ H.text "Play" ]
+centerLine : Svg msg
+centerLine =
+    div [ HA.class "midi-player-center-line" ] []
 
 
-centerLine : Int -> Svg msg
-centerLine height =
-    div
-        [ HA.style
-            [ "border-right" => "solid 1px #555"
-            , "height" => px height
-            , "left" => "50%"
-            , "top" => "0"
-            , "position" => "absolute"
-            ]
-        ]
-        []
-
-
-svgAttributes : Int -> Int -> List (S.Attribute msg)
-svgAttributes height currentPosition =
+svgAttributes : Int -> List (S.Attribute msg)
+svgAttributes currentPosition =
     [ SA.width "10000"
     , SA.height "90"
     , viewBox (String.join " " <| List.map toString [ currentPosition - 5000, 0, 10000, 90 ])
     , preserveAspectRatio "none"
-    , HA.style
-        [ "width" => "100%"
-        , "height" => px height
-        , "background-color" => "black"
-        , "display" => "block"
-        ]
+    , SA.class "midi-player-display"
     ]
 
 
-control : Options msg -> List Track -> Bool -> Html msg
-control options tracks playing =
+control : Options msg -> Bool -> List Track -> Bool -> Html msg
+control options fullscreen tracks playing =
     div
         [ HA.class "midi-player-control" ]
         [ backButton options
         , playButton options playing
+        , if fullscreen then
+            miniButton options
+          else
+            fullButton options
+        , tweetButton options
         , closeButton options.onClose
         ]
 
@@ -119,7 +101,7 @@ backButton : Options msg -> Html msg
 backButton options =
     controlButton
         (onClick options.onBack)
-        (S.path [ SA.fill "#ddd", back ] [])
+        (S.path [ SA.fill "#ddd", SA.d "M12,10v10h2v-10zm14,0v10l-12,-5z" ] [])
 
 
 playButton : Options msg -> Bool -> Html msg
@@ -135,54 +117,47 @@ playButton options playing =
         (S.path
             [ SA.fill "#ddd"
             , if playing then
-                stop
+                SA.d "M10,8v14h4v-14zm10,0v14h4v-14z"
               else
-                start
+                SA.d "M10,8v14l16,-7z"
             ]
             []
         )
+
+
+fullButton : Options msg -> Html msg
+fullButton options =
+    controlButton
+        (onClick options.onFullscreen)
+        (S.path [ SA.stroke "#ddd", SA.strokeWidth "2", fill "transparent", SA.d "M11,9V21H25V9z" ] [])
+
+
+miniButton : Options msg -> Html msg
+miniButton options =
+    controlButton
+        (onClick options.onMinimize)
+        (S.path [ SA.stroke "#ddd", SA.strokeWidth "2", fill "transparent", SA.d "M13,21H23" ] [])
+
+
+tweetButton : Options msg -> Html msg
+tweetButton options =
+    controlButton
+        (onClick options.onClose)
+        (S.image [ SA.width "30", SA.height "30", SA.xlinkHref "./assets/Twitter_Logo_White_On_Image.svg" ] [])
 
 
 closeButton : msg -> Html msg
 closeButton onClose =
     controlButton
         (onClick onClose)
-        (S.path [ SA.stroke "#ddd", SA.strokeWidth "2", close ] [])
+        (S.path [ SA.stroke "#ddd", SA.strokeWidth "2", SA.d "M11,9L25,21zM11,21L25,9z" ] [])
 
 
 controlButton : H.Attribute msg -> Svg msg -> Html msg
 controlButton event inner =
     div
-        [ event, HA.style buttonStyles ]
+        [ event, SA.class "midi-player-control-button" ]
         [ svg [ SA.width "40", SA.height "30" ] [ inner ] ]
-
-
-back : S.Attribute msg
-back =
-    SA.d "M12,10v10h2v-10zm14,0v10l-12,-5z"
-
-
-start : S.Attribute msg
-start =
-    SA.d "M10,8v14l16,-7z"
-
-
-close : S.Attribute msg
-close =
-    SA.d "M11,9L25,21zM11,21L25,9z"
-
-
-stop : S.Attribute msg
-stop =
-    SA.d "M10,8v14h4v-14zm10,0v14h4v-14z"
-
-
-buttonStyles : List ( String, String )
-buttonStyles =
-    [ "width" => "40px"
-    , "bottom" => "0"
-    , "text-align" => "center"
-    ]
 
 
 viewTrack : Int -> NoteColor -> Track -> Html msg

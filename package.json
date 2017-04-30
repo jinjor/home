@@ -1,0 +1,23 @@
+{
+  "name": "home",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "elm-live src/Main.elm --output=assets/elm.js --open --warn",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jinjor/home.git"
+  },
+  "author": "Yosuke Torii <jinjorweb@gmail.com> (https://github.com/jinjor)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jinjor/home/issues"
+  },
+  "homepage": "https://github.com/jinjor/home",
+  "dependencies": {
+    "elm-live": "^2.7.4"
+  }
+}

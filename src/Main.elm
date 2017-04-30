@@ -37,6 +37,7 @@ type alias Model =
     , selectedMidiOut : Maybe String
     , showConfig : Bool
     , gitHub : GitHub
+    , fullscreen : Bool
     , error : Error
     }
 
@@ -59,6 +60,7 @@ type Msg
     | TriggerStart Midi AudioBuffer
     | Start Midi AudioBuffer Time
     | Stop
+    | Fullscreen Bool
     | Close
     | Tick Time
     | ToggleConfig
@@ -79,7 +81,7 @@ init =
                 , "jinjor/elm-debounce"
                 ]
     in
-        ( Model initialMidiCountents Nothing False 0 0 [] Nothing False gitHub NoError
+        ( Model initialMidiCountents Nothing False 0 0 [] Nothing False gitHub False NoError
         , cmd
         )
 
@@ -208,6 +210,9 @@ update msg model =
             ( { model | playing = False }
             , WebAudioApi.stop
             )
+
+        Fullscreen fullscreen ->
+            ( { model | fullscreen = fullscreen }, Cmd.none )
 
         Close ->
             model.selected
@@ -414,38 +419,49 @@ viewHeader =
 viewPlayer : Model -> Html Msg
 viewPlayer model =
     model.selected
-        |> Maybe.andThen
-            (\content ->
-                case content.details of
-                    Mp3 mp3File ->
-                        Just <|
-                            audio [ class "mp3", src ("./contents/music/" ++ mp3File), autoplay True, controls True ] []
-
-                    MidiAndMp3 midiFile mp3File delay ->
-                        Dict.get midiFile model.midiContents
-                            |> Maybe.map
-                                (\midiContent ->
-                                    midiContent.midiAndMp3
-                                        |> Maybe.map
-                                            (\( midi, mp3 ) ->
-                                                MidiPlayer.view
-                                                    { onBack = Back
-                                                    , onStart = TriggerStart midi mp3
-                                                    , onStop = Stop
-                                                    , onClose = Close
-                                                    }
-                                                    model.playing
-                                                    (model.currentTime - model.startTime + delay)
-                                                    midi
-                                            )
-                                        |> Maybe.withDefault (MidiPlayer.viewLoading Close)
-                                )
-
-                    SoundCloud id ->
-                        Just <|
-                            div [ class "soundcloud" ] [ soundCloud id ]
-            )
+        |> Maybe.map (viewPlayerHelp model)
         |> Maybe.withDefault (text "")
+
+
+viewPlayerHelp : Model -> Content -> Html Msg
+viewPlayerHelp model content =
+    div
+        [ class "player-container"
+        , classList [ ( "player-fullscreen", model.fullscreen ) ]
+        ]
+        [ case content.details of
+            Mp3 mp3File ->
+                div [ class "mp3" ]
+                    [ audio [ src ("./contents/music/" ++ mp3File), autoplay True, controls True ] []
+                    ]
+
+            MidiAndMp3 midiFile mp3File delay ->
+                Dict.get midiFile model.midiContents
+                    |> Maybe.map
+                        (\midiContent ->
+                            midiContent.midiAndMp3
+                                |> Maybe.map
+                                    (\( midi, mp3 ) ->
+                                        MidiPlayer.view
+                                            { onBack = Back
+                                            , onStart = TriggerStart midi mp3
+                                            , onStop = Stop
+                                            , onFullscreen = Fullscreen True
+                                            , onMinimize = Fullscreen False
+                                            , onClose = Close
+                                            }
+                                            model.fullscreen
+                                            model.playing
+                                            (model.currentTime - model.startTime + delay)
+                                            midi
+                                    )
+                                |> Maybe.withDefault (MidiPlayer.viewLoading Close)
+                        )
+                    |> Maybe.withDefault (text "")
+
+            SoundCloud id ->
+                div [ class "soundcloud" ] [ soundCloud id ]
+        ]
 
 
 viewMusicItem : Model -> Content -> Html Msg
@@ -467,7 +483,7 @@ viewMusicItem model content =
 
             MidiAndMp3 midiFile mp3File delay ->
                 viewMusicItemHelp clickMsg "music-item-midi-and-mp3" content.hash content.title selected <|
-                    viewMusicIcon content.image content.title "Midi+MP3"
+                    viewMusicIcon content.image content.title "Midi + MP3"
 
             SoundCloud id ->
                 viewMusicItemHelp clickMsg "music-item-soundcloud" content.hash content.title selected <|

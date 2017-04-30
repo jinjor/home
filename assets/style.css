@@ -56,10 +56,71 @@ a {
     }
 }
 
+
+/* Player */
+
+.player-container {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-top: solid 1px #000;
+}
+
+.player-container.player-fullscreen {
+    height: 100%;
+    background-color: #000;
+}
+
 .midi-player {
     position: relative;
+    height: 180px;
+    max-width: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
     width: 100%;
 }
+
+.player-container.player-fullscreen .midi-player {
+    height: 100%;
+}
+
+.midi-player-display {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    display: block;
+}
+
+.midi-player-center-line {
+    border-right: solid 1px #555;
+    height: 100%;
+    left: 50%;
+    top: 0;
+    position: absolute;
+}
+
+.midi-player-control {
+    width: 100%;
+    max-width: 100%;
+    height: 30px;
+    background-color: rgb(51, 0, 17);
+    display: flex;
+    position: absolute;
+    bottom: 0;
+}
+
+.midi-player-control-button {
+    width: 40px;
+    bottom: 0;
+    text-align: center;
+    flex-grow: 1;
+}
+
+
+/* Music */
 
 .music-items {
     display: flex;
@@ -90,27 +151,28 @@ a {
     box-sizing: border-box;
 }
 
-.music-item.music-item-midi-and-mp3 div.music-item-image {
+.music-item.music-item-midi-and-mp3 .music-item-image {
     background-color: #786;
     color: #efd;
 }
 
-.music-item.music-item-mp3 div.music-item-image {
+.music-item.music-item-mp3 .music-item-image {
     background-color: #678;
     color: #def;
 }
 
-.music-item.music-item-soundcloud div.music-item-image {
+.music-item.music-item-soundcloud .music-item-image {
     background-color: #876;
     color: #fed;
 }
 
 .music-item .music-item-image {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
+    line-height: 90px;
+    font-size: 12px;
     margin: auto;
     margin-bottom: 10px;
-    line-height: 100px;
     box-shadow: 0px 2px 6px 1px rgba(0, 0, 0, 0.4);
 }
 
@@ -143,45 +205,30 @@ a {
   mix-blend-mode: overlay;*/
 }
 
-.midi-player-empty {
-    background-color: rgb(51, 0, 17);
-    padding: 10px;
-    color: #eee;
-}
-
-.midi-player-selected {
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    width: 100%;
-}
-
-.midi-player-control {
-    width: 100%;
-    max-width: 100%;
-    height: 30px;
-    background-color: rgb(51, 0, 17);
-    display: flex;
-}
-
 .mp3 {
-    display: block;
-    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    height: 40px;
     box-sizing: border-box;
+}
+
+.mp3>audio {
+    display: block;
+    width: 100%;
 }
 
 .soundcloud {
-    padding: 10px;
     background-color: #fb6;
-    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    height: 120px;
     box-sizing: border-box;
+}
+
+.soundcloud>iframe {
+    height: 100%;
 }
 
 
