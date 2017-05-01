@@ -6,15 +6,15 @@ window.onerror = (message, url, line) => {
 let app = Elm.Main.fullscreen();
 let AudioContext = window.AudioContext || window.webkitAudioContext;
 let context = new AudioContext();
-var resume = function () {
-  context.resume();
-  setTimeout(function () {
-    if (context.state === 'running') {
-      document.body.removeEventListener('touchend', resume, false);
-    }
-  }, 0);
+var unlock = function() {
+	var buffer = context.createBuffer(1, 1, 22050);
+	var source = context.createBufferSource();
+	source.buffer = buffer;
+	source.connect(context.destination);
+	source.noteOn(0);
+  window.removeEventListener('touchstart', unlock, false);
 };
-document.body.addEventListener('touchend', resume, false);
+window.addEventListener('touchstart', unlock, false);
 
 var source = null;
 
