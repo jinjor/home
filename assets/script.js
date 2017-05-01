@@ -12,9 +12,9 @@ var unlock = function() {
 	source.buffer = buffer;
 	source.connect(context.destination);
 	source.start(0);
-  window.removeEventListener('touchstart', unlock, false);
+  window.removeEventListener('touchend', unlock, false);
 };
-window.addEventListener('touchstart', unlock, false);
+window.addEventListener('touchend', unlock, false);
 
 var source = null;
 

@@ -9,9 +9,9 @@ var unlock = function() {
 	source.buffer = buffer;
 	source.connect(context.destination);
 	source.start(0);
-  window.removeEventListener('touchstart', unlock, false);
+  window.removeEventListener('touchend', unlock, false);
 };
-window.addEventListener('touchstart', unlock, false);
+window.addEventListener('touchend', unlock, false);
 
 function decodeAudioData(arrayBuffer) {
   return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback){
