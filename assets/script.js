@@ -6,7 +6,6 @@ window.onerror = (message, url, line) => {
 let app = Elm.Main.fullscreen();
 let AudioContext = window.AudioContext || window.webkitAudioContext;
 let context = new AudioContext();
-var source = null;
 var resume = function () {
   context.resume();
   setTimeout(function () {
@@ -16,6 +15,8 @@ var resume = function () {
   }, 0);
 };
 document.body.addEventListener('touchend', resume, false);
+
+var source = null;
 
 app.ports.webAudioApiPlay.subscribe(data => {
   let buffer = data[0];
