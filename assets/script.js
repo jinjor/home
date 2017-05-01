@@ -11,7 +11,7 @@ var unlock = function() {
 	var source = context.createBufferSource();
 	source.buffer = buffer;
 	source.connect(context.destination);
-	source.noteOn(0);
+	source.start(0);
   window.removeEventListener('touchstart', unlock, false);
 };
 window.addEventListener('touchstart', unlock, false);
