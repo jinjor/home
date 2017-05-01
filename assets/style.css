@@ -34,6 +34,10 @@ a {
     cursor: pointer;
 }
 
+a:hover {
+    /*text-decoration: underline;*/
+}
+
 .body {
     /*margin-top: 9em;*/
     margin-top: 2em;
@@ -193,6 +197,18 @@ a {
     box-shadow: 0px 2px 20px 6px rgb(255, 200, 180);
 }
 
+.music-item-label {}
+
+.music-item-description {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #aaa;
+}
+
+.music-item-description a {
+    color: #abd;
+}
+
 .header {
     padding-top: 1.5em;
     padding-bottom: 0.5em;
@@ -303,11 +319,6 @@ a {
     margin-right: 3px;
 }
 
-
-/*.repository-card-stats-language-color-elm {
-  background-color: #60B5CC;
-}*/
-
 .repository-card-stats-stargazers {
     margin-left: 16px;
 }
@@ -318,35 +329,13 @@ a {
 
 .paintings-container {
     display: flex;
-    justify-content: space-between;
-    /*margin-bottom: 5px;*/
 }
-
-.paintings-container.paintings-container-single>div {
-    width: 100%;
-}
-
-.paintings-container.paintings-container-single>div>img {
-    width: 100%;
-}
-
-
-/*.paintings-container.paintings-container-small > div {
-  flex-grow: 1;
-}*/
 
 .paintings-container.paintings-container-small .paintings-image {
-    height: 150px;
+    max-height: 200px;
 }
 
 .paintings-image {
     max-width: 100%;
     vertical-align: bottom;
-}
-
-ottom;
-
-}
-ottom;
-
 }

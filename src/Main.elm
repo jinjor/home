@@ -15,6 +15,7 @@ import Midi exposing (Midi, Note, Detailed)
 import MidiPlayer
 import GitHub exposing (GitHub)
 import WebAudioApi exposing (AudioBuffer)
+import Markdown
 
 
 main : Program Never Model Msg
@@ -291,46 +292,46 @@ subscriptions model =
 contents : List Content
 contents =
     -- 2017
-    [ Content "#monday-morning" "Monday Morning" Nothing (MidiAndMp3 "2017/monday-morning.mid" "2017/monday-morning.mp3" 1250)
-    , Content "#train-journey" "列車の旅" (Just "train.jpg") (SoundCloud "318647824")
-    , Content "#good-night" "おやすみ" (Just "inn.jpg") (SoundCloud "318080873")
-    , Content "#little-world" "Little World" (Just "field.jpg") (SoundCloud "306090165")
+    [ Content "#monday-morning" "Monday Morning" "" Nothing (MidiAndMp3 "2017/monday-morning.mid" "2017/monday-morning.mp3" 1250)
+    , Content "#train-journey" "列車の旅" "「オレ宿」の裏企画「オレが考えた発車ベルその壱」参加曲" (Just "train.jpg") (SoundCloud "318647824")
+    , Content "#good-night" "おやすみ" "[「オレが考えた宿で一泊」](http://carrotwine.muse.bindsite.jp/myinn.html)参加曲" (Just "inn.jpg") (SoundCloud "318080873")
+    , Content "#little-world" "Little World" "[「オレが考えたフィールド曲」](http://carrotwine.muse.bindsite.jp/dtmmeeting4.html)参加曲" (Just "field.jpg") (SoundCloud "306090165")
       -- 2016
-    , Content "#hokora" "ほこら" (Just "hokora.jpg") (MidiAndMp3 "2016/hokora.mid" "2016/hokora.mp3" 2770)
-    , Content "#hokora-fc" "ほこら (FCアレンジ by ハイデンさん)" (Just "hokora.jpg") (Mp3 "2016/hokora-fc.mp3")
-    , Content "#kira-kira" "Kira Kira" Nothing (SoundCloud "278194362")
-    , Content "#candy" "Candy" Nothing (SoundCloud "240810123")
+    , Content "#hokora" "ほこら" "[「オレが考えたほこらの曲」](http://carrotwine.muse.bindsite.jp/dtmermeeting.html)参加曲" (Just "hokora.jpg") (MidiAndMp3 "2016/hokora.mid" "2016/hokora.mp3" 2770)
+    , Content "#hokora-fc" "ほこら (FCアレンジ)" "by [ハイデン](https://twitter.com/hydden0310)さん" (Just "hokora.jpg") (Mp3 "2016/hokora-fc.mp3")
+    , Content "#kira-kira" "Kira Kira" "" Nothing (SoundCloud "278194362")
+    , Content "#candy" "Candy" "" Nothing (SoundCloud "240810123")
       -- block
-    , Content "#ancient" "ancient" (Just "block.png") (Mp3 "2016/ancient.mp3")
+    , Content "#ancient" "ancient" "スマホゲーム [Block Brothers](http://blockbros.net/) BGM" (Just "block.png") (Mp3 "2016/ancient.mp3")
       -- , Content "#beach" "beach" (Just "block.png") (Mp3 "2016/beach.mp3")
-    , Content "#cloud" "cloud" (Just "block.png") (Mp3 "2016/cloud.mp3")
-    , Content "#ice" "ice" (Just "block.png") (Mp3 "2016/ice.mp3")
-    , Content "#jungle" "jungle" (Just "block.png") (Mp3 "2016/jungle.mp3")
+    , Content "#cloud" "cloud" "スマホゲーム [Block Brothers](http://blockbros.net/) BGM" (Just "block.png") (Mp3 "2016/cloud.mp3")
+    , Content "#ice" "ice" "スマホゲーム [Block Brothers](http://blockbros.net/) 未収録曲" (Just "block.png") (Mp3 "2016/ice.mp3")
+    , Content "#jungle" "jungle" "スマホゲーム [Block Brothers](http://blockbros.net/) 未収録曲" (Just "block.png") (Mp3 "2016/jungle.mp3")
       -- , Content "#kingdom" "kingdom" Nothing (Mp3 "2016/kingdom.mp3")
       -- , Content "#night" "night" Nothing (Mp3 "2016/night.mp3")
-    , Content "#ninja" "ninja" (Just "block.png") (Mp3 "2016/ninja.mp3")
-    , Content "#volcano" "volcano" (Just "block.png") (Mp3 "2016/volcano.mp3")
+    , Content "#ninja" "ninja" "スマホゲーム [Block Brothers](http://blockbros.net/) BGM" (Just "block.png") (Mp3 "2016/ninja.mp3")
+    , Content "#volcano" "volcano" "スマホゲーム [Block Brothers](http://blockbros.net/) 未収録曲" (Just "block.png") (Mp3 "2016/volcano.mp3")
       -- 2015
-    , Content "#megalopolis" "Megalopolis" Nothing (SoundCloud "236197155")
-    , Content "#voice-of-water" "Voice of Water" Nothing (SoundCloud "233781385")
-    , Content "#wedding-march" "Wedding March" Nothing (SoundCloud "228037751")
-    , Content "#glass-city" "Glass City" Nothing (SoundCloud "200427994")
+    , Content "#megalopolis" "Megalopolis" "" Nothing (SoundCloud "236197155")
+    , Content "#voice-of-water" "Voice of Water" "" Nothing (SoundCloud "233781385")
+    , Content "#wedding-march" "Wedding March" "自作自演" Nothing (SoundCloud "228037751")
+    , Content "#glass-city" "Glass City" "" Nothing (SoundCloud "200427994")
       -- 2014
-    , Content "#summer" "Summer" Nothing (MidiAndMp3 "2014/summer.mid" "2014/summer.mp3" 1420)
-    , Content "#sakura" "桜舞う" Nothing (MidiAndMp3 "2014/sakura.mid" "2014/sakura.mp3" 1600)
-    , Content "#midnight" "真夜中の暇つぶし" Nothing (MidiAndMp3 "2014/midnight.mid" "2014/midnight.mp3" 540)
+    , Content "#summer" "Summer" "" Nothing (MidiAndMp3 "2014/summer.mid" "2014/summer.mp3" 1420)
+    , Content "#sakura" "桜舞う" "" Nothing (MidiAndMp3 "2014/sakura.mid" "2014/sakura.mp3" 1600)
+    , Content "#midnight" "真夜中の暇つぶし" "" Nothing (MidiAndMp3 "2014/midnight.mid" "2014/midnight.mp3" 540)
       -- 2013
-    , Content "#string" "糸" Nothing (MidiAndMp3 "2013/string.mid" "2013/string.mp3" 840)
-    , Content "#autumn" "秋風" Nothing (MidiAndMp3 "2013/autumn.mid" "2013/autumn.mp3" 1100)
-    , Content "#afternoon-caos" "午後のカオス" Nothing (MidiAndMp3 "2013/afternoon_caos.mid" "2013/afternoon_caos.mp3" 700)
-    , Content "#michikusa" "道草" Nothing (MidiAndMp3 "2013/michikusa.mid" "2013/michikusa.mp3" 860)
-    , Content "#tmp" "Temporary" Nothing (MidiAndMp3 "2013/tmp.mid" "2013/tmp.mp3" 1700)
-    , Content "#hallucination" "幻覚" Nothing (MidiAndMp3 "2013/hallucination.mid" "2013/hallucination.mp3" 1200)
-    , Content "#blue" "Blue" Nothing (MidiAndMp3 "2013/blue.mid" "2013/blue.mp3" 1660)
+    , Content "#string" "糸" "" Nothing (MidiAndMp3 "2013/string.mid" "2013/string.mp3" 840)
+    , Content "#autumn" "秋風" "" Nothing (MidiAndMp3 "2013/autumn.mid" "2013/autumn.mp3" 1100)
+    , Content "#afternoon-caos" "午後のカオス" "" Nothing (MidiAndMp3 "2013/afternoon_caos.mid" "2013/afternoon_caos.mp3" 700)
+    , Content "#michikusa" "道草" "" Nothing (MidiAndMp3 "2013/michikusa.mid" "2013/michikusa.mp3" 860)
+    , Content "#tmp" "Temporary" "" Nothing (MidiAndMp3 "2013/tmp.mid" "2013/tmp.mp3" 1700)
+    , Content "#hallucination" "幻覚" "" Nothing (MidiAndMp3 "2013/hallucination.mid" "2013/hallucination.mp3" 1200)
+    , Content "#blue" "Blue" "" Nothing (MidiAndMp3 "2013/blue.mid" "2013/blue.mp3" 1660)
       -- 2012
-    , Content "#painter" "変人" Nothing (MidiAndMp3 "2012/painter.mid" "2012/painter.mp3" 1800)
-    , Content "#uploar" "大騒ぎ" Nothing (MidiAndMp3 "2012/uploar.mid" "2012/uploar.mp3" 0)
-      -- , Content "#air" "air" Nothing (MidiAndMp3 "2012/air.mid" "2012/air.mp3" 0) -- TODO: call stack exceeded?
+    , Content "#painter" "変人" "" Nothing (MidiAndMp3 "2012/painter.mid" "2012/painter.mp3" 1800)
+    , Content "#uploar" "大騒ぎ" "" Nothing (MidiAndMp3 "2012/uploar.mid" "2012/uploar.mp3" 0)
+      -- , Content "#air" "air" ""　Nothing (MidiAndMp3 "2012/air.mid" "2012/air.mp3" 0) -- TODO: call stack exceeded?
     ]
 
 
@@ -352,6 +353,7 @@ initialMidiCountents =
 type alias Content =
     { hash : String
     , title : String
+    , description : String
     , image : Maybe String
     , details : Details
     }
@@ -478,15 +480,15 @@ viewMusicItem model content =
     in
         case content.details of
             Mp3 mp3File ->
-                viewMusicItemHelp clickMsg "music-item-mp3" content.hash content.title selected <|
+                viewMusicItemHelp clickMsg "music-item-mp3" content.hash content.title content.description selected <|
                     viewMusicIcon content.image content.title "MP3"
 
             MidiAndMp3 midiFile mp3File delay ->
-                viewMusicItemHelp clickMsg "music-item-midi-and-mp3" content.hash content.title selected <|
+                viewMusicItemHelp clickMsg "music-item-midi-and-mp3" content.hash content.title content.description selected <|
                     viewMusicIcon content.image content.title "Midi + MP3"
 
             SoundCloud id ->
-                viewMusicItemHelp clickMsg "music-item-soundcloud" content.hash content.title selected <|
+                viewMusicItemHelp clickMsg "music-item-soundcloud" content.hash content.title content.description selected <|
                     viewMusicIcon content.image content.title "SoundCloud"
 
 
@@ -497,8 +499,8 @@ viewMusicIcon maybeUrl alt_ tipe =
         |> Maybe.withDefault (div [ class "music-item-image" ] [ text tipe ])
 
 
-viewMusicItemHelp : msg -> String -> String -> String -> Bool -> Html msg -> Html msg
-viewMusicItemHelp clickMsg class_ hash label selected image =
+viewMusicItemHelp : msg -> String -> String -> String -> String -> Bool -> Html msg -> Html msg
+viewMusicItemHelp clickMsg class_ hash label description selected image =
     li
         [ classList
             [ ( "music-item", True )
@@ -509,7 +511,8 @@ viewMusicItemHelp clickMsg class_ hash label selected image =
         ]
         [ a [ class "music-item-link", href hash ]
             [ image
-            , div [] [ text label ]
+            , div [ class "music-item-label" ] [ text label ]
+            , Markdown.toHtml [ class "music-item-description" ] description
             ]
         ]
 

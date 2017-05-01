@@ -7,6 +7,16 @@ let app = Elm.Main.fullscreen();
 let AudioContext = window.AudioContext || window.webkitAudioContext;
 let context = new AudioContext();
 var source = null;
+var resume = function () {
+  context.resume();
+  setTimeout(function () {
+    if (context.state === 'running') {
+      document.body.removeEventListener('touchend', resume, false);
+    }
+  }, 0);
+};
+document.body.addEventListener('touchend', resume, false);
+
 app.ports.webAudioApiPlay.subscribe(data => {
   let buffer = data[0];
   let time = data[1];
