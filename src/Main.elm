@@ -17,6 +17,7 @@ import GitHub exposing (GitHub)
 import WebAudioApi exposing (AudioBuffer)
 import Markdown
 import Navigation exposing (Location)
+import Json.Decode as Decode
 
 
 main : Program Never Model Msg
@@ -56,9 +57,9 @@ type alias FileName =
 
 type Msg
     = NoOp
-    | OpenPlayer Content
-    | TriggerLoadMidiAndMp3 FileName FileName
-    | LoadedMidiAndMp3 FileName FileName (Result String ( AudioBuffer, ArrayBuffer ))
+    | OpenPlayer Bool Content
+    | TriggerLoadMidiAndMp3 Bool FileName FileName
+    | LoadedMidiAndMp3 Bool FileName FileName (Result String ( AudioBuffer, ArrayBuffer ))
     | Back
     | TriggerStart Midi AudioBuffer
     | Start Midi AudioBuffer Time
@@ -86,9 +87,25 @@ init location =
         ]
         |> andThen
             (\gitHub ->
-                ( Model initialMidiCountents Nothing False 0 0 [] Nothing False gitHub False NoError
-                , moveToCard location.hash
-                )
+                let
+                    model =
+                        Model initialMidiCountents Nothing False 0 0 [] Nothing False gitHub False NoError
+
+                    id =
+                        String.dropLeft 1 location.hash
+
+                    firstContent =
+                        contents
+                            |> List.filter (\content -> content.hash == id)
+                            |> List.head
+                in
+                    case firstContent of
+                        Just content ->
+                            update (OpenPlayer True content) model
+                                |> andThen (\model -> ( model, moveToCard id ))
+
+                        Nothing ->
+                            ( model, Cmd.none )
             )
 
 
@@ -107,28 +124,32 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
-        OpenPlayer content ->
+        OpenPlayer isInitialLoad content ->
             model.selected
                 |> Maybe.map (\_ -> update Stop model)
                 |> Maybe.withDefault ( model, Cmd.none )
                 |> andThen (update Back)
+                |> andThen
+                    (if isInitialLoad then
+                        update (Fullscreen True)
+                     else
+                        flip (,) Cmd.none
+                    )
                 |> andThen (\model -> ( { model | selected = Just content }, Cmd.none ))
                 |> andThen
                     (\model ->
                         case content.details of
                             Mp3 mp3File ->
-                                --TODO
                                 ( model, Cmd.none )
 
                             MidiAndMp3 midiFile mp3File delay ->
-                                update (TriggerLoadMidiAndMp3 midiFile mp3File) model
+                                update (TriggerLoadMidiAndMp3 isInitialLoad midiFile mp3File) model
 
                             SoundCloud id ->
-                                --TODO
                                 ( model, Cmd.none )
                     )
 
-        TriggerLoadMidiAndMp3 midiFile mp3File ->
+        TriggerLoadMidiAndMp3 isInitialLoad midiFile mp3File ->
             ( model
             , File.fetchArrayBuffer ("./contents/music/" ++ mp3File)
                 |> Task.andThen WebAudioApi.decodeAudioData
@@ -137,10 +158,10 @@ update msg model =
                         File.fetchArrayBuffer ("./contents/music/" ++ midiFile)
                             |> Task.map ((,) mp3AudioBuf)
                     )
-                |> Task.attempt (LoadedMidiAndMp3 midiFile mp3File)
+                |> Task.attempt (LoadedMidiAndMp3 isInitialLoad midiFile mp3File)
             )
 
-        LoadedMidiAndMp3 midiFile _ (Ok ( mp3AudioBuffer, smfBuffer )) ->
+        LoadedMidiAndMp3 isInitialLoad midiFile _ (Ok ( mp3AudioBuffer, smfBuffer )) ->
             case Byte.decode SmfDecoder.smf smfBuffer of
                 Ok smf ->
                     let
@@ -161,7 +182,12 @@ update msg model =
                           }
                         , Cmd.none
                         )
-                            |> andThen (update (TriggerStart midi mp3AudioBuffer))
+                            |> andThen
+                                (if isInitialLoad then
+                                    flip (,) Cmd.none
+                                 else
+                                    update (TriggerStart midi mp3AudioBuffer)
+                                )
 
                 Err e ->
                     ( { model
@@ -170,7 +196,7 @@ update msg model =
                     , Cmd.none
                     )
 
-        LoadedMidiAndMp3 mp3File midiFile (Err s) ->
+        LoadedMidiAndMp3 _ mp3File midiFile (Err s) ->
             Debug.crash <|
                 "failed to load file '"
                     ++ midiFile
@@ -481,7 +507,7 @@ viewMusicItem model content =
             if selected then
                 Close
             else
-                OpenPlayer content
+                OpenPlayer False content
     in
         case content.details of
             Mp3 mp3File ->
@@ -504,7 +530,7 @@ viewMusicIcon maybeUrl alt_ tipe =
         |> Maybe.withDefault (div [ class "music-item-image" ] [ text tipe ])
 
 
-viewMusicItemHelp : msg -> String -> String -> String -> String -> Bool -> Html msg -> Html msg
+viewMusicItemHelp : Msg -> String -> String -> String -> String -> Bool -> Html Msg -> Html Msg
 viewMusicItemHelp clickMsg class_ id_ label description selected image =
     li
         [ id id_
@@ -515,7 +541,11 @@ viewMusicItemHelp clickMsg class_ id_ label description selected image =
             ]
         , onClick clickMsg
         ]
-        [ a [ class "music-item-link", href ("#" ++ id_) ]
+        [ a
+            [ class "music-item-link"
+            , href ("#" ++ id_)
+            , onWithOptions "click" { defaultOptions | preventDefault = True } (Decode.succeed NoOp)
+            ]
             [ image
             , div [ class "music-item-label" ] [ text label ]
             , Markdown.toHtml [ class "music-item-description" ] description

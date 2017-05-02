@@ -74,7 +74,7 @@ a:hover {
 
 .player-container.player-fullscreen {
     height: 100%;
-    background-color: #000;
+    /*background-color: #000;*/
 }
 
 .midi-player {
@@ -222,10 +222,10 @@ a:hover {
 }
 
 .mp3 {
-    top: 0;
+    position: absolute;
+    bottom: 0;
     left: 0;
     width: 100%;
-    height: 40px;
     box-sizing: border-box;
 }
 
@@ -235,8 +235,9 @@ a:hover {
 }
 
 .soundcloud {
+    position: absolute;
     background-color: #fb6;
-    top: 0;
+    bottom: 0;
     left: 0;
     width: 100%;
     height: 120px;

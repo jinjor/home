@@ -17,8 +17,8 @@ var unlock = function() {
 window.addEventListener('touchend', unlock, false);
 
 var source = null;
-app.ports.moveToCard.subscribe(hash => {
-    var element = document.getElementById(hash.substring(1));
+app.ports.moveToCard.subscribe(id => {
+    var element = document.getElementById(id);
     if (element) {
         var rect = element.getBoundingClientRect();
         setTimeout(() => {
