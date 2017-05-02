@@ -1,4 +1,4 @@
-module MidiPlayer exposing (Options, view, viewLoading)
+module MidiPlayer exposing (Options, view, viewLoading, closeButton)
 
 import Time exposing (Time)
 import Html as H exposing (..)
@@ -33,8 +33,8 @@ colors =
     List.map2 NoteColor (Colors.depth 1) (Colors.depth 5)
 
 
-view : Options msg -> Bool -> Bool -> Time -> Midi -> Html msg
-view options fullscreen playing time midi =
+view : Options msg -> String -> Bool -> Bool -> Time -> Midi -> Html msg
+view options id fullscreen playing time midi =
     let
         currentPosition =
             Midi.timeToPosition midi.timeBase midi.tempo time
@@ -46,7 +46,7 @@ view options fullscreen playing time midi =
                 |> List.map2 (viewTrack currentPosition) colors
                 |> svg (svgAttributes currentPosition)
             , centerLine
-            , control options fullscreen midi.tracks playing
+            , control options id fullscreen midi.tracks playing
             ]
 
 
@@ -75,8 +75,8 @@ svgAttributes currentPosition =
     ]
 
 
-control : Options msg -> Bool -> List Track -> Bool -> Html msg
-control options fullscreen tracks playing =
+control : Options msg -> String -> Bool -> List Track -> Bool -> Html msg
+control options id fullscreen tracks playing =
     div
         [ HA.class "midi-player-control" ]
         [ backButton options
@@ -85,7 +85,7 @@ control options fullscreen tracks playing =
             miniButton options
           else
             fullButton options
-        , tweetButton options
+        , tweetButton options id
         , closeButton options.onClose
         ]
 
@@ -139,11 +139,35 @@ miniButton options =
         (S.path [ SA.stroke "#ddd", SA.strokeWidth "2", fill "transparent", SA.d "M13,21H23" ] [])
 
 
-tweetButton : Options msg -> Html msg
-tweetButton options =
+tweetButton : Options msg -> String -> Html msg
+tweetButton options id =
     controlButton
         (onClick options.onClose)
-        (S.image [ SA.width "30", SA.height "30", SA.xlinkHref "./assets/Twitter_Logo_White_On_Image.svg" ] [])
+        (S.a
+            [ SA.xlinkHref (tweetUrl id)
+            , SA.target "_blank"
+            ]
+            [ S.image
+                [ SA.width "30"
+                , SA.height "30"
+                , SA.xlinkHref "./assets/Twitter_Logo_White_On_Image.svg"
+                ]
+                []
+            ]
+        )
+
+
+tweetUrl : String -> String
+tweetUrl id =
+    "https://twitter.com/intent/tweet"
+        ++ "?original_referer="
+        ++ "http%3A%2F%2Flocalhost%3A8000%2F"
+        ++ "&ref_src="
+        ++ "twsrc%5Etfw"
+        ++ "&text="
+        ++ "TODO"
+        ++ "&tw_p=tweetbutton&url=https://jinjor.github.io/home/#"
+        ++ id
 
 
 closeButton : msg -> Html msg

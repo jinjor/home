@@ -12945,27 +12945,68 @@ var _user$project$MidiPlayer$closeButton = function (onClose) {
 			},
 			{ctor: '[]'}));
 };
-var _user$project$MidiPlayer$tweetButton = function (options) {
+var _user$project$MidiPlayer$tweetUrl = function (id) {
 	return A2(
-		_user$project$MidiPlayer$controlButton,
-		_elm_lang$html$Html_Events$onClick(options.onClose),
+		_elm_lang$core$Basics_ops['++'],
+		'https://twitter.com/intent/tweet',
 		A2(
-			_elm_lang$svg$Svg$image,
-			{
-				ctor: '::',
-				_0: _elm_lang$svg$Svg_Attributes$width('30'),
-				_1: {
+			_elm_lang$core$Basics_ops['++'],
+			'?original_referer=',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'http%3A%2F%2Flocalhost%3A8000%2F',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'&ref_src=',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'twsrc%5Etfw',
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'&text=',
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'TODO',
+								A2(_elm_lang$core$Basics_ops['++'], '&tw_p=tweetbutton&url=https://jinjor.github.io/home/#', id))))))));
+};
+var _user$project$MidiPlayer$tweetButton = F2(
+	function (options, id) {
+		return A2(
+			_user$project$MidiPlayer$controlButton,
+			_elm_lang$html$Html_Events$onClick(options.onClose),
+			A2(
+				_elm_lang$svg$Svg$a,
+				{
 					ctor: '::',
-					_0: _elm_lang$svg$Svg_Attributes$height('30'),
+					_0: _elm_lang$svg$Svg_Attributes$xlinkHref(
+						_user$project$MidiPlayer$tweetUrl(id)),
 					_1: {
 						ctor: '::',
-						_0: _elm_lang$svg$Svg_Attributes$xlinkHref('./assets/Twitter_Logo_White_On_Image.svg'),
+						_0: _elm_lang$svg$Svg_Attributes$target('_blank'),
 						_1: {ctor: '[]'}
 					}
-				}
-			},
-			{ctor: '[]'}));
-};
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$svg$Svg$image,
+						{
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$width('30'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$height('30'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$xlinkHref('./assets/Twitter_Logo_White_On_Image.svg'),
+									_1: {ctor: '[]'}
+								}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {ctor: '[]'}
+				}));
+	});
 var _user$project$MidiPlayer$miniButton = function (options) {
 	return A2(
 		_user$project$MidiPlayer$controlButton,
@@ -13066,8 +13107,8 @@ var _user$project$MidiPlayer$disabledControl = function (onClose) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$MidiPlayer$control = F4(
-	function (options, fullscreen, tracks, playing) {
+var _user$project$MidiPlayer$control = F5(
+	function (options, id, fullscreen, tracks, playing) {
 		return A2(
 			_elm_lang$html$Html$div,
 			{
@@ -13086,7 +13127,7 @@ var _user$project$MidiPlayer$control = F4(
 						_0: fullscreen ? _user$project$MidiPlayer$miniButton(options) : _user$project$MidiPlayer$fullButton(options),
 						_1: {
 							ctor: '::',
-							_0: _user$project$MidiPlayer$tweetButton(options),
+							_0: A2(_user$project$MidiPlayer$tweetButton, options, id),
 							_1: {
 								ctor: '::',
 								_0: _user$project$MidiPlayer$closeButton(options.onClose),
@@ -13185,8 +13226,8 @@ var _user$project$MidiPlayer$colors = A3(
 	_user$project$MidiPlayer$NoteColor,
 	_user$project$Colors$depth(1),
 	_user$project$Colors$depth(5));
-var _user$project$MidiPlayer$view = F5(
-	function (options, fullscreen, playing, time, midi) {
+var _user$project$MidiPlayer$view = F6(
+	function (options, id, fullscreen, playing, time, midi) {
 		var currentPosition = A3(_user$project$Midi$timeToPosition, midi.timeBase, midi.tempo, time);
 		return A2(
 			_elm_lang$html$Html$div,
@@ -13210,7 +13251,7 @@ var _user$project$MidiPlayer$view = F5(
 					_0: _user$project$MidiPlayer$centerLine,
 					_1: {
 						ctor: '::',
-						_0: A4(_user$project$MidiPlayer$control, options, fullscreen, midi.tracks, playing),
+						_0: A5(_user$project$MidiPlayer$control, options, id, fullscreen, midi.tracks, playing),
 						_1: {ctor: '[]'}
 					}
 				}
@@ -13219,32 +13260,32 @@ var _user$project$MidiPlayer$view = F5(
 
 var _user$project$Native_WebAudioApi = function() {
 
-var AudioContext = window.AudioContext || window.webkitAudioContext;
-var context = new AudioContext();
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
+    var context = new AudioContext();
 
-var unlock = function() {
-	var buffer = context.createBuffer(1, 1, 22050);
-	var source = context.createBufferSource();
-	source.buffer = buffer;
-	source.connect(context.destination);
-	source.start(0);
-  window.removeEventListener('touchend', unlock, false);
-};
-window.addEventListener('touchend', unlock, false);
+    var unlock = function() {
+        var buffer = context.createBuffer(1, 1, 22050);
+        var source = context.createBufferSource();
+        source.buffer = buffer;
+        source.connect(context.destination);
+        source.start(0);
+        window.removeEventListener('touchend', unlock, true);
+    };
+    window.addEventListener('touchend', unlock, true);
 
-function decodeAudioData(arrayBuffer) {
-  return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback){
-    context.decodeAudioData(arrayBuffer, function(buffer) {
-      callback(_elm_lang$core$Native_Scheduler.succeed(buffer));
-    }, function(e) {
-      callback(_elm_lang$core$Native_Scheduler.fail(e.toString()));
-    });
-  });
-}
+    function decodeAudioData(arrayBuffer) {
+        return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback) {
+            context.decodeAudioData(arrayBuffer, function(buffer) {
+                callback(_elm_lang$core$Native_Scheduler.succeed(buffer));
+            }, function(e) {
+                callback(_elm_lang$core$Native_Scheduler.fail(e.toString()));
+            });
+        });
+    }
 
-return {
-  decodeAudioData: decodeAudioData,
-};
+    return {
+        decodeAudioData: decodeAudioData,
+    };
 
 }();
 
@@ -13934,7 +13975,11 @@ var _user$project$Main$viewPlayerHelp = F2(
 											}
 										},
 										{ctor: '[]'}),
-									_1: {ctor: '[]'}
+									_1: {
+										ctor: '::',
+										_0: _user$project$MidiPlayer$closeButton(_user$project$Main$Close),
+										_1: {ctor: '[]'}
+									}
 								});
 						case 'MidiAndMp3':
 							return A2(
@@ -13951,7 +13996,7 @@ var _user$project$Main$viewPlayerHelp = F2(
 												function (_p10) {
 													var _p11 = _p10;
 													var _p12 = _p11._0;
-													return A5(
+													return A6(
 														_user$project$MidiPlayer$view,
 														{
 															onBack: _user$project$Main$Back,
@@ -13961,6 +14006,7 @@ var _user$project$Main$viewPlayerHelp = F2(
 															onMinimize: _user$project$Main$Fullscreen(false),
 															onClose: _user$project$Main$Close
 														},
+														content.hash,
 														model.fullscreen,
 														model.playing,
 														(model.currentTime - model.startTime) + _p9._2,
@@ -13980,7 +14026,11 @@ var _user$project$Main$viewPlayerHelp = F2(
 								{
 									ctor: '::',
 									_0: _user$project$Main$soundCloud(_p9._0),
-									_1: {ctor: '[]'}
+									_1: {
+										ctor: '::',
+										_0: _user$project$MidiPlayer$closeButton(_user$project$Main$Close),
+										_1: {ctor: '[]'}
+									}
 								});
 					}
 				}(),

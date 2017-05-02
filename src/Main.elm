@@ -475,7 +475,13 @@ viewPlayerHelp model content =
         [ case content.details of
             Mp3 mp3File ->
                 div [ class "mp3" ]
-                    [ audio [ src ("./contents/music/" ++ mp3File), autoplay True, controls True ] []
+                    [ audio
+                        [ src ("./contents/music/" ++ mp3File)
+                        , autoplay True
+                        , controls True
+                        ]
+                        []
+                    , MidiPlayer.closeButton Close
                     ]
 
             MidiAndMp3 midiFile mp3File delay ->
@@ -493,6 +499,7 @@ viewPlayerHelp model content =
                                             , onMinimize = Fullscreen False
                                             , onClose = Close
                                             }
+                                            content.hash
                                             model.fullscreen
                                             model.playing
                                             (model.currentTime - model.startTime + delay)
@@ -503,7 +510,7 @@ viewPlayerHelp model content =
                     |> Maybe.withDefault (text "")
 
             SoundCloud id ->
-                div [ class "soundcloud" ] [ soundCloud id ]
+                div [ class "soundcloud" ] [ soundCloud id, MidiPlayer.closeButton Close ]
         ]
 
 
