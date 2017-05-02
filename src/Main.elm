@@ -325,8 +325,18 @@ contents =
     -- 2017
     [ Content "monday-morning" "Monday Morning" "" Nothing (MidiAndMp3 "2017/monday-morning.mid" "2017/monday-morning.mp3" 1250)
     , Content "train-journey" "列車の旅" "「オレ宿」の裏企画「オレが考えた発車ベルその壱」参加曲" (Just "train.jpg") (SoundCloud "318647824")
-    , Content "good-night" "おやすみ" "[「オレが考えた宿で一泊」](http://carrotwine.muse.bindsite.jp/myinn.html)参加曲" (Just "inn.jpg") (SoundCloud "318080873")
-    , Content "little-world" "Little World" "[「オレが考えたフィールド曲」](http://carrotwine.muse.bindsite.jp/dtmmeeting4.html)参加曲" (Just "field.jpg") (SoundCloud "306090165")
+    , Content
+        "good-night"
+        "おやすみ"
+        """<a href="http://carrotwine.muse.bindsite.jp/myinn.html" target="_blank">「オレが考えた宿で一泊」</a>参加曲"""
+        (Just "inn.jpg")
+        (SoundCloud "318080873")
+    , Content
+        "little-world"
+        "Little World"
+        """<a href="http://carrotwine.muse.bindsite.jp/dtmmeeting4.html" target="_blank">「オレが考えたフィールド曲」</a>参加曲"""
+        (Just "field.jpg")
+        (SoundCloud "306090165")
       -- 2016
     , Content "hokora" "ほこら" "[「オレが考えたほこらの曲」](http://carrotwine.muse.bindsite.jp/dtmermeeting.html)参加曲" (Just "hokora.jpg") (MidiAndMp3 "2016/hokora.mid" "2016/hokora.mp3" 2770)
     , Content "hokora-fc" "ほこら (FCアレンジ)" "by [ハイデン](https://twitter.com/hydden0310)さん" (Just "hokora.jpg") (Mp3 "2016/hokora-fc.mp3")
@@ -541,15 +551,13 @@ viewMusicItemHelp clickMsg class_ id_ label description selected image =
             ]
         , onClick clickMsg
         ]
-        [ a
-            [ class "music-item-link"
-            , href ("#" ++ id_)
-            , onWithOptions "click" { defaultOptions | preventDefault = True } (Decode.succeed NoOp)
+        [ image
+        , div [ class "music-item-label" ] [ text label ]
+        , Markdown.toHtml
+            [ class "music-item-description"
+            , onWithOptions "click" { defaultOptions | stopPropagation = True } (Decode.succeed NoOp)
             ]
-            [ image
-            , div [ class "music-item-label" ] [ text label ]
-            , Markdown.toHtml [ class "music-item-description" ] description
-            ]
+            description
         ]
 
 

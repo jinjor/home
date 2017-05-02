@@ -12,9 +12,9 @@ var unlock = function() {
     source.buffer = buffer;
     source.connect(context.destination);
     source.start(0);
-    window.removeEventListener('touchend', unlock, false);
+    window.removeEventListener('touchend', unlock, true);
 };
-window.addEventListener('touchend', unlock, false);
+window.addEventListener('touchend', unlock, true);
 
 var source = null;
 app.ports.moveToCard.subscribe(id => {
@@ -36,6 +36,7 @@ app.ports.webAudioApiPlay.subscribe(data => {
     source = context.createBufferSource();
     source.buffer = buffer;
     source.connect(context.destination);
+    console.log(time);
     source.start(0, time);
 });
 app.ports.webAudioApiStop.subscribe(() => {

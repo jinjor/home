@@ -14300,60 +14300,44 @@ var _user$project$Main$viewMusicItemHelp = F7(
 			},
 			{
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$a,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('music-item-link'),
-						_1: {
+				_0: image,
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$href(
-								A2(_elm_lang$core$Basics_ops['++'], '#', id_)),
-							_1: {
-								ctor: '::',
-								_0: A3(
-									_elm_lang$html$Html_Events$onWithOptions,
-									'click',
-									_elm_lang$core$Native_Utils.update(
-										_elm_lang$html$Html_Events$defaultOptions,
-										{preventDefault: true}),
-									_elm_lang$core$Json_Decode$succeed(_user$project$Main$NoOp)),
-								_1: {ctor: '[]'}
-							}
-						}
-					},
-					{
-						ctor: '::',
-						_0: image,
-						_1: {
+							_0: _elm_lang$html$Html_Attributes$class('music-item-label'),
+							_1: {ctor: '[]'}
+						},
+						{
 							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('music-item-label'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text(label),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
+							_0: _elm_lang$html$Html$text(label),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_evancz$elm_markdown$Markdown$toHtml,
+							{
 								ctor: '::',
-								_0: A2(
-									_evancz$elm_markdown$Markdown$toHtml,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('music-item-description'),
-										_1: {ctor: '[]'}
-									},
-									description),
-								_1: {ctor: '[]'}
-							}
-						}
-					}),
-				_1: {ctor: '[]'}
+								_0: _elm_lang$html$Html_Attributes$class('music-item-description'),
+								_1: {
+									ctor: '::',
+									_0: A3(
+										_elm_lang$html$Html_Events$onWithOptions,
+										'click',
+										_elm_lang$core$Native_Utils.update(
+											_elm_lang$html$Html_Events$defaultOptions,
+											{stopPropagation: true}),
+										_elm_lang$core$Json_Decode$succeed(_user$project$Main$NoOp)),
+									_1: {ctor: '[]'}
+								}
+							},
+							description),
+						_1: {ctor: '[]'}
+					}
+				}
 			});
 	});
 var _user$project$Main$viewMusicItem = F2(
@@ -14430,7 +14414,7 @@ var _user$project$Main$contents = {
 				_user$project$Main$Content,
 				'good-night',
 				'おやすみ',
-				'[「オレが考えた宿で一泊」](http://carrotwine.muse.bindsite.jp/myinn.html)参加曲',
+				'<a href=\"http://carrotwine.muse.bindsite.jp/myinn.html\" target=\"_blank\">「オレが考えた宿で一泊」</a>参加曲',
 				_elm_lang$core$Maybe$Just('inn.jpg'),
 				_user$project$Main$SoundCloud('318080873')),
 			_1: {
@@ -14439,7 +14423,7 @@ var _user$project$Main$contents = {
 					_user$project$Main$Content,
 					'little-world',
 					'Little World',
-					'[「オレが考えたフィールド曲」](http://carrotwine.muse.bindsite.jp/dtmmeeting4.html)参加曲',
+					'<a href=\"http://carrotwine.muse.bindsite.jp/dtmmeeting4.html\" target=\"_blank\">「オレが考えたフィールド曲」</a>参加曲',
 					_elm_lang$core$Maybe$Just('field.jpg'),
 					_user$project$Main$SoundCloud('306090165')),
 				_1: {
