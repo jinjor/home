@@ -10,6 +10,7 @@ import Svg.Attributes as SA exposing (..)
 import Svg.Keyed
 import Midi exposing (..)
 import Colors
+import Http
 
 
 type alias Options msg =
@@ -100,20 +101,20 @@ disabledControl onClose =
 backButton : Options msg -> Html msg
 backButton options =
     controlButton
-        (onClick options.onBack)
+        [ onClick options.onBack ]
         (S.path [ SA.fill "#ddd", SA.d "M12,10v10h2v-10zm14,0v10l-12,-5z" ] [])
 
 
 playButton : Options msg -> Bool -> Html msg
 playButton options playing =
     controlButton
-        (onClick
+        [ onClick
             (if playing then
                 options.onStop
              else
                 options.onStart
             )
-        )
+        ]
         (S.path
             [ SA.fill "#ddd"
             , if playing then
@@ -128,21 +129,21 @@ playButton options playing =
 fullButton : Options msg -> Html msg
 fullButton options =
     controlButton
-        (onClick options.onFullscreen)
+        [ onClick options.onFullscreen ]
         (S.path [ SA.stroke "#ddd", SA.strokeWidth "2", fill "transparent", SA.d "M11,9V21H25V9z" ] [])
 
 
 miniButton : Options msg -> Html msg
 miniButton options =
     controlButton
-        (onClick options.onMinimize)
+        [ onClick options.onMinimize ]
         (S.path [ SA.stroke "#ddd", SA.strokeWidth "2", fill "transparent", SA.d "M13,21H23" ] [])
 
 
 tweetButton : Options msg -> String -> Html msg
 tweetButton options id =
     controlButton
-        (onClick options.onClose)
+        []
         (S.a
             [ SA.xlinkHref (tweetUrl id)
             , SA.target "_blank"
@@ -165,22 +166,22 @@ tweetUrl id =
         ++ "&ref_src="
         ++ "twsrc%5Etfw"
         ++ "&text="
-        ++ "TODO"
-        ++ "&tw_p=tweetbutton&url=https://jinjor.github.io/home/#"
-        ++ id
+        ++ ""
+        ++ "&tw_p=tweetbutton&url=https://jinjor.github.io/home/?content="
+        ++ Http.encodeUri id
 
 
 closeButton : msg -> Html msg
 closeButton onClose =
     controlButton
-        (onClick onClose)
+        [ onClick onClose ]
         (S.path [ SA.stroke "#ddd", SA.strokeWidth "2", SA.d "M11,9L25,21zM11,21L25,9z" ] [])
 
 
-controlButton : H.Attribute msg -> Svg msg -> Html msg
-controlButton event inner =
+controlButton : List (H.Attribute msg) -> Svg msg -> Html msg
+controlButton attributes inner =
     div
-        [ event, SA.class "midi-player-control-button" ]
+        (SA.class "midi-player-control-button" :: attributes)
         [ svg [ SA.width "40", SA.height "30" ] [ inner ] ]
 
 

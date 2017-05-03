@@ -18,6 +18,7 @@ import WebAudioApi exposing (AudioBuffer)
 import Markdown
 import Navigation exposing (Location)
 import Json.Decode as Decode
+import UrlParser exposing ((<?>))
 
 
 main : Program Never Model Msg
@@ -91,22 +92,32 @@ init location =
                     model =
                         Model initialMidiCountents Nothing False 0 0 [] Nothing False gitHub False NoError
 
-                    id =
-                        String.dropLeft 1 location.hash
-
                     firstContent =
-                        contents
-                            |> List.filter (\content -> content.hash == id)
-                            |> List.head
+                        UrlParser.parsePath parser location
+                            |> Maybe.andThen
+                                (\maybeId ->
+                                    maybeId
+                                        |> Maybe.andThen
+                                            (\id ->
+                                                contents
+                                                    |> List.filter (\content -> content.hash == id)
+                                                    |> List.head
+                                            )
+                                )
                 in
                     case firstContent of
                         Just content ->
                             update (OpenPlayer True content) model
-                                |> andThen (\model -> ( model, moveToCard id ))
+                                |> andThen (\model -> ( model, moveToCard content.hash ))
 
                         Nothing ->
                             ( model, Cmd.none )
             )
+
+
+parser : UrlParser.Parser (Maybe String -> a) a
+parser =
+    UrlParser.top <?> UrlParser.stringParam "content"
 
 
 andThen : (model1 -> ( model2, Cmd msg )) -> ( model1, Cmd msg ) -> ( model2, Cmd msg )
@@ -135,7 +146,12 @@ update msg model =
                      else
                         flip (,) Cmd.none
                     )
-                |> andThen (\model -> ( { model | selected = Just content }, Cmd.none ))
+                |> andThen
+                    (\model ->
+                        ( { model | selected = Just content }
+                        , Navigation.modifyUrl ("?content=" ++ content.hash)
+                        )
+                    )
                 |> andThen
                     (\model ->
                         case content.details of

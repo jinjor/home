@@ -10145,6 +10145,257 @@ var _evancz$elm_markdown$Markdown$Options = F4(
 		return {githubFlavored: a, defaultHighlighting: b, sanitize: c, smartypants: d};
 	});
 
+var _evancz$url_parser$UrlParser$toKeyValuePair = function (segment) {
+	var _p0 = A2(_elm_lang$core$String$split, '=', segment);
+	if (((_p0.ctor === '::') && (_p0._1.ctor === '::')) && (_p0._1._1.ctor === '[]')) {
+		return A3(
+			_elm_lang$core$Maybe$map2,
+			F2(
+				function (v0, v1) {
+					return {ctor: '_Tuple2', _0: v0, _1: v1};
+				}),
+			_elm_lang$http$Http$decodeUri(_p0._0),
+			_elm_lang$http$Http$decodeUri(_p0._1._0));
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
+var _evancz$url_parser$UrlParser$parseParams = function (queryString) {
+	return _elm_lang$core$Dict$fromList(
+		A2(
+			_elm_lang$core$List$filterMap,
+			_evancz$url_parser$UrlParser$toKeyValuePair,
+			A2(
+				_elm_lang$core$String$split,
+				'&',
+				A2(_elm_lang$core$String$dropLeft, 1, queryString))));
+};
+var _evancz$url_parser$UrlParser$splitUrl = function (url) {
+	var _p1 = A2(_elm_lang$core$String$split, '/', url);
+	if ((_p1.ctor === '::') && (_p1._0 === '')) {
+		return _p1._1;
+	} else {
+		return _p1;
+	}
+};
+var _evancz$url_parser$UrlParser$parseHelp = function (states) {
+	parseHelp:
+	while (true) {
+		var _p2 = states;
+		if (_p2.ctor === '[]') {
+			return _elm_lang$core$Maybe$Nothing;
+		} else {
+			var _p4 = _p2._0;
+			var _p3 = _p4.unvisited;
+			if (_p3.ctor === '[]') {
+				return _elm_lang$core$Maybe$Just(_p4.value);
+			} else {
+				if ((_p3._0 === '') && (_p3._1.ctor === '[]')) {
+					return _elm_lang$core$Maybe$Just(_p4.value);
+				} else {
+					var _v4 = _p2._1;
+					states = _v4;
+					continue parseHelp;
+				}
+			}
+		}
+	}
+};
+var _evancz$url_parser$UrlParser$parse = F3(
+	function (_p5, url, params) {
+		var _p6 = _p5;
+		return _evancz$url_parser$UrlParser$parseHelp(
+			_p6._0(
+				{
+					visited: {ctor: '[]'},
+					unvisited: _evancz$url_parser$UrlParser$splitUrl(url),
+					params: params,
+					value: _elm_lang$core$Basics$identity
+				}));
+	});
+var _evancz$url_parser$UrlParser$parseHash = F2(
+	function (parser, location) {
+		return A3(
+			_evancz$url_parser$UrlParser$parse,
+			parser,
+			A2(_elm_lang$core$String$dropLeft, 1, location.hash),
+			_evancz$url_parser$UrlParser$parseParams(location.search));
+	});
+var _evancz$url_parser$UrlParser$parsePath = F2(
+	function (parser, location) {
+		return A3(
+			_evancz$url_parser$UrlParser$parse,
+			parser,
+			location.pathname,
+			_evancz$url_parser$UrlParser$parseParams(location.search));
+	});
+var _evancz$url_parser$UrlParser$intParamHelp = function (maybeValue) {
+	var _p7 = maybeValue;
+	if (_p7.ctor === 'Nothing') {
+		return _elm_lang$core$Maybe$Nothing;
+	} else {
+		return _elm_lang$core$Result$toMaybe(
+			_elm_lang$core$String$toInt(_p7._0));
+	}
+};
+var _evancz$url_parser$UrlParser$mapHelp = F2(
+	function (func, _p8) {
+		var _p9 = _p8;
+		return {
+			visited: _p9.visited,
+			unvisited: _p9.unvisited,
+			params: _p9.params,
+			value: func(_p9.value)
+		};
+	});
+var _evancz$url_parser$UrlParser$State = F4(
+	function (a, b, c, d) {
+		return {visited: a, unvisited: b, params: c, value: d};
+	});
+var _evancz$url_parser$UrlParser$Parser = function (a) {
+	return {ctor: 'Parser', _0: a};
+};
+var _evancz$url_parser$UrlParser$s = function (str) {
+	return _evancz$url_parser$UrlParser$Parser(
+		function (_p10) {
+			var _p11 = _p10;
+			var _p12 = _p11.unvisited;
+			if (_p12.ctor === '[]') {
+				return {ctor: '[]'};
+			} else {
+				var _p13 = _p12._0;
+				return _elm_lang$core$Native_Utils.eq(_p13, str) ? {
+					ctor: '::',
+					_0: A4(
+						_evancz$url_parser$UrlParser$State,
+						{ctor: '::', _0: _p13, _1: _p11.visited},
+						_p12._1,
+						_p11.params,
+						_p11.value),
+					_1: {ctor: '[]'}
+				} : {ctor: '[]'};
+			}
+		});
+};
+var _evancz$url_parser$UrlParser$custom = F2(
+	function (tipe, stringToSomething) {
+		return _evancz$url_parser$UrlParser$Parser(
+			function (_p14) {
+				var _p15 = _p14;
+				var _p16 = _p15.unvisited;
+				if (_p16.ctor === '[]') {
+					return {ctor: '[]'};
+				} else {
+					var _p18 = _p16._0;
+					var _p17 = stringToSomething(_p18);
+					if (_p17.ctor === 'Ok') {
+						return {
+							ctor: '::',
+							_0: A4(
+								_evancz$url_parser$UrlParser$State,
+								{ctor: '::', _0: _p18, _1: _p15.visited},
+								_p16._1,
+								_p15.params,
+								_p15.value(_p17._0)),
+							_1: {ctor: '[]'}
+						};
+					} else {
+						return {ctor: '[]'};
+					}
+				}
+			});
+	});
+var _evancz$url_parser$UrlParser$string = A2(_evancz$url_parser$UrlParser$custom, 'STRING', _elm_lang$core$Result$Ok);
+var _evancz$url_parser$UrlParser$int = A2(_evancz$url_parser$UrlParser$custom, 'NUMBER', _elm_lang$core$String$toInt);
+var _evancz$url_parser$UrlParser_ops = _evancz$url_parser$UrlParser_ops || {};
+_evancz$url_parser$UrlParser_ops['</>'] = F2(
+	function (_p20, _p19) {
+		var _p21 = _p20;
+		var _p22 = _p19;
+		return _evancz$url_parser$UrlParser$Parser(
+			function (state) {
+				return A2(
+					_elm_lang$core$List$concatMap,
+					_p22._0,
+					_p21._0(state));
+			});
+	});
+var _evancz$url_parser$UrlParser$map = F2(
+	function (subValue, _p23) {
+		var _p24 = _p23;
+		return _evancz$url_parser$UrlParser$Parser(
+			function (_p25) {
+				var _p26 = _p25;
+				return A2(
+					_elm_lang$core$List$map,
+					_evancz$url_parser$UrlParser$mapHelp(_p26.value),
+					_p24._0(
+						{visited: _p26.visited, unvisited: _p26.unvisited, params: _p26.params, value: subValue}));
+			});
+	});
+var _evancz$url_parser$UrlParser$oneOf = function (parsers) {
+	return _evancz$url_parser$UrlParser$Parser(
+		function (state) {
+			return A2(
+				_elm_lang$core$List$concatMap,
+				function (_p27) {
+					var _p28 = _p27;
+					return _p28._0(state);
+				},
+				parsers);
+		});
+};
+var _evancz$url_parser$UrlParser$top = _evancz$url_parser$UrlParser$Parser(
+	function (state) {
+		return {
+			ctor: '::',
+			_0: state,
+			_1: {ctor: '[]'}
+		};
+	});
+var _evancz$url_parser$UrlParser_ops = _evancz$url_parser$UrlParser_ops || {};
+_evancz$url_parser$UrlParser_ops['<?>'] = F2(
+	function (_p30, _p29) {
+		var _p31 = _p30;
+		var _p32 = _p29;
+		return _evancz$url_parser$UrlParser$Parser(
+			function (state) {
+				return A2(
+					_elm_lang$core$List$concatMap,
+					_p32._0,
+					_p31._0(state));
+			});
+	});
+var _evancz$url_parser$UrlParser$QueryParser = function (a) {
+	return {ctor: 'QueryParser', _0: a};
+};
+var _evancz$url_parser$UrlParser$customParam = F2(
+	function (key, func) {
+		return _evancz$url_parser$UrlParser$QueryParser(
+			function (_p33) {
+				var _p34 = _p33;
+				var _p35 = _p34.params;
+				return {
+					ctor: '::',
+					_0: A4(
+						_evancz$url_parser$UrlParser$State,
+						_p34.visited,
+						_p34.unvisited,
+						_p35,
+						_p34.value(
+							func(
+								A2(_elm_lang$core$Dict$get, key, _p35)))),
+					_1: {ctor: '[]'}
+				};
+			});
+	});
+var _evancz$url_parser$UrlParser$stringParam = function (name) {
+	return A2(_evancz$url_parser$UrlParser$customParam, name, _elm_lang$core$Basics$identity);
+};
+var _evancz$url_parser$UrlParser$intParam = function (name) {
+	return A2(_evancz$url_parser$UrlParser$customParam, name, _evancz$url_parser$UrlParser$intParamHelp);
+};
+
 var _rtfeldman$hex$Hex$toString = function (num) {
 	return _elm_lang$core$String$fromList(
 		(_elm_lang$core$Native_Utils.cmp(num, 0) < 0) ? {
@@ -12891,17 +13142,13 @@ var _user$project$MidiPlayer$viewTrack = F3(
 			{ctor: '[]'});
 	});
 var _user$project$MidiPlayer$controlButton = F2(
-	function (event, inner) {
+	function (attributes, inner) {
 		return A2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: event,
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$svg$Svg_Attributes$class('midi-player-control-button'),
-					_1: {ctor: '[]'}
-				}
+				_0: _elm_lang$svg$Svg_Attributes$class('midi-player-control-button'),
+				_1: attributes
 			},
 			{
 				ctor: '::',
@@ -12927,7 +13174,11 @@ var _user$project$MidiPlayer$controlButton = F2(
 var _user$project$MidiPlayer$closeButton = function (onClose) {
 	return A2(
 		_user$project$MidiPlayer$controlButton,
-		_elm_lang$html$Html_Events$onClick(onClose),
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(onClose),
+			_1: {ctor: '[]'}
+		},
 		A2(
 			_elm_lang$svg$Svg$path,
 			{
@@ -12966,14 +13217,17 @@ var _user$project$MidiPlayer$tweetUrl = function (id) {
 							'&text=',
 							A2(
 								_elm_lang$core$Basics_ops['++'],
-								'TODO',
-								A2(_elm_lang$core$Basics_ops['++'], '&tw_p=tweetbutton&url=https://jinjor.github.io/home/#', id))))))));
+								'',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'&tw_p=tweetbutton&url=https://jinjor.github.io/home/?content=',
+									_elm_lang$http$Http$encodeUri(id)))))))));
 };
 var _user$project$MidiPlayer$tweetButton = F2(
 	function (options, id) {
 		return A2(
 			_user$project$MidiPlayer$controlButton,
-			_elm_lang$html$Html_Events$onClick(options.onClose),
+			{ctor: '[]'},
 			A2(
 				_elm_lang$svg$Svg$a,
 				{
@@ -13010,7 +13264,11 @@ var _user$project$MidiPlayer$tweetButton = F2(
 var _user$project$MidiPlayer$miniButton = function (options) {
 	return A2(
 		_user$project$MidiPlayer$controlButton,
-		_elm_lang$html$Html_Events$onClick(options.onMinimize),
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(options.onMinimize),
+			_1: {ctor: '[]'}
+		},
 		A2(
 			_elm_lang$svg$Svg$path,
 			{
@@ -13035,7 +13293,11 @@ var _user$project$MidiPlayer$miniButton = function (options) {
 var _user$project$MidiPlayer$fullButton = function (options) {
 	return A2(
 		_user$project$MidiPlayer$controlButton,
-		_elm_lang$html$Html_Events$onClick(options.onFullscreen),
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(options.onFullscreen),
+			_1: {ctor: '[]'}
+		},
 		A2(
 			_elm_lang$svg$Svg$path,
 			{
@@ -13061,8 +13323,12 @@ var _user$project$MidiPlayer$playButton = F2(
 	function (options, playing) {
 		return A2(
 			_user$project$MidiPlayer$controlButton,
-			_elm_lang$html$Html_Events$onClick(
-				playing ? options.onStop : options.onStart),
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(
+					playing ? options.onStop : options.onStart),
+				_1: {ctor: '[]'}
+			},
 			A2(
 				_elm_lang$svg$Svg$path,
 				{
@@ -13079,7 +13345,11 @@ var _user$project$MidiPlayer$playButton = F2(
 var _user$project$MidiPlayer$backButton = function (options) {
 	return A2(
 		_user$project$MidiPlayer$controlButton,
-		_elm_lang$html$Html_Events$onClick(options.onBack),
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(options.onBack),
+			_1: {ctor: '[]'}
+		},
 		A2(
 			_elm_lang$svg$Svg$path,
 			{
@@ -13855,6 +14125,10 @@ var _user$project$Main$andThen = F2(
 				}
 			});
 	});
+var _user$project$Main$parser = A2(
+	_evancz$url_parser$UrlParser_ops['<?>'],
+	_evancz$url_parser$UrlParser$top,
+	_evancz$url_parser$UrlParser$stringParam('content'));
 var _user$project$Main$moveToCard = _elm_lang$core$Native_Platform.outgoingPort(
 	'moveToCard',
 	function (v) {
@@ -14095,7 +14369,8 @@ var _user$project$Main$update = F2(
 									{
 										selected: _elm_lang$core$Maybe$Just(_p16)
 									}),
-								_1: _elm_lang$core$Platform_Cmd$none
+								_1: _elm_lang$navigation$Navigation$modifyUrl(
+									A2(_elm_lang$core$Basics_ops['++'], '?content=', _p16.hash))
 							};
 						},
 						A2(
@@ -14200,8 +14475,8 @@ var _user$project$Main$update = F2(
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Main',
 						{
-							start: {line: 123, column: 5},
-							end: {line: 275, column: 14}
+							start: {line: 134, column: 5},
+							end: {line: 291, column: 14}
 						},
 						_p13)(
 						A2(
@@ -14769,30 +15044,40 @@ var _user$project$Main$init = function (location) {
 	return A2(
 		_user$project$Main$andThen,
 		function (gitHub) {
-			var id = A2(_elm_lang$core$String$dropLeft, 1, location.hash);
-			var firstContent = _elm_lang$core$List$head(
-				A2(
-					_elm_lang$core$List$filter,
-					function (content) {
-						return _elm_lang$core$Native_Utils.eq(content.hash, id);
-					},
-					_user$project$Main$contents));
+			var firstContent = A2(
+				_elm_lang$core$Maybe$andThen,
+				function (maybeId) {
+					return A2(
+						_elm_lang$core$Maybe$andThen,
+						function (id) {
+							return _elm_lang$core$List$head(
+								A2(
+									_elm_lang$core$List$filter,
+									function (content) {
+										return _elm_lang$core$Native_Utils.eq(content.hash, id);
+									},
+									_user$project$Main$contents));
+						},
+						maybeId);
+				},
+				A2(_evancz$url_parser$UrlParser$parsePath, _user$project$Main$parser, location));
 			var model = _user$project$Main$Model(_user$project$Main$initialMidiCountents)(_elm_lang$core$Maybe$Nothing)(false)(0)(0)(
 				{ctor: '[]'})(_elm_lang$core$Maybe$Nothing)(false)(gitHub)(false)(_user$project$Main$NoError);
 			var _p29 = firstContent;
 			if (_p29.ctor === 'Just') {
+				var _p30 = _p29._0;
 				return A2(
 					_user$project$Main$andThen,
 					function (model) {
 						return {
 							ctor: '_Tuple2',
 							_0: model,
-							_1: _user$project$Main$moveToCard(id)
+							_1: _user$project$Main$moveToCard(_p30.hash)
 						};
 					},
 					A2(
 						_user$project$Main$update,
-						A2(_user$project$Main$OpenPlayer, true, _p29._0),
+						A2(_user$project$Main$OpenPlayer, true, _p30),
 						model));
 			} else {
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
@@ -14880,12 +15165,12 @@ var _user$project$Main$view = function (model) {
 									_1: {
 										ctor: '::',
 										_0: function () {
-											var _p30 = model.error;
-											if (_p30.ctor === 'NoError') {
+											var _p31 = model.error;
+											if (_p31.ctor === 'NoError') {
 												return _elm_lang$html$Html$text('');
 											} else {
 												return _elm_lang$html$Html$text(
-													_elm_lang$core$Basics$toString(_p30._1));
+													_elm_lang$core$Basics$toString(_p31._1));
 											}
 										}(),
 										_1: {
