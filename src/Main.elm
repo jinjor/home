@@ -643,7 +643,7 @@ viewLink =
         [ li [ class "links-item" ] [ a [ href "https://soundcloud.com/jinjor" ] [ text "SoundCloud(@jinjor)" ] ]
         , li [ class "links-item" ] [ a [ href "https://github.com/jinjor" ] [ text "GitHub(@jinjor)" ] ]
         , li [ class "links-item" ] [ a [ href "https://twitter.com/jinjor" ] [ text "Twitter(@jinjor)" ] ]
-        , li [ class "links-item" ] [ a [ href "http://jinjor-labo.hatenablog.com/" ] [ text "ジンジャー研究室（id:jinjor）" ] ]
+        , li [ class "links-item" ] [ a [ href "http://jinjor-labo.hatenablog.com/" ] [ text "ジンジャー研究室（はてなブログ）" ] ]
         , li [ class "links-item" ] [ a [ href "mailto:jinjorweb@gmail.com" ] [ text "メール: jinjorweb@gmail.com" ] ]
         ]
 

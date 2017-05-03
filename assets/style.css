@@ -210,6 +210,10 @@ h2 .introduction {
   opacity: 0.6;
 }
 
+.music-item-description p {
+  margin: 0;
+}
+
 .header {
   padding-top: 1.5em;
   padding-bottom: 0.5em;

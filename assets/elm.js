@@ -13706,7 +13706,7 @@ var _user$project$Main$viewLink = A2(
 								},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('ジンジャー研究室（id:jinjor）'),
+									_0: _elm_lang$html$Html$text('ジンジャー研究室（はてなブログ）'),
 									_1: {ctor: '[]'}
 								}),
 							_1: {ctor: '[]'}
