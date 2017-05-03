@@ -13220,7 +13220,7 @@ var _user$project$MidiPlayer$tweetUrl = function (id) {
 								'',
 								A2(
 									_elm_lang$core$Basics_ops['++'],
-									'&tw_p=tweetbutton&url=https://jinjor.github.io/home/?content=',
+									'&tw_p=tweetbutton&url=http://world-maker.com/?content=',
 									_elm_lang$http$Http$encodeUri(id)))))))));
 };
 var _user$project$MidiPlayer$tweetButton = F2(

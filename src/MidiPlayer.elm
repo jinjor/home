@@ -167,7 +167,7 @@ tweetUrl id =
         ++ "twsrc%5Etfw"
         ++ "&text="
         ++ ""
-        ++ "&tw_p=tweetbutton&url=https://jinjor.github.io/home/?content="
+        ++ "&tw_p=tweetbutton&url=http://world-maker.com/?content="
         ++ Http.encodeUri id
 
 
