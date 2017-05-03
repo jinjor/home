@@ -43,7 +43,7 @@ view options id fullscreen playing time midi =
             [ HA.class "midi-player"
             ]
             [ midi.tracks
-                |> List.map2 (viewTrack currentPosition) colors
+                |> List.map2 (lazy3 viewTrack currentPosition) colors
                 |> svg (svgAttributes currentPosition)
             , centerLine
             , control options id fullscreen midi.tracks playing
@@ -79,14 +79,14 @@ control : Options msg -> String -> Bool -> List Track -> Bool -> Html msg
 control options id fullscreen tracks playing =
     div
         [ HA.class "midi-player-control" ]
-        [ backButton options
-        , playButton options playing
+        [ lazy backButton options
+        , lazy2 playButton options playing
         , if fullscreen then
-            miniButton options
+            lazy miniButton options
           else
-            fullButton options
-        , tweetButton options id
-        , closeButton options.onClose
+            lazy fullButton options
+        , lazy2 tweetButton options id
+        , lazy closeButton options.onClose
         ]
 
 

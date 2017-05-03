@@ -423,7 +423,7 @@ view model =
             [ introduction "ジンジャー と Yosuke Torii のホームページ"
             , h2 [] [ Shape.note, text "Music" ]
             , introduction "世界を創る音楽"
-            , ul [ class "music-items" ] (List.map (viewMusicItem model) contents)
+            , ul [ class "music-items" ] (List.map (lazy2 viewMusicItem model.selected) contents)
             , case model.error of
                 NoError ->
                     text ""
@@ -474,15 +474,7 @@ viewPlayerHelp model content =
         ]
         [ case content.details of
             Mp3 mp3File ->
-                div [ class "mp3" ]
-                    [ audio
-                        [ src ("./contents/music/" ++ mp3File)
-                        , autoplay True
-                        , controls True
-                        ]
-                        []
-                    , MidiPlayer.closeButton Close
-                    ]
+                lazy viewMp3Player mp3File
 
             MidiAndMp3 midiFile mp3File delay ->
                 Dict.get midiFile model.midiContents
@@ -510,15 +502,33 @@ viewPlayerHelp model content =
                     |> Maybe.withDefault (text "")
 
             SoundCloud id ->
-                div [ class "soundcloud" ] [ soundCloud id, MidiPlayer.closeButton Close ]
+                lazy viewSoundCloudPlayer id
         ]
 
 
-viewMusicItem : Model -> Content -> Html Msg
-viewMusicItem model content =
+viewMp3Player : String -> Html Msg
+viewMp3Player mp3File =
+    div [ class "mp3" ]
+        [ audio
+            [ src ("./contents/music/" ++ mp3File)
+            , autoplay True
+            , controls True
+            ]
+            []
+        , MidiPlayer.closeButton Close
+        ]
+
+
+viewSoundCloudPlayer : String -> Html Msg
+viewSoundCloudPlayer id =
+    div [ class "soundcloud" ] [ soundCloud id, MidiPlayer.closeButton Close ]
+
+
+viewMusicItem : Maybe Content -> Content -> Html Msg
+viewMusicItem selectedContent content =
     let
         selected =
-            Just content == model.selected
+            Just content == selectedContent
 
         clickMsg =
             if selected then
@@ -529,15 +539,15 @@ viewMusicItem model content =
         case content.details of
             Mp3 mp3File ->
                 viewMusicItemHelp clickMsg "music-item-mp3" content.hash content.title content.description selected <|
-                    viewMusicIcon content.image content.title "MP3"
+                    lazy3 viewMusicIcon content.image content.title "MP3"
 
             MidiAndMp3 midiFile mp3File delay ->
                 viewMusicItemHelp clickMsg "music-item-midi-and-mp3" content.hash content.title content.description selected <|
-                    viewMusicIcon content.image content.title "Midi + MP3"
+                    lazy3 viewMusicIcon content.image content.title "Midi + MP3"
 
             SoundCloud id ->
                 viewMusicItemHelp clickMsg "music-item-soundcloud" content.hash content.title content.description selected <|
-                    viewMusicIcon content.image content.title "SoundCloud"
+                    lazy3 viewMusicIcon content.image content.title "SoundCloud"
 
 
 viewMusicIcon : Maybe String -> String -> String -> Html msg

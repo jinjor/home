@@ -13118,19 +13118,19 @@ var _user$project$MidiPlayer$control = F5(
 			},
 			{
 				ctor: '::',
-				_0: _user$project$MidiPlayer$backButton(options),
+				_0: A2(_elm_lang$html$Html_Lazy$lazy, _user$project$MidiPlayer$backButton, options),
 				_1: {
 					ctor: '::',
-					_0: A2(_user$project$MidiPlayer$playButton, options, playing),
+					_0: A3(_elm_lang$html$Html_Lazy$lazy2, _user$project$MidiPlayer$playButton, options, playing),
 					_1: {
 						ctor: '::',
-						_0: fullscreen ? _user$project$MidiPlayer$miniButton(options) : _user$project$MidiPlayer$fullButton(options),
+						_0: fullscreen ? A2(_elm_lang$html$Html_Lazy$lazy, _user$project$MidiPlayer$miniButton, options) : A2(_elm_lang$html$Html_Lazy$lazy, _user$project$MidiPlayer$fullButton, options),
 						_1: {
 							ctor: '::',
-							_0: A2(_user$project$MidiPlayer$tweetButton, options, id),
+							_0: A3(_elm_lang$html$Html_Lazy$lazy2, _user$project$MidiPlayer$tweetButton, options, id),
 							_1: {
 								ctor: '::',
-								_0: _user$project$MidiPlayer$closeButton(options.onClose),
+								_0: A2(_elm_lang$html$Html_Lazy$lazy, _user$project$MidiPlayer$closeButton, options.onClose),
 								_1: {ctor: '[]'}
 							}
 						}
@@ -13243,7 +13243,7 @@ var _user$project$MidiPlayer$view = F6(
 					_user$project$MidiPlayer$svgAttributes(currentPosition),
 					A3(
 						_elm_lang$core$List$map2,
-						_user$project$MidiPlayer$viewTrack(currentPosition),
+						A2(_elm_lang$html$Html_Lazy$lazy3, _user$project$MidiPlayer$viewTrack, currentPosition),
 						_user$project$MidiPlayer$colors,
 						midi.tracks)),
 				_1: {
@@ -13912,6 +13912,58 @@ var _user$project$Main$subscriptions = function (model) {
 		});
 };
 var _user$project$Main$Close = {ctor: 'Close'};
+var _user$project$Main$viewMp3Player = function (mp3File) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('mp3'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$audio,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$src(
+						A2(_elm_lang$core$Basics_ops['++'], './contents/music/', mp3File)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$autoplay(true),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$controls(true),
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: _user$project$MidiPlayer$closeButton(_user$project$Main$Close),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Main$viewSoundCloudPlayer = function (id) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('soundcloud'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Main$soundCloud(id),
+			_1: {
+				ctor: '::',
+				_0: _user$project$MidiPlayer$closeButton(_user$project$Main$Close),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _user$project$Main$Fullscreen = function (a) {
 	return {ctor: 'Fullscreen', _0: a};
 };
@@ -13949,38 +14001,7 @@ var _user$project$Main$viewPlayerHelp = F2(
 					var _p9 = content.details;
 					switch (_p9.ctor) {
 						case 'Mp3':
-							return A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('mp3'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$audio,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$src(
-												A2(_elm_lang$core$Basics_ops['++'], './contents/music/', _p9._0)),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$autoplay(true),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$controls(true),
-													_1: {ctor: '[]'}
-												}
-											}
-										},
-										{ctor: '[]'}),
-									_1: {
-										ctor: '::',
-										_0: _user$project$MidiPlayer$closeButton(_user$project$Main$Close),
-										_1: {ctor: '[]'}
-									}
-								});
+							return A2(_elm_lang$html$Html_Lazy$lazy, _user$project$Main$viewMp3Player, _p9._0);
 						case 'MidiAndMp3':
 							return A2(
 								_elm_lang$core$Maybe$withDefault,
@@ -14016,22 +14037,7 @@ var _user$project$Main$viewPlayerHelp = F2(
 									},
 									A2(_elm_lang$core$Dict$get, _p9._0, model.midiContents)));
 						default:
-							return A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('soundcloud'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _user$project$Main$soundCloud(_p9._0),
-									_1: {
-										ctor: '::',
-										_0: _user$project$MidiPlayer$closeButton(_user$project$Main$Close),
-										_1: {ctor: '[]'}
-									}
-								});
+							return A2(_elm_lang$html$Html_Lazy$lazy, _user$project$Main$viewSoundCloudPlayer, _p9._0);
 					}
 				}(),
 				_1: {ctor: '[]'}
@@ -14391,10 +14397,10 @@ var _user$project$Main$viewMusicItemHelp = F7(
 			});
 	});
 var _user$project$Main$viewMusicItem = F2(
-	function (model, content) {
+	function (selectedContent, content) {
 		var selected = _elm_lang$core$Native_Utils.eq(
 			_elm_lang$core$Maybe$Just(content),
-			model.selected);
+			selectedContent);
 		var clickMsg = selected ? _user$project$Main$Close : A2(_user$project$Main$OpenPlayer, false, content);
 		var _p26 = content.details;
 		switch (_p26.ctor) {
@@ -14407,7 +14413,7 @@ var _user$project$Main$viewMusicItem = F2(
 					content.title,
 					content.description,
 					selected,
-					A3(_user$project$Main$viewMusicIcon, content.image, content.title, 'MP3'));
+					A4(_elm_lang$html$Html_Lazy$lazy3, _user$project$Main$viewMusicIcon, content.image, content.title, 'MP3'));
 			case 'MidiAndMp3':
 				return A7(
 					_user$project$Main$viewMusicItemHelp,
@@ -14417,7 +14423,7 @@ var _user$project$Main$viewMusicItem = F2(
 					content.title,
 					content.description,
 					selected,
-					A3(_user$project$Main$viewMusicIcon, content.image, content.title, 'Midi + MP3'));
+					A4(_elm_lang$html$Html_Lazy$lazy3, _user$project$Main$viewMusicIcon, content.image, content.title, 'Midi + MP3'));
 			default:
 				return A7(
 					_user$project$Main$viewMusicItemHelp,
@@ -14427,7 +14433,7 @@ var _user$project$Main$viewMusicItem = F2(
 					content.title,
 					content.description,
 					selected,
-					A3(_user$project$Main$viewMusicIcon, content.image, content.title, 'SoundCloud'));
+					A4(_elm_lang$html$Html_Lazy$lazy3, _user$project$Main$viewMusicIcon, content.image, content.title, 'SoundCloud'));
 		}
 	});
 var _user$project$Main$SoundCloud = function (a) {
@@ -14869,7 +14875,7 @@ var _user$project$Main$view = function (model) {
 										},
 										A2(
 											_elm_lang$core$List$map,
-											_user$project$Main$viewMusicItem(model),
+											A2(_elm_lang$html$Html_Lazy$lazy2, _user$project$Main$viewMusicItem, model.selected),
 											_user$project$Main$contents)),
 									_1: {
 										ctor: '::',
