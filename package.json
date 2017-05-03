@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "elm-live src/Main.elm --output=assets/elm.js --open --warn",
+    "build": "elm-make src/Main.elm --output=assets/elm.js --warn",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

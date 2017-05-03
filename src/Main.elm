@@ -7,7 +7,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Html.Lazy exposing (..)
-import Shape
+import Svg as S
+import Svg.Attributes as SA
 import BinaryDecoder.File as File exposing (File)
 import BinaryDecoder.Byte as Byte exposing (ArrayBuffer, Error)
 import SmfDecoder exposing (Smf)
@@ -437,8 +438,7 @@ view model =
         [ viewHeader
         , main_ [ class "body container" ]
             [ introduction "ジンジャー と Yosuke Torii のホームページ"
-            , h2 [] [ Shape.note, text "Music" ]
-            , introduction "世界を創る音楽"
+            , headline "Music" "世界を創る音楽"
             , ul [ class "music-items" ] (List.map (lazy2 viewMusicItem model.selected) contents)
             , case model.error of
                 NoError ->
@@ -446,23 +446,25 @@ view model =
 
                 DecodeError buf e ->
                     text (toString e)
-            , h2 [] [ Shape.note, text "Development" ]
-            , introduction "プログラミングは芸術"
+            , headline "Development" "プログラミングは芸術"
             , div [ class "repository" ] (GitHub.view model.gitHub |> Tuple.second)
-            , h2 [] [ Shape.note, text "Paintings" ]
-            , introduction "ペイントでお絵かき"
+            , headline "Paintings" "ペイントでお絵かき"
             , viewPaintings
-            , h2 [] [ Shape.note, text "Links" ]
-            , introduction ""
+            , headline "Links" "主な SNS と連絡先"
             , viewLink
             , viewPlayer model
             ]
         ]
 
 
+headline : String -> String -> Html msg
+headline title comment =
+    h2 [] [ note, text title, introduction comment ]
+
+
 introduction : String -> Html msg
 introduction s =
-    p [ class "introduction" ] [ text s ]
+    span [ class "introduction" ] [ text s ]
 
 
 viewHeader : Html msg
@@ -508,6 +510,7 @@ viewPlayerHelp model content =
                                             , onClose = Close
                                             }
                                             content.hash
+                                            content.title
                                             model.fullscreen
                                             model.playing
                                             (model.currentTime - model.startTime + delay)
@@ -636,9 +639,19 @@ viewPaintings =
 
 viewLink : Html msg
 viewLink =
-    ul []
-        [ li [] [ a [ href "https://soundcloud.com/jinjor" ] [ text "SoundCloud" ] ]
-        , li [] [ a [ href "https://github.com/jinjor" ] [ text "GitHub" ] ]
-        , li [] [ a [ href "https://twitter.com/jinjor" ] [ text "Twitter" ] ]
-        , li [] [ a [ href "http://jinjor-labo.hatenablog.com/" ] [ text "Blog" ] ]
+    ul [ class "links" ]
+        [ li [ class "links-item" ] [ a [ href "https://soundcloud.com/jinjor" ] [ text "SoundCloud(@jinjor)" ] ]
+        , li [ class "links-item" ] [ a [ href "https://github.com/jinjor" ] [ text "GitHub(@jinjor)" ] ]
+        , li [ class "links-item" ] [ a [ href "https://twitter.com/jinjor" ] [ text "Twitter(@jinjor)" ] ]
+        , li [ class "links-item" ] [ a [ href "http://jinjor-labo.hatenablog.com/" ] [ text "ジンジャー研究室（id:jinjor）" ] ]
+        , li [ class "links-item" ] [ a [ href "mailto:jinjorweb@gmail.com" ] [ text "メール: jinjorweb@gmail.com" ] ]
+        ]
+
+
+note : Html msg
+note =
+    S.svg
+        [ SA.width "36", SA.height "36", SA.class "shape-note" ]
+        [ S.path [ SA.d "M16,6L18,30L20,30L18,8zM18,12L29,15L29,12L16,6zM18,30L15,30z" ] []
+        , S.circle [ SA.cx "15", SA.cy "29", SA.r "5" ] []
         ]

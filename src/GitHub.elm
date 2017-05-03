@@ -1,6 +1,5 @@
 module GitHub exposing (..)
 
-import Dict exposing (Dict)
 import Json.Decode as Decode exposing (Decoder)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -8,72 +7,26 @@ import Http
 
 
 type alias User =
-    { avatarUrl :
-        String
-        -- "https://avatars1.githubusercontent.com/u/2568148?v=3"
-    , bio :
-        String
-        -- null
-        -- , company : String -- null
-        -- , createdAt : String -- "2012-10-15T23:01:43Z"
-        -- , email : String -- "jinjorweb@gmail.com"
+    { avatarUrl : String
+    , bio : String
     , followers : Int
     , following : Int
-    , htmlUrl :
-        String
-        -- "https://github.com/jinjor"
-    , location :
-        String
-        -- "Japan"
-    , name :
-        String
-        -- "Yosuke Torii"
-        -- , publicGists : Int
-    , publicRepos :
-        Int
-        -- , type_ : String -- User
-        -- , updatedAt : String -- "2016-12-29T17:05:42Z"
+    , htmlUrl : String
+    , location : String
+    , name : String
+    , publicRepos : Int
     }
 
 
 type alias Repository =
-    -- { createdAt : String -- "2016-07-17T15:56:06Z"
-    -- , defaultBranch : String -- "master"
-    -- ,
-    { description :
-        String
-        -- "A diff implementation for Elm"
-        -- , fork : Bool -- false
-    , forks :
-        Int
-        -- , forksCount : Int
-    , fullName :
-        String
-        -- "jinjor/elm-diff"
-    , homepage :
-        String
-        -- "http://package.elm-lang.org/packages/jinjor/elm-diff/latest"
-    , language :
-        String
-        -- "Elm"
-    , name :
-        String
-        -- "elm-diff"
-        -- , networkCount : Int
-        -- , openIssues : Int
-        -- , openIssuesCount : Int
-        -- , owner : User
-        -- , private : Bool -- false
-        -- , pushedAt : String -- "2016-11-14T07:47:34Z"
-        -- , size : Int -- 13
-        -- , sshUrl : String -- "git@github.com:jinjor/elm-diff.git"
-    , stargazersCount :
-        Int
-        -- , subscribersCount : Int
-        -- , updateAt : String -- "2017-04-03T01:49:57Z"
-    , watchers :
-        Int
-        -- , watchersCount : Int
+    { description : String
+    , forks : Int
+    , fullName : String
+    , homepage : String
+    , language : String
+    , name : String
+    , stargazersCount : Int
+    , watchers : Int
     }
 
 
@@ -192,14 +145,6 @@ view gitHub =
 userCard : User -> Html msg
 userCard user =
     text ""
-
-
-
--- repositoryCards : List (String, Maybe Repository) -> Html msg
--- repositoryCards repositories =
---   repositories
---     |> List.map repositoryCard
---     |> ul []
 
 
 repositoryCard : ( String, Maybe Repository ) -> Html msg

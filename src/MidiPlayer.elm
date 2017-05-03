@@ -34,8 +34,8 @@ colors =
     List.map2 NoteColor (Colors.depth 1) (Colors.depth 5)
 
 
-view : Options msg -> String -> Bool -> Bool -> Time -> Midi -> Html msg
-view options id fullscreen playing time midi =
+view : Options msg -> String -> String -> Bool -> Bool -> Time -> Midi -> Html msg
+view options id title fullscreen playing time midi =
     let
         currentPosition =
             Midi.timeToPosition midi.timeBase midi.tempo time
@@ -47,8 +47,14 @@ view options id fullscreen playing time midi =
                 |> List.map2 (lazy3 viewTrack currentPosition) colors
                 |> svg (svgAttributes currentPosition)
             , centerLine
+            , lazy viewTitle title
             , control options id fullscreen midi.tracks playing
             ]
+
+
+viewTitle : String -> Html msg
+viewTitle title =
+    H.div [ HA.class "midi-player-title" ] [ H.text title ]
 
 
 viewLoading : msg -> Html msg

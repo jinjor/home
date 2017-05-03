@@ -12518,53 +12518,6 @@ var _user$project$GitHub$init = F3(
 		};
 	});
 
-var _user$project$Shape$note = A2(
-	_elm_lang$svg$Svg$svg,
-	{
-		ctor: '::',
-		_0: _elm_lang$svg$Svg_Attributes$width('36'),
-		_1: {
-			ctor: '::',
-			_0: _elm_lang$svg$Svg_Attributes$height('36'),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$svg$Svg_Attributes$class('shape-note'),
-				_1: {ctor: '[]'}
-			}
-		}
-	},
-	{
-		ctor: '::',
-		_0: A2(
-			_elm_lang$svg$Svg$path,
-			{
-				ctor: '::',
-				_0: _elm_lang$svg$Svg_Attributes$d('M16,6L17,30L20,30L18,8zM17,12L29,15L29,12L16,6zM18,30L15,30z'),
-				_1: {ctor: '[]'}
-			},
-			{ctor: '[]'}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$svg$Svg$circle,
-				{
-					ctor: '::',
-					_0: _elm_lang$svg$Svg_Attributes$cx('15'),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$svg$Svg_Attributes$cy('29'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$r('5'),
-							_1: {ctor: '[]'}
-						}
-					}
-				},
-				{ctor: '[]'}),
-			_1: {ctor: '[]'}
-		}
-	});
-
 var _user$project$SmfDecoder$deltaTimeHelp = function (prev) {
 	return A2(
 		_user$project$BinaryDecoder$given,
@@ -13483,6 +13436,20 @@ var _user$project$MidiPlayer$viewLoading = function (onClose) {
 			}
 		});
 };
+var _user$project$MidiPlayer$viewTitle = function (title) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('midi-player-title'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(title),
+			_1: {ctor: '[]'}
+		});
+};
 var _user$project$MidiPlayer$Options = F6(
 	function (a, b, c, d, e, f) {
 		return {onBack: a, onStart: b, onStop: c, onFullscreen: d, onMinimize: e, onClose: f};
@@ -13496,8 +13463,8 @@ var _user$project$MidiPlayer$colors = A3(
 	_user$project$MidiPlayer$NoteColor,
 	_user$project$Colors$depth(1),
 	_user$project$Colors$depth(5));
-var _user$project$MidiPlayer$view = F6(
-	function (options, id, fullscreen, playing, time, midi) {
+var _user$project$MidiPlayer$view = F7(
+	function (options, id, title, fullscreen, playing, time, midi) {
 		var currentPosition = A3(_user$project$Midi$timeToPosition, midi.timeBase, midi.tempo, time);
 		return A2(
 			_elm_lang$html$Html$div,
@@ -13521,8 +13488,12 @@ var _user$project$MidiPlayer$view = F6(
 					_0: _user$project$MidiPlayer$centerLine,
 					_1: {
 						ctor: '::',
-						_0: A5(_user$project$MidiPlayer$control, options, id, fullscreen, midi.tracks, playing),
-						_1: {ctor: '[]'}
+						_0: A2(_elm_lang$html$Html_Lazy$lazy, _user$project$MidiPlayer$viewTitle, title),
+						_1: {
+							ctor: '::',
+							_0: A5(_user$project$MidiPlayer$control, options, id, fullscreen, midi.tracks, playing),
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			});
@@ -13587,14 +13558,68 @@ var _user$project$WebAudioApi$decodeAudioData = function (_p2) {
 		_user$project$Native_WebAudioApi.decodeAudioData(_p2));
 };
 
+var _user$project$Main$note = A2(
+	_elm_lang$svg$Svg$svg,
+	{
+		ctor: '::',
+		_0: _elm_lang$svg$Svg_Attributes$width('36'),
+		_1: {
+			ctor: '::',
+			_0: _elm_lang$svg$Svg_Attributes$height('36'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$svg$Svg_Attributes$class('shape-note'),
+				_1: {ctor: '[]'}
+			}
+		}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$svg$Svg$path,
+			{
+				ctor: '::',
+				_0: _elm_lang$svg$Svg_Attributes$d('M16,6L18,30L20,30L18,8zM18,12L29,15L29,12L16,6zM18,30L15,30z'),
+				_1: {ctor: '[]'}
+			},
+			{ctor: '[]'}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$svg$Svg$circle,
+				{
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$cx('15'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$cy('29'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$r('5'),
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {ctor: '[]'}
+		}
+	});
 var _user$project$Main$viewLink = A2(
 	_elm_lang$html$Html$ul,
-	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('links'),
+		_1: {ctor: '[]'}
+	},
 	{
 		ctor: '::',
 		_0: A2(
 			_elm_lang$html$Html$li,
-			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('links-item'),
+				_1: {ctor: '[]'}
+			},
 			{
 				ctor: '::',
 				_0: A2(
@@ -13606,7 +13631,7 @@ var _user$project$Main$viewLink = A2(
 					},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('SoundCloud'),
+						_0: _elm_lang$html$Html$text('SoundCloud(@jinjor)'),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
@@ -13615,7 +13640,11 @@ var _user$project$Main$viewLink = A2(
 			ctor: '::',
 			_0: A2(
 				_elm_lang$html$Html$li,
-				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('links-item'),
+					_1: {ctor: '[]'}
+				},
 				{
 					ctor: '::',
 					_0: A2(
@@ -13627,7 +13656,7 @@ var _user$project$Main$viewLink = A2(
 						},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text('GitHub'),
+							_0: _elm_lang$html$Html$text('GitHub(@jinjor)'),
 							_1: {ctor: '[]'}
 						}),
 					_1: {ctor: '[]'}
@@ -13636,7 +13665,11 @@ var _user$project$Main$viewLink = A2(
 				ctor: '::',
 				_0: A2(
 					_elm_lang$html$Html$li,
-					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('links-item'),
+						_1: {ctor: '[]'}
+					},
 					{
 						ctor: '::',
 						_0: A2(
@@ -13648,7 +13681,7 @@ var _user$project$Main$viewLink = A2(
 							},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('Twitter'),
+								_0: _elm_lang$html$Html$text('Twitter(@jinjor)'),
 								_1: {ctor: '[]'}
 							}),
 						_1: {ctor: '[]'}
@@ -13657,7 +13690,11 @@ var _user$project$Main$viewLink = A2(
 					ctor: '::',
 					_0: A2(
 						_elm_lang$html$Html$li,
-						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('links-item'),
+							_1: {ctor: '[]'}
+						},
 						{
 							ctor: '::',
 							_0: A2(
@@ -13669,12 +13706,38 @@ var _user$project$Main$viewLink = A2(
 								},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('Blog'),
+									_0: _elm_lang$html$Html$text('ジンジャー研究室（id:jinjor）'),
 									_1: {ctor: '[]'}
 								}),
 							_1: {ctor: '[]'}
 						}),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$li,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('links-item'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$a,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$href('mailto:jinjorweb@gmail.com'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('メール: jinjorweb@gmail.com'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		}
@@ -14015,7 +14078,7 @@ var _user$project$Main$viewHeader = A2(
 	});
 var _user$project$Main$introduction = function (s) {
 	return A2(
-		_elm_lang$html$Html$p,
+		_elm_lang$html$Html$span,
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html_Attributes$class('introduction'),
@@ -14027,6 +14090,25 @@ var _user$project$Main$introduction = function (s) {
 			_1: {ctor: '[]'}
 		});
 };
+var _user$project$Main$headline = F2(
+	function (title, comment) {
+		return A2(
+			_elm_lang$html$Html$h2,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _user$project$Main$note,
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(title),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$introduction(comment),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
 var _user$project$Main$splitWhile = F3(
 	function (f, taken, list) {
 		splitWhile:
@@ -14291,7 +14373,7 @@ var _user$project$Main$viewPlayerHelp = F2(
 												function (_p10) {
 													var _p11 = _p10;
 													var _p12 = _p11._0;
-													return A6(
+													return A7(
 														_user$project$MidiPlayer$view,
 														{
 															onBack: _user$project$Main$Back,
@@ -14302,6 +14384,7 @@ var _user$project$Main$viewPlayerHelp = F2(
 															onClose: _user$project$Main$Close
 														},
 														content.hash,
+														content.title,
 														model.fullscreen,
 														model.playing,
 														(model.currentTime - model.startTime) + _p9._2,
@@ -14475,8 +14558,8 @@ var _user$project$Main$update = F2(
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Main',
 						{
-							start: {line: 134, column: 5},
-							end: {line: 291, column: 14}
+							start: {line: 135, column: 5},
+							end: {line: 292, column: 14}
 						},
 						_p13)(
 						A2(
@@ -15134,121 +15217,61 @@ var _user$project$Main$view = function (model) {
 						_0: _user$project$Main$introduction('ジンジャー と Yosuke Torii のホームページ'),
 						_1: {
 							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$h2,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _user$project$Shape$note,
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('Music'),
-										_1: {ctor: '[]'}
-									}
-								}),
+							_0: A2(_user$project$Main$headline, 'Music', '世界を創る音楽'),
 							_1: {
 								ctor: '::',
-								_0: _user$project$Main$introduction('世界を創る音楽'),
+								_0: A2(
+									_elm_lang$html$Html$ul,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('music-items'),
+										_1: {ctor: '[]'}
+									},
+									A2(
+										_elm_lang$core$List$map,
+										A2(_elm_lang$html$Html_Lazy$lazy2, _user$project$Main$viewMusicItem, model.selected),
+										_user$project$Main$contents)),
 								_1: {
 									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$ul,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('music-items'),
-											_1: {ctor: '[]'}
-										},
-										A2(
-											_elm_lang$core$List$map,
-											A2(_elm_lang$html$Html_Lazy$lazy2, _user$project$Main$viewMusicItem, model.selected),
-											_user$project$Main$contents)),
+									_0: function () {
+										var _p31 = model.error;
+										if (_p31.ctor === 'NoError') {
+											return _elm_lang$html$Html$text('');
+										} else {
+											return _elm_lang$html$Html$text(
+												_elm_lang$core$Basics$toString(_p31._1));
+										}
+									}(),
 									_1: {
 										ctor: '::',
-										_0: function () {
-											var _p31 = model.error;
-											if (_p31.ctor === 'NoError') {
-												return _elm_lang$html$Html$text('');
-											} else {
-												return _elm_lang$html$Html$text(
-													_elm_lang$core$Basics$toString(_p31._1));
-											}
-										}(),
+										_0: A2(_user$project$Main$headline, 'Development', 'プログラミングは芸術'),
 										_1: {
 											ctor: '::',
 											_0: A2(
-												_elm_lang$html$Html$h2,
-												{ctor: '[]'},
+												_elm_lang$html$Html$div,
 												{
 													ctor: '::',
-													_0: _user$project$Shape$note,
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('Development'),
-														_1: {ctor: '[]'}
-													}
-												}),
+													_0: _elm_lang$html$Html_Attributes$class('repository'),
+													_1: {ctor: '[]'}
+												},
+												_elm_lang$core$Tuple$second(
+													_user$project$GitHub$view(model.gitHub))),
 											_1: {
 												ctor: '::',
-												_0: _user$project$Main$introduction('プログラミングは芸術'),
+												_0: A2(_user$project$Main$headline, 'Paintings', 'ペイントでお絵かき'),
 												_1: {
 													ctor: '::',
-													_0: A2(
-														_elm_lang$html$Html$div,
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$class('repository'),
-															_1: {ctor: '[]'}
-														},
-														_elm_lang$core$Tuple$second(
-															_user$project$GitHub$view(model.gitHub))),
+													_0: _user$project$Main$viewPaintings,
 													_1: {
 														ctor: '::',
-														_0: A2(
-															_elm_lang$html$Html$h2,
-															{ctor: '[]'},
-															{
-																ctor: '::',
-																_0: _user$project$Shape$note,
-																_1: {
-																	ctor: '::',
-																	_0: _elm_lang$html$Html$text('Paintings'),
-																	_1: {ctor: '[]'}
-																}
-															}),
+														_0: A2(_user$project$Main$headline, 'Links', '主な SNS と連絡先'),
 														_1: {
 															ctor: '::',
-															_0: _user$project$Main$introduction('ペイントでお絵かき'),
+															_0: _user$project$Main$viewLink,
 															_1: {
 																ctor: '::',
-																_0: _user$project$Main$viewPaintings,
-																_1: {
-																	ctor: '::',
-																	_0: A2(
-																		_elm_lang$html$Html$h2,
-																		{ctor: '[]'},
-																		{
-																			ctor: '::',
-																			_0: _user$project$Shape$note,
-																			_1: {
-																				ctor: '::',
-																				_0: _elm_lang$html$Html$text('Links'),
-																				_1: {ctor: '[]'}
-																			}
-																		}),
-																	_1: {
-																		ctor: '::',
-																		_0: _user$project$Main$introduction(''),
-																		_1: {
-																			ctor: '::',
-																			_0: _user$project$Main$viewLink,
-																			_1: {
-																				ctor: '::',
-																				_0: _user$project$Main$viewPlayer(model),
-																				_1: {ctor: '[]'}
-																			}
-																		}
-																	}
-																}
+																_0: _user$project$Main$viewPlayer(model),
+																_1: {ctor: '[]'}
 															}
 														}
 													}

@@ -6,10 +6,6 @@ html, head, body {
 body {
   font-family: 'Noto Sans Japanese', sans-serif;
   font-size: 95%;
-  /*background: repeating-linear-gradient(30deg, transparent, rgba(255,255,255,0.8) 80px, #fff 160px, transparent 220px)
-            , repeating-linear-gradient(48deg, transparent, transparent 100px, rgba(200,255,200,0.5) 380px, transparent 700px, transparent 1440px);
-  background-attachment:fixed;*/
-  /*background-position: 0 -700px;*/
 }
 
 h1 {
@@ -17,7 +13,7 @@ h1 {
 }
 
 h2 {
-  margin: 1em 0;
+  margin: 1.5em 0 1em;
   font-size: 1.5em;
   border-bottom: solid 1px;
   font-weight: normal;
@@ -26,25 +22,30 @@ h2 {
 
 ul {
   list-style-type: none;
+  padding-left: 0;
 }
 
 a {
-  color: #444;
+  color: #469;
   text-decoration: none;
   cursor: pointer;
 }
 
 a:hover {
-  /*text-decoration: underline;*/
+  text-decoration: underline;
 }
 
 .body {
-  /*margin-top: 9em;*/
   margin-top: 2em;
 }
 
 .introduction {
   margin-bottom: 1em;
+}
+
+h2 .introduction {
+  font-size: small;
+  margin-left: 3ch;
 }
 
 .container {
@@ -72,12 +73,6 @@ a:hover {
   border-top: solid 1px #000;
 }
 
-.player-container.player-fullscreen {
-  /*height: 100%;*/
-  /*pointer-events: none;*/
-  /*background-color: #000;*/
-}
-
 .midi-player {
   position: relative;
   height: 180px;
@@ -86,6 +81,14 @@ a:hover {
   top: 0;
   left: 0;
   width: 100%;
+}
+
+.midi-player-title {
+  position: absolute;
+  left: 10px;
+  top: 4px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #aaa;
 }
 
 .player-container.player-fullscreen .midi-player {
@@ -204,11 +207,7 @@ a:hover {
 .music-item-description {
   margin-top: 8px;
   font-size: 12px;
-  color: #aaa;
-}
-
-.music-item-description a {
-  color: #abd;
+  opacity: 0.6;
 }
 
 .header {
@@ -216,11 +215,6 @@ a:hover {
   padding-bottom: 0.5em;
   border-bottom: solid 1px #000;
   background: rgba(255, 255, 255, 0.5);
-  /*position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  mix-blend-mode: overlay;*/
 }
 
 .mp3 {
@@ -331,6 +325,9 @@ a:hover {
   margin-left: 16px;
 }
 
+
+/* Paintings */
+
 .paintings-container {
   display: flex;
 }
@@ -342,4 +339,15 @@ a:hover {
 .paintings-image {
   max-width: 100%;
   vertical-align: bottom;
+}
+
+
+/* Links */
+
+.links {
+  margin-bottom: 200px;
+}
+
+.links-item {
+  margin: 1em 0;
 }
