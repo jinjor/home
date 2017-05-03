@@ -270,7 +270,7 @@ update msg model =
                 |> andThen
                     (\model ->
                         ( { model | selected = Nothing }
-                        , Cmd.none
+                        , Navigation.modifyUrl "/"
                         )
                     )
 
