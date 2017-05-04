@@ -1,7 +1,14 @@
-elm-stuff
+# node
 node_modules
 
+# elm
+elm-stuff
 elm-binary-decoder
 lib
 
+# contents
 contents/music/others
+
+# GAE
+*~
+*.pyc

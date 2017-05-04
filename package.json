@@ -1,12 +1,14 @@
 {
   "name": "home",
   "version": "1.0.0",
-  "description": "",
+  "description": "Jinjor's home page",
   "main": "index.js",
   "scripts": {
-    "dev": "elm-live src/Main.elm --output=assets/elm.js --open --warn",
+    "dev-client": "elm-live src/Main.elm --output=assets/elm.js --open --warn",
+    "dev-server": "dev_appserver.py app.yaml",
     "build": "elm-make src/Main.elm --output=assets/elm.js --warn",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "gcloud app deploy"
   },
   "repository": {
     "type": "git",

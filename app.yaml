@@ -1,0 +1,22 @@
+runtime: go
+api_version: go1
+
+handlers:
+- url: /assets
+  static_dir: assets
+- url: /contents
+  static_dir: contents
+- url: /.*
+  script: _go_app
+
+
+skip_files:
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- node_modules
+- elm-stuff
+- elm-binary-decoder
+- lib
