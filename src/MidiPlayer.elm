@@ -48,7 +48,7 @@ view options id title fullscreen playing time midi =
                 |> svg (svgAttributes currentPosition)
             , centerLine
             , lazy viewTitle title
-            , control options id fullscreen midi.tracks playing
+            , control options id title fullscreen midi.tracks playing
             ]
 
 
@@ -82,8 +82,8 @@ svgAttributes currentPosition =
     ]
 
 
-control : Options msg -> String -> Bool -> List Track -> Bool -> Html msg
-control options id fullscreen tracks playing =
+control : Options msg -> String -> String -> Bool -> List Track -> Bool -> Html msg
+control options id title fullscreen tracks playing =
     div
         [ HA.class "midi-player-control" ]
         [ lazy backButton options
@@ -92,7 +92,7 @@ control options id fullscreen tracks playing =
             lazy miniButton options
           else
             lazy fullButton options
-        , lazy2 tweetButton options id
+        , lazy3 tweetButton options id title
         , lazy closeButton options.onClose
         ]
 
@@ -146,12 +146,12 @@ miniButton options =
         (S.path [ SA.stroke "#ddd", SA.strokeWidth "2", fill "transparent", SA.d "M13,21H23" ] [])
 
 
-tweetButton : Options msg -> String -> Html msg
-tweetButton options id =
+tweetButton : Options msg -> String -> String -> Html msg
+tweetButton options id title =
     controlButton
         []
         (S.a
-            [ SA.xlinkHref (tweetUrl id)
+            [ SA.xlinkHref (tweetUrl id title)
             , SA.target "_blank"
             ]
             [ S.image
@@ -164,15 +164,15 @@ tweetButton options id =
         )
 
 
-tweetUrl : String -> String
-tweetUrl id =
+tweetUrl : String -> String -> String
+tweetUrl id title =
     "https://twitter.com/intent/tweet"
         ++ "?original_referer="
         ++ "http%3A%2F%2Flocalhost%3A8000%2F"
         ++ "&ref_src="
         ++ "twsrc%5Etfw"
         ++ "&text="
-        ++ ""
+        ++ ("♪" ++ title ++ " - ジンジャー")
         ++ "&tw_p=tweetbutton&url=http://world-maker.com/?content="
         ++ Http.encodeUri id
 

@@ -91,6 +91,10 @@ h2 .introduction {
   color: #aaa;
 }
 
+.player-fullscreen .midi-player-title {
+  font-size: x-large;
+}
+
 .player-container.player-fullscreen .midi-player {
   height: 100%;
   position: fixed;

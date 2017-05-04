@@ -13149,35 +13149,39 @@ var _user$project$MidiPlayer$closeButton = function (onClose) {
 			},
 			{ctor: '[]'}));
 };
-var _user$project$MidiPlayer$tweetUrl = function (id) {
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		'https://twitter.com/intent/tweet',
-		A2(
+var _user$project$MidiPlayer$tweetUrl = F2(
+	function (id, title) {
+		return A2(
 			_elm_lang$core$Basics_ops['++'],
-			'?original_referer=',
+			'https://twitter.com/intent/tweet',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				'http%3A%2F%2Flocalhost%3A8000%2F',
+				'?original_referer=',
 				A2(
 					_elm_lang$core$Basics_ops['++'],
-					'&ref_src=',
+					'http%3A%2F%2Flocalhost%3A8000%2F',
 					A2(
 						_elm_lang$core$Basics_ops['++'],
-						'twsrc%5Etfw',
+						'&ref_src=',
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							'&text=',
+							'twsrc%5Etfw',
 							A2(
 								_elm_lang$core$Basics_ops['++'],
-								'',
+								'&text=',
 								A2(
 									_elm_lang$core$Basics_ops['++'],
-									'&tw_p=tweetbutton&url=http://world-maker.com/?content=',
-									_elm_lang$http$Http$encodeUri(id)))))))));
-};
-var _user$project$MidiPlayer$tweetButton = F2(
-	function (options, id) {
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										'♪',
+										A2(_elm_lang$core$Basics_ops['++'], title, ' - ジンジャー')),
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										'&tw_p=tweetbutton&url=http://world-maker.com/?content=',
+										_elm_lang$http$Http$encodeUri(id)))))))));
+	});
+var _user$project$MidiPlayer$tweetButton = F3(
+	function (options, id, title) {
 		return A2(
 			_user$project$MidiPlayer$controlButton,
 			{ctor: '[]'},
@@ -13186,7 +13190,7 @@ var _user$project$MidiPlayer$tweetButton = F2(
 				{
 					ctor: '::',
 					_0: _elm_lang$svg$Svg_Attributes$xlinkHref(
-						_user$project$MidiPlayer$tweetUrl(id)),
+						A2(_user$project$MidiPlayer$tweetUrl, id, title)),
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$svg$Svg_Attributes$target('_blank'),
@@ -13330,8 +13334,8 @@ var _user$project$MidiPlayer$disabledControl = function (onClose) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$MidiPlayer$control = F5(
-	function (options, id, fullscreen, tracks, playing) {
+var _user$project$MidiPlayer$control = F6(
+	function (options, id, title, fullscreen, tracks, playing) {
 		return A2(
 			_elm_lang$html$Html$div,
 			{
@@ -13350,7 +13354,7 @@ var _user$project$MidiPlayer$control = F5(
 						_0: fullscreen ? A2(_elm_lang$html$Html_Lazy$lazy, _user$project$MidiPlayer$miniButton, options) : A2(_elm_lang$html$Html_Lazy$lazy, _user$project$MidiPlayer$fullButton, options),
 						_1: {
 							ctor: '::',
-							_0: A3(_elm_lang$html$Html_Lazy$lazy2, _user$project$MidiPlayer$tweetButton, options, id),
+							_0: A4(_elm_lang$html$Html_Lazy$lazy3, _user$project$MidiPlayer$tweetButton, options, id, title),
 							_1: {
 								ctor: '::',
 								_0: A2(_elm_lang$html$Html_Lazy$lazy, _user$project$MidiPlayer$closeButton, options.onClose),
@@ -13491,7 +13495,7 @@ var _user$project$MidiPlayer$view = F7(
 						_0: A2(_elm_lang$html$Html_Lazy$lazy, _user$project$MidiPlayer$viewTitle, title),
 						_1: {
 							ctor: '::',
-							_0: A5(_user$project$MidiPlayer$control, options, id, fullscreen, midi.tracks, playing),
+							_0: A6(_user$project$MidiPlayer$control, options, id, title, fullscreen, midi.tracks, playing),
 							_1: {ctor: '[]'}
 						}
 					}
@@ -14637,7 +14641,7 @@ var _user$project$Main$update = F2(
 							_0: _elm_lang$core$Native_Utils.update(
 								model,
 								{selected: _elm_lang$core$Maybe$Nothing}),
-							_1: _elm_lang$core$Platform_Cmd$none
+							_1: _elm_lang$navigation$Navigation$modifyUrl('/')
 						};
 					},
 					A2(
@@ -14889,47 +14893,47 @@ var _user$project$Main$contents = {
 										ctor: '::',
 										_0: A5(
 											_user$project$Main$Content,
-											'cloud',
-											'cloud',
+											'cloud-passage',
+											'Cloud Passage',
 											'スマホゲーム [Block Brothers](http://blockbros.net/) BGM',
 											_elm_lang$core$Maybe$Just('block.png'),
-											_user$project$Main$Mp3('2016/cloud.mp3')),
+											_user$project$Main$Mp3('2016/cloud-passage.mp3')),
 										_1: {
 											ctor: '::',
 											_0: A5(
 												_user$project$Main$Content,
-												'ice',
-												'ice',
+												'ice-world',
+												'Ice World',
 												'スマホゲーム [Block Brothers](http://blockbros.net/) 未収録曲',
 												_elm_lang$core$Maybe$Just('block.png'),
-												_user$project$Main$Mp3('2016/ice.mp3')),
+												_user$project$Main$Mp3('2016/ice-world.mp3')),
 											_1: {
 												ctor: '::',
 												_0: A5(
 													_user$project$Main$Content,
-													'jungle',
-													'jungle',
+													'welcome-to-the-jungle',
+													'Welcome to the Jungle!',
 													'スマホゲーム [Block Brothers](http://blockbros.net/) 未収録曲',
 													_elm_lang$core$Maybe$Just('block.png'),
-													_user$project$Main$Mp3('2016/jungle.mp3')),
+													_user$project$Main$Mp3('2016/welcome-to-the-jungle.mp3')),
 												_1: {
 													ctor: '::',
 													_0: A5(
 														_user$project$Main$Content,
-														'ninja',
-														'ninja',
+														'moon-over-the-castle',
+														'Moon Over The Castle',
 														'スマホゲーム [Block Brothers](http://blockbros.net/) BGM',
 														_elm_lang$core$Maybe$Just('block.png'),
-														_user$project$Main$Mp3('2016/ninja.mp3')),
+														_user$project$Main$Mp3('2016/moon-over-the-castle.mp3')),
 													_1: {
 														ctor: '::',
 														_0: A5(
 															_user$project$Main$Content,
-															'volcano',
-															'volcano',
+															'lava-mountain',
+															'Lava Mountain',
 															'スマホゲーム [Block Brothers](http://blockbros.net/) 未収録曲',
 															_elm_lang$core$Maybe$Just('block.png'),
-															_user$project$Main$Mp3('2016/volcano.mp3')),
+															_user$project$Main$Mp3('2016/lava-mountain.mp3')),
 														_1: {
 															ctor: '::',
 															_0: A5(
