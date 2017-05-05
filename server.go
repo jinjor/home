@@ -5,10 +5,20 @@ import (
     "fmt"
     "net/http"
     "os"
+    "encoding/json"
+    "io/ioutil"
 )
+
+type Music struct {
+    Id string `json:"id"`
+    Path string `json:"path"`
+    Title string `json:"title"`
+    Description string `json:"description"`
+}
 
 type Info struct {
     Title string
+    Path string
     Description string
     Image string
 }
@@ -26,14 +36,26 @@ var defaultInfo =
 
 
 func handler(w http.ResponseWriter, r *http.Request) {
-    contentPath := r.URL.Query().Get("content-path")
-    contentTitle := r.URL.Query().Get("content-title")
-    contentDescription := r.URL.Query().Get("content-description")
-    var info *Info
-    if contentPath != "" && contentTitle != "" && contentDescription != "" && Exists("contents/music/" + contentPath) {
-      info = &Info{Title: contentTitle, Description: contentDescription, Image: "http://world-maker.com/assets/world-maker.jpg"}
-    } else {
-      info = defaultInfo
+    contentId := r.URL.Query().Get("content")
+    info := defaultInfo
+    if contentId != "" {
+      file, _ := ioutil.ReadFile("contents/music.json")
+      musics := make([]Music,0)
+      json.Unmarshal(file, &musics)
+      musicMap := make(map[string]Music)
+      for _, value := range musics {
+        musicMap[value.Id] = value
+      }
+      if _, ok := musicMap[contentId]; ok {
+        music := musicMap[contentId]
+        if Exists("contents/music/" + music.Path) {
+          info = &Info{
+            Title: music.Title,
+            Description: music.Description,
+            Image: "http://world-maker.com/assets/world-maker.jpg",
+          }
+        }
+      }
     }
     t, err := template.ParseFiles("index.html")
     if err != nil {

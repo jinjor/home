@@ -13158,12 +13158,25 @@ var _user$project$MidiPlayer$tweetUrl = F2(
 				_elm_lang$core$Basics_ops['++'],
 				A2(
 					_elm_lang$core$Basics_ops['++'],
-					'&text=♪',
-					A2(_elm_lang$core$Basics_ops['++'], title, ' - ジンジャー')),
+					'?original_referer=',
+					_elm_lang$http$Http$encodeUri('http://world-maker.com')),
 				A2(
 					_elm_lang$core$Basics_ops['++'],
-					'&url=http://world-maker.com/?content=',
-					_elm_lang$http$Http$encodeUri(id))));
+					'&ref_src=twsrc%5Etfw',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'&text=♪',
+							_elm_lang$http$Http$encodeUri(
+								A2(_elm_lang$core$Basics_ops['++'], title, ' - ジンジャー'))),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'&tw_p=tweetbutton',
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'&url=http://world-maker.com/?content=',
+								_elm_lang$http$Http$encodeUri(id)))))));
 	});
 var _user$project$MidiPlayer$tweetButton = F3(
 	function (options, id, title) {
