@@ -36,7 +36,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
     contentId := r.URL.Query().Get("content")
     info := defaultInfo
     if contentId != "" {
-      file, _ := ioutil.ReadFile("contents/music.json")
+      file, _ := ioutil.ReadFile("music.json")
       musics := make([]Music,0)
       json.Unmarshal(file, &musics)
       musicMap := make(map[string]Music)
