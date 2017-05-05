@@ -13156,29 +13156,14 @@ var _user$project$MidiPlayer$tweetUrl = F2(
 			'https://twitter.com/intent/tweet',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				'?original_referer=',
 				A2(
 					_elm_lang$core$Basics_ops['++'],
-					'http%3A%2F%2Flocalhost%3A8000%2F',
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'&ref_src=',
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'twsrc%5Etfw',
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								'&text=',
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										'♪',
-										A2(_elm_lang$core$Basics_ops['++'], title, ' - ジンジャー')),
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										'&tw_p=tweetbutton&url=http://world-maker.com/?content=',
-										_elm_lang$http$Http$encodeUri(id)))))))));
+					'&text=♪',
+					A2(_elm_lang$core$Basics_ops['++'], title, ' - ジンジャー')),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'&url=http://world-maker.com/?content=',
+					_elm_lang$http$Http$encodeUri(id))));
 	});
 var _user$project$MidiPlayer$tweetButton = F3(
 	function (options, id, title) {
@@ -13561,6 +13546,428 @@ var _user$project$WebAudioApi$decodeAudioData = function (_p2) {
 		_user$project$WebAudioApi$AudioBuffer,
 		_user$project$Native_WebAudioApi.decodeAudioData(_p2));
 };
+
+var _user$project$MusicContents$encodeDetails = function (details) {
+	var _p0 = details;
+	switch (_p0.ctor) {
+		case 'Mp3':
+			return _elm_lang$core$Json_Encode$object(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'mp3',
+						_1: _elm_lang$core$Json_Encode$string(_p0._0)
+					},
+					_1: {ctor: '[]'}
+				});
+		case 'MidiAndMp3':
+			return _elm_lang$core$Json_Encode$object(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'midi',
+						_1: _elm_lang$core$Json_Encode$string(_p0._0)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'mp3',
+							_1: _elm_lang$core$Json_Encode$string(_p0._1)
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'delay',
+								_1: _elm_lang$core$Json_Encode$float(_p0._2)
+							},
+							_1: {ctor: '[]'}
+						}
+					}
+				});
+		default:
+			return _elm_lang$core$Json_Encode$object(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'id',
+						_1: _elm_lang$core$Json_Encode$string(_p0._0)
+					},
+					_1: {ctor: '[]'}
+				});
+	}
+};
+var _user$project$MusicContents$encodeContent = function (content) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'id',
+				_1: _elm_lang$core$Json_Encode$string(content.id)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'title',
+					_1: _elm_lang$core$Json_Encode$string(content.title)
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'description',
+						_1: _elm_lang$core$Json_Encode$string(content.description)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'image',
+							_1: A2(
+								_elm_lang$core$Maybe$withDefault,
+								_elm_lang$core$Json_Encode$null,
+								A2(_elm_lang$core$Maybe$map, _elm_lang$core$Json_Encode$string, content.image))
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'details',
+								_1: _user$project$MusicContents$encodeDetails(content.details)
+							},
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$MusicContents$encodeContents = function (contents) {
+	return _elm_lang$core$Json_Encode$list(
+		A2(_elm_lang$core$List$map, _user$project$MusicContents$encodeContent, contents));
+};
+var _user$project$MusicContents$Content = F5(
+	function (a, b, c, d, e) {
+		return {id: a, title: b, description: c, image: d, details: e};
+	});
+var _user$project$MusicContents$SoundCloud = function (a) {
+	return {ctor: 'SoundCloud', _0: a};
+};
+var _user$project$MusicContents$MidiAndMp3 = F3(
+	function (a, b, c) {
+		return {ctor: 'MidiAndMp3', _0: a, _1: b, _2: c};
+	});
+var _user$project$MusicContents$Mp3 = function (a) {
+	return {ctor: 'Mp3', _0: a};
+};
+var _user$project$MusicContents$contents = {
+	ctor: '::',
+	_0: A5(
+		_user$project$MusicContents$Content,
+		'monday-morning',
+		'Monday Morning',
+		'',
+		_elm_lang$core$Maybe$Nothing,
+		A3(_user$project$MusicContents$MidiAndMp3, '2017/monday-morning.mid', '2017/monday-morning.mp3', 1250)),
+	_1: {
+		ctor: '::',
+		_0: A5(
+			_user$project$MusicContents$Content,
+			'train-journey',
+			'列車の旅',
+			'「オレ宿」の裏企画「オレが考えた発車ベルその壱」参加曲',
+			_elm_lang$core$Maybe$Just('train.jpg'),
+			_user$project$MusicContents$SoundCloud('318647824')),
+		_1: {
+			ctor: '::',
+			_0: A5(
+				_user$project$MusicContents$Content,
+				'good-night',
+				'おやすみ',
+				'<a href=\"http://carrotwine.muse.bindsite.jp/myinn.html\" target=\"_blank\">「オレが考えた宿で一泊」</a>参加曲',
+				_elm_lang$core$Maybe$Just('inn.jpg'),
+				_user$project$MusicContents$SoundCloud('318080873')),
+			_1: {
+				ctor: '::',
+				_0: A5(
+					_user$project$MusicContents$Content,
+					'little-world',
+					'Little World',
+					'<a href=\"http://carrotwine.muse.bindsite.jp/dtmmeeting4.html\" target=\"_blank\">「オレが考えたフィールド曲」</a>参加曲',
+					_elm_lang$core$Maybe$Just('field.jpg'),
+					_user$project$MusicContents$SoundCloud('306090165')),
+				_1: {
+					ctor: '::',
+					_0: A5(
+						_user$project$MusicContents$Content,
+						'hokora',
+						'ほこら',
+						'[「オレが考えたほこらの曲」](http://carrotwine.muse.bindsite.jp/dtmermeeting.html)参加曲',
+						_elm_lang$core$Maybe$Just('hokora.jpg'),
+						A3(_user$project$MusicContents$MidiAndMp3, '2016/hokora.mid', '2016/hokora.mp3', 2770)),
+					_1: {
+						ctor: '::',
+						_0: A5(
+							_user$project$MusicContents$Content,
+							'hokora-fc',
+							'ほこら (FCアレンジ)',
+							'by [ハイデン](https://twitter.com/hydden0310)さん',
+							_elm_lang$core$Maybe$Just('hokora.jpg'),
+							_user$project$MusicContents$Mp3('2016/hokora-fc.mp3')),
+						_1: {
+							ctor: '::',
+							_0: A5(
+								_user$project$MusicContents$Content,
+								'kira-kira',
+								'Kira Kira',
+								'',
+								_elm_lang$core$Maybe$Nothing,
+								_user$project$MusicContents$SoundCloud('278194362')),
+							_1: {
+								ctor: '::',
+								_0: A5(
+									_user$project$MusicContents$Content,
+									'candy',
+									'Candy',
+									'',
+									_elm_lang$core$Maybe$Nothing,
+									_user$project$MusicContents$SoundCloud('240810123')),
+								_1: {
+									ctor: '::',
+									_0: A5(
+										_user$project$MusicContents$Content,
+										'ancient',
+										'ancient',
+										'スマホゲーム [Block Brothers](http://blockbros.net/) BGM',
+										_elm_lang$core$Maybe$Just('block.png'),
+										_user$project$MusicContents$Mp3('2016/ancient.mp3')),
+									_1: {
+										ctor: '::',
+										_0: A5(
+											_user$project$MusicContents$Content,
+											'cloud-passage',
+											'Cloud Passage',
+											'スマホゲーム [Block Brothers](http://blockbros.net/) BGM',
+											_elm_lang$core$Maybe$Just('block.png'),
+											_user$project$MusicContents$Mp3('2016/cloud-passage.mp3')),
+										_1: {
+											ctor: '::',
+											_0: A5(
+												_user$project$MusicContents$Content,
+												'ice-world',
+												'Ice World',
+												'スマホゲーム [Block Brothers](http://blockbros.net/) 未収録曲',
+												_elm_lang$core$Maybe$Just('block.png'),
+												_user$project$MusicContents$Mp3('2016/ice-world.mp3')),
+											_1: {
+												ctor: '::',
+												_0: A5(
+													_user$project$MusicContents$Content,
+													'welcome-to-the-jungle',
+													'Welcome to the Jungle!',
+													'スマホゲーム [Block Brothers](http://blockbros.net/) 未収録曲',
+													_elm_lang$core$Maybe$Just('block.png'),
+													_user$project$MusicContents$Mp3('2016/welcome-to-the-jungle.mp3')),
+												_1: {
+													ctor: '::',
+													_0: A5(
+														_user$project$MusicContents$Content,
+														'moon-over-the-castle',
+														'Moon Over The Castle',
+														'スマホゲーム [Block Brothers](http://blockbros.net/) BGM',
+														_elm_lang$core$Maybe$Just('block.png'),
+														_user$project$MusicContents$Mp3('2016/moon-over-the-castle.mp3')),
+													_1: {
+														ctor: '::',
+														_0: A5(
+															_user$project$MusicContents$Content,
+															'lava-mountain',
+															'Lava Mountain',
+															'スマホゲーム [Block Brothers](http://blockbros.net/) 未収録曲',
+															_elm_lang$core$Maybe$Just('block.png'),
+															_user$project$MusicContents$Mp3('2016/lava-mountain.mp3')),
+														_1: {
+															ctor: '::',
+															_0: A5(
+																_user$project$MusicContents$Content,
+																'megalopolis',
+																'Megalopolis',
+																'',
+																_elm_lang$core$Maybe$Nothing,
+																_user$project$MusicContents$SoundCloud('236197155')),
+															_1: {
+																ctor: '::',
+																_0: A5(
+																	_user$project$MusicContents$Content,
+																	'voice-of-water',
+																	'Voice of Water',
+																	'',
+																	_elm_lang$core$Maybe$Nothing,
+																	_user$project$MusicContents$SoundCloud('233781385')),
+																_1: {
+																	ctor: '::',
+																	_0: A5(
+																		_user$project$MusicContents$Content,
+																		'wedding-march',
+																		'Wedding March',
+																		'自作自演',
+																		_elm_lang$core$Maybe$Nothing,
+																		_user$project$MusicContents$SoundCloud('228037751')),
+																	_1: {
+																		ctor: '::',
+																		_0: A5(
+																			_user$project$MusicContents$Content,
+																			'glass-city',
+																			'Glass City',
+																			'',
+																			_elm_lang$core$Maybe$Nothing,
+																			_user$project$MusicContents$SoundCloud('200427994')),
+																		_1: {
+																			ctor: '::',
+																			_0: A5(
+																				_user$project$MusicContents$Content,
+																				'summer',
+																				'Summer',
+																				'',
+																				_elm_lang$core$Maybe$Nothing,
+																				A3(_user$project$MusicContents$MidiAndMp3, '2014/summer.mid', '2014/summer.mp3', 1420)),
+																			_1: {
+																				ctor: '::',
+																				_0: A5(
+																					_user$project$MusicContents$Content,
+																					'sakura',
+																					'桜舞う',
+																					'',
+																					_elm_lang$core$Maybe$Nothing,
+																					A3(_user$project$MusicContents$MidiAndMp3, '2014/sakura.mid', '2014/sakura.mp3', 1600)),
+																				_1: {
+																					ctor: '::',
+																					_0: A5(
+																						_user$project$MusicContents$Content,
+																						'midnight',
+																						'真夜中の暇つぶし',
+																						'',
+																						_elm_lang$core$Maybe$Nothing,
+																						A3(_user$project$MusicContents$MidiAndMp3, '2014/midnight.mid', '2014/midnight.mp3', 540)),
+																					_1: {
+																						ctor: '::',
+																						_0: A5(
+																							_user$project$MusicContents$Content,
+																							'string',
+																							'糸',
+																							'',
+																							_elm_lang$core$Maybe$Nothing,
+																							A3(_user$project$MusicContents$MidiAndMp3, '2013/string.mid', '2013/string.mp3', 840)),
+																						_1: {
+																							ctor: '::',
+																							_0: A5(
+																								_user$project$MusicContents$Content,
+																								'autumn',
+																								'秋風',
+																								'',
+																								_elm_lang$core$Maybe$Nothing,
+																								A3(_user$project$MusicContents$MidiAndMp3, '2013/autumn.mid', '2013/autumn.mp3', 1100)),
+																							_1: {
+																								ctor: '::',
+																								_0: A5(
+																									_user$project$MusicContents$Content,
+																									'afternoon-caos',
+																									'午後のカオス',
+																									'',
+																									_elm_lang$core$Maybe$Nothing,
+																									A3(_user$project$MusicContents$MidiAndMp3, '2013/afternoon_caos.mid', '2013/afternoon_caos.mp3', 700)),
+																								_1: {
+																									ctor: '::',
+																									_0: A5(
+																										_user$project$MusicContents$Content,
+																										'michikusa',
+																										'道草',
+																										'',
+																										_elm_lang$core$Maybe$Nothing,
+																										A3(_user$project$MusicContents$MidiAndMp3, '2013/michikusa.mid', '2013/michikusa.mp3', 860)),
+																									_1: {
+																										ctor: '::',
+																										_0: A5(
+																											_user$project$MusicContents$Content,
+																											'tmp',
+																											'Temporary',
+																											'',
+																											_elm_lang$core$Maybe$Nothing,
+																											A3(_user$project$MusicContents$MidiAndMp3, '2013/tmp.mid', '2013/tmp.mp3', 1700)),
+																										_1: {
+																											ctor: '::',
+																											_0: A5(
+																												_user$project$MusicContents$Content,
+																												'hallucination',
+																												'幻覚',
+																												'',
+																												_elm_lang$core$Maybe$Nothing,
+																												A3(_user$project$MusicContents$MidiAndMp3, '2013/hallucination.mid', '2013/hallucination.mp3', 1200)),
+																											_1: {
+																												ctor: '::',
+																												_0: A5(
+																													_user$project$MusicContents$Content,
+																													'blue',
+																													'Blue',
+																													'',
+																													_elm_lang$core$Maybe$Nothing,
+																													A3(_user$project$MusicContents$MidiAndMp3, '2013/blue.mid', '2013/blue.mp3', 1660)),
+																												_1: {
+																													ctor: '::',
+																													_0: A5(
+																														_user$project$MusicContents$Content,
+																														'painter',
+																														'変人',
+																														'',
+																														_elm_lang$core$Maybe$Nothing,
+																														A3(_user$project$MusicContents$MidiAndMp3, '2012/painter.mid', '2012/painter.mp3', 1800)),
+																													_1: {
+																														ctor: '::',
+																														_0: A5(
+																															_user$project$MusicContents$Content,
+																															'uploar',
+																															'大騒ぎ',
+																															'',
+																															_elm_lang$core$Maybe$Nothing,
+																															A3(_user$project$MusicContents$MidiAndMp3, '2012/uploar.mid', '2012/uploar.mp3', 0)),
+																														_1: {ctor: '[]'}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
+var _user$project$MusicContents$json = _user$project$MusicContents$encodeContents(_user$project$MusicContents$contents);
 
 var _user$project$Main$note = A2(
 	_elm_lang$svg$Svg$svg,
@@ -14243,14 +14650,28 @@ var _user$project$Main$Model = function (a) {
 		};
 	};
 };
-var _user$project$Main$Content = F5(
-	function (a, b, c, d, e) {
-		return {hash: a, title: b, description: c, image: d, details: e};
-	});
 var _user$project$Main$MidiContent = F4(
 	function (a, b, c, d) {
 		return {midiFile: a, mp3File: b, delay: c, midiAndMp3: d};
 	});
+var _user$project$Main$initialMidiCountents = _elm_lang$core$Dict$fromList(
+	A2(
+		_elm_lang$core$List$filterMap,
+		function (content) {
+			var _p9 = content.details;
+			if (_p9.ctor === 'MidiAndMp3') {
+				var _p10 = _p9._0;
+				return _elm_lang$core$Maybe$Just(
+					{
+						ctor: '_Tuple2',
+						_0: _p10,
+						_1: A4(_user$project$Main$MidiContent, _p10, _p9._1, _p9._2, _elm_lang$core$Maybe$Nothing)
+					});
+			} else {
+				return _elm_lang$core$Maybe$Nothing;
+			}
+		},
+		_user$project$MusicContents$contents));
 var _user$project$Main$DecodeError = F2(
 	function (a, b) {
 		return {ctor: 'DecodeError', _0: a, _1: b};
@@ -14358,10 +14779,10 @@ var _user$project$Main$viewPlayerHelp = F2(
 			{
 				ctor: '::',
 				_0: function () {
-					var _p9 = content.details;
-					switch (_p9.ctor) {
+					var _p11 = content.details;
+					switch (_p11.ctor) {
 						case 'Mp3':
-							return A2(_elm_lang$html$Html_Lazy$lazy, _user$project$Main$viewMp3Player, _p9._0);
+							return A2(_elm_lang$html$Html_Lazy$lazy, _user$project$Main$viewMp3Player, _p11._0);
 						case 'MidiAndMp3':
 							return A2(
 								_elm_lang$core$Maybe$withDefault,
@@ -14374,31 +14795,31 @@ var _user$project$Main$viewPlayerHelp = F2(
 											_user$project$MidiPlayer$viewLoading(_user$project$Main$Close),
 											A2(
 												_elm_lang$core$Maybe$map,
-												function (_p10) {
-													var _p11 = _p10;
-													var _p12 = _p11._0;
+												function (_p12) {
+													var _p13 = _p12;
+													var _p14 = _p13._0;
 													return A7(
 														_user$project$MidiPlayer$view,
 														{
 															onBack: _user$project$Main$Back,
-															onStart: A2(_user$project$Main$TriggerStart, _p12, _p11._1),
+															onStart: A2(_user$project$Main$TriggerStart, _p14, _p13._1),
 															onStop: _user$project$Main$Stop,
 															onFullscreen: _user$project$Main$Fullscreen(true),
 															onMinimize: _user$project$Main$Fullscreen(false),
 															onClose: _user$project$Main$Close
 														},
-														content.hash,
+														content.id,
 														content.title,
 														model.fullscreen,
 														model.playing,
-														(model.currentTime - model.startTime) + _p9._2,
-														_p12);
+														(model.currentTime - model.startTime) + _p11._2,
+														_p14);
 												},
 												midiContent.midiAndMp3));
 									},
-									A2(_elm_lang$core$Dict$get, _p9._0, model.midiContents)));
+									A2(_elm_lang$core$Dict$get, _p11._0, model.midiContents)));
 						default:
-							return A2(_elm_lang$html$Html_Lazy$lazy, _user$project$Main$viewSoundCloudPlayer, _p9._0);
+							return A2(_elm_lang$html$Html_Lazy$lazy, _user$project$Main$viewSoundCloudPlayer, _p11._0);
 					}
 				}(),
 				_1: {ctor: '[]'}
@@ -14423,24 +14844,24 @@ var _user$project$Main$TriggerLoadMidiAndMp3 = F3(
 	});
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p13 = msg;
-		switch (_p13.ctor) {
+		var _p15 = msg;
+		switch (_p15.ctor) {
 			case 'NoOp':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'OpenPlayer':
-				var _p17 = _p13._0;
-				var _p16 = _p13._1;
+				var _p19 = _p15._0;
+				var _p18 = _p15._1;
 				return A2(
 					_user$project$Main$andThen,
 					function (model) {
-						var _p14 = _p16.details;
-						switch (_p14.ctor) {
+						var _p16 = _p18.details;
+						switch (_p16.ctor) {
 							case 'Mp3':
 								return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 							case 'MidiAndMp3':
 								return A2(
 									_user$project$Main$update,
-									A3(_user$project$Main$TriggerLoadMidiAndMp3, _p17, _p14._0, _p14._1),
+									A3(_user$project$Main$TriggerLoadMidiAndMp3, _p19, _p16._0, _p16._1),
 									model);
 							default:
 								return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
@@ -14454,15 +14875,15 @@ var _user$project$Main$update = F2(
 								_0: _elm_lang$core$Native_Utils.update(
 									model,
 									{
-										selected: _elm_lang$core$Maybe$Just(_p16)
+										selected: _elm_lang$core$Maybe$Just(_p18)
 									}),
 								_1: _elm_lang$navigation$Navigation$modifyUrl(
-									A2(_elm_lang$core$Basics_ops['++'], '?content=', _p16.hash))
+									A2(_elm_lang$core$Basics_ops['++'], '?content=', _p18.id))
 							};
 						},
 						A2(
 							_user$project$Main$andThen,
-							_p17 ? _user$project$Main$update(
+							_p19 ? _user$project$Main$update(
 								_user$project$Main$Fullscreen(true)) : A2(
 								_elm_lang$core$Basics$flip,
 								F2(
@@ -14478,19 +14899,19 @@ var _user$project$Main$update = F2(
 									{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none},
 									A2(
 										_elm_lang$core$Maybe$map,
-										function (_p15) {
+										function (_p17) {
 											return A2(_user$project$Main$update, _user$project$Main$Stop, model);
 										},
 										model.selected))))));
 			case 'TriggerLoadMidiAndMp3':
-				var _p19 = _p13._2;
-				var _p18 = _p13._1;
+				var _p21 = _p15._2;
+				var _p20 = _p15._1;
 				return {
 					ctor: '_Tuple2',
 					_0: model,
 					_1: A2(
 						_elm_lang$core$Task$attempt,
-						A3(_user$project$Main$LoadedMidiAndMp3, _p13._0, _p18, _p19),
+						A3(_user$project$Main$LoadedMidiAndMp3, _p15._0, _p20, _p21),
 						A2(
 							_elm_lang$core$Task$andThen,
 							function (mp3AudioBuf) {
@@ -14501,31 +14922,31 @@ var _user$project$Main$update = F2(
 											return {ctor: '_Tuple2', _0: v0, _1: v1};
 										})(mp3AudioBuf),
 									_user$project$BinaryDecoder_File$fetchArrayBuffer(
-										A2(_elm_lang$core$Basics_ops['++'], './contents/music/', _p18)));
+										A2(_elm_lang$core$Basics_ops['++'], './contents/music/', _p20)));
 							},
 							A2(
 								_elm_lang$core$Task$andThen,
 								_user$project$WebAudioApi$decodeAudioData,
 								_user$project$BinaryDecoder_File$fetchArrayBuffer(
-									A2(_elm_lang$core$Basics_ops['++'], './contents/music/', _p19)))))
+									A2(_elm_lang$core$Basics_ops['++'], './contents/music/', _p21)))))
 				};
 			case 'LoadedMidiAndMp3':
-				if (_p13._3.ctor === 'Ok') {
-					var _p22 = _p13._3._0._1;
-					var _p21 = _p13._3._0._0;
-					var _p20 = A2(_user$project$BinaryDecoder_Byte$decode, _user$project$SmfDecoder$smf, _p22);
-					if (_p20.ctor === 'Ok') {
-						var midi = _user$project$Midi$fromSmf(_p20._0);
+				if (_p15._3.ctor === 'Ok') {
+					var _p24 = _p15._3._0._1;
+					var _p23 = _p15._3._0._0;
+					var _p22 = A2(_user$project$BinaryDecoder_Byte$decode, _user$project$SmfDecoder$smf, _p24);
+					if (_p22.ctor === 'Ok') {
+						var midi = _user$project$Midi$fromSmf(_p22._0);
 						return A2(
 							_user$project$Main$andThen,
-							_p13._0 ? A2(
+							_p15._0 ? A2(
 								_elm_lang$core$Basics$flip,
 								F2(
 									function (v0, v1) {
 										return {ctor: '_Tuple2', _0: v0, _1: v1};
 									}),
 								_elm_lang$core$Platform_Cmd$none) : _user$project$Main$update(
-								A2(_user$project$Main$TriggerStart, midi, _p21)),
+								A2(_user$project$Main$TriggerStart, midi, _p23)),
 							{
 								ctor: '_Tuple2',
 								_0: _elm_lang$core$Native_Utils.update(
@@ -14533,14 +14954,14 @@ var _user$project$Main$update = F2(
 									{
 										midiContents: A3(
 											_elm_lang$core$Dict$update,
-											_p13._1,
+											_p15._1,
 											_elm_lang$core$Maybe$map(
 												function (midiContent) {
 													return _elm_lang$core$Native_Utils.update(
 														midiContent,
 														{
 															midiAndMp3: _elm_lang$core$Maybe$Just(
-																{ctor: '_Tuple2', _0: midi, _1: _p21})
+																{ctor: '_Tuple2', _0: midi, _1: _p23})
 														});
 												}),
 											model.midiContents)
@@ -14553,7 +14974,7 @@ var _user$project$Main$update = F2(
 							_0: _elm_lang$core$Native_Utils.update(
 								model,
 								{
-									error: A2(_user$project$Main$DecodeError, _p22, _p20._0)
+									error: A2(_user$project$Main$DecodeError, _p24, _p22._0)
 								}),
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
@@ -14562,23 +14983,23 @@ var _user$project$Main$update = F2(
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Main',
 						{
-							start: {line: 135, column: 5},
-							end: {line: 292, column: 14}
+							start: {line: 136, column: 5},
+							end: {line: 293, column: 14}
 						},
-						_p13)(
+						_p15)(
 						A2(
 							_elm_lang$core$Basics_ops['++'],
 							'failed to load file \'',
 							A2(
 								_elm_lang$core$Basics_ops['++'],
-								_p13._2,
+								_p15._2,
 								A2(
 									_elm_lang$core$Basics_ops['++'],
 									' or file ',
 									A2(
 										_elm_lang$core$Basics_ops['++'],
-										_p13._1,
-										A2(_elm_lang$core$Basics_ops['++'], '\': ', _p13._3._0))))));
+										_p15._1,
+										A2(_elm_lang$core$Basics_ops['++'], '\': ', _p15._3._0))))));
 				}
 			case 'Back':
 				return {
@@ -14594,27 +15015,27 @@ var _user$project$Main$update = F2(
 					_0: model,
 					_1: A2(
 						_elm_lang$core$Task$perform,
-						A2(_user$project$Main$Start, _p13._0, _p13._1),
+						A2(_user$project$Main$Start, _p15._0, _p15._1),
 						_elm_lang$core$Time$now)
 				};
 			case 'Start':
-				var _p24 = _p13._2;
-				var startTime = (_elm_lang$core$Native_Utils.cmp(model.currentTime, 0) > 0) ? (_p24 - (model.currentTime - model.startTime)) : _p24;
+				var _p26 = _p15._2;
+				var startTime = (_elm_lang$core$Native_Utils.cmp(model.currentTime, 0) > 0) ? (_p26 - (model.currentTime - model.startTime)) : _p26;
 				return A2(
 					_user$project$Main$andThen,
 					_user$project$Main$update(
-						_user$project$Main$Tick(_p24)),
+						_user$project$Main$Tick(_p26)),
 					{
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
 							{
 								startTime: startTime,
-								currentTime: _p24,
+								currentTime: _p26,
 								playing: true,
-								futureNotes: A2(_user$project$Main$prepareFutureNotes, _p24 - startTime, _p13._0)
+								futureNotes: A2(_user$project$Main$prepareFutureNotes, _p26 - startTime, _p15._0)
 							}),
-						_1: A2(_user$project$WebAudioApi$play, _p13._1, _p24 - startTime)
+						_1: A2(_user$project$WebAudioApi$play, _p15._1, _p26 - startTime)
 					});
 			case 'Stop':
 				return {
@@ -14629,7 +15050,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{fullscreen: _p13._0}),
+						{fullscreen: _p15._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'Close':
@@ -14649,7 +15070,7 @@ var _user$project$Main$update = F2(
 						{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none},
 						A2(
 							_elm_lang$core$Maybe$map,
-							function (_p25) {
+							function (_p27) {
 								return A2(_user$project$Main$update, _user$project$Main$Stop, model);
 							},
 							model.selected)));
@@ -14658,7 +15079,7 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{currentTime: _p13._0}),
+						{currentTime: _p15._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ToggleConfig':
@@ -14675,7 +15096,7 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							gitHub: A2(_user$project$GitHub$update, _p13._0, model.gitHub)
+							gitHub: A2(_user$project$GitHub$update, _p15._0, model.gitHub)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -14685,6 +15106,79 @@ var _user$project$Main$OpenPlayer = F2(
 	function (a, b) {
 		return {ctor: 'OpenPlayer', _0: a, _1: b};
 	});
+var _user$project$Main$init = function (location) {
+	return A2(
+		_user$project$Main$andThen,
+		function (gitHub) {
+			var firstContent = A2(
+				_elm_lang$core$Maybe$andThen,
+				function (maybeId) {
+					return A2(
+						_elm_lang$core$Maybe$andThen,
+						function (id) {
+							return _elm_lang$core$List$head(
+								A2(
+									_elm_lang$core$List$filter,
+									function (content) {
+										return _elm_lang$core$Native_Utils.eq(content.id, id);
+									},
+									_user$project$MusicContents$contents));
+						},
+						maybeId);
+				},
+				A2(_evancz$url_parser$UrlParser$parsePath, _user$project$Main$parser, location));
+			var model = _user$project$Main$Model(_user$project$Main$initialMidiCountents)(_elm_lang$core$Maybe$Nothing)(false)(0)(0)(
+				{ctor: '[]'})(_elm_lang$core$Maybe$Nothing)(false)(gitHub)(false)(_user$project$Main$NoError);
+			var _p28 = firstContent;
+			if (_p28.ctor === 'Just') {
+				var _p29 = _p28._0;
+				return A2(
+					_user$project$Main$andThen,
+					function (model) {
+						return {
+							ctor: '_Tuple2',
+							_0: model,
+							_1: _user$project$Main$moveToCard(_p29.id)
+						};
+					},
+					A2(
+						_user$project$Main$update,
+						A2(_user$project$Main$OpenPlayer, true, _p29),
+						model));
+			} else {
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			}
+		},
+		A3(
+			_user$project$GitHub$init,
+			_user$project$Main$GitHubMsg,
+			_elm_lang$core$Maybe$Just('jinjor'),
+			{
+				ctor: '::',
+				_0: 'jinjor/elm-diff',
+				_1: {
+					ctor: '::',
+					_0: 'jinjor/elm-time-travel',
+					_1: {
+						ctor: '::',
+						_0: 'jinjor/elm-html-parser',
+						_1: {
+							ctor: '::',
+							_0: 'jinjor/elm-contextmenu',
+							_1: {
+								ctor: '::',
+								_0: 'jinjor/elm-inline-hover',
+								_1: {
+									ctor: '::',
+									_0: 'jinjor/elm-debounce',
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			}));
+};
 var _user$project$Main$NoOp = {ctor: 'NoOp'};
 var _user$project$Main$viewMusicItemHelp = F7(
 	function (clickMsg, class_, id_, label, description, selected, image) {
@@ -14764,14 +15258,14 @@ var _user$project$Main$viewMusicItem = F2(
 			_elm_lang$core$Maybe$Just(content),
 			selectedContent);
 		var clickMsg = selected ? _user$project$Main$Close : A2(_user$project$Main$OpenPlayer, false, content);
-		var _p26 = content.details;
-		switch (_p26.ctor) {
+		var _p30 = content.details;
+		switch (_p30.ctor) {
 			case 'Mp3':
 				return A7(
 					_user$project$Main$viewMusicItemHelp,
 					clickMsg,
 					'music-item-mp3',
-					content.hash,
+					content.id,
 					content.title,
 					content.description,
 					selected,
@@ -14781,7 +15275,7 @@ var _user$project$Main$viewMusicItem = F2(
 					_user$project$Main$viewMusicItemHelp,
 					clickMsg,
 					'music-item-midi-and-mp3',
-					content.hash,
+					content.id,
 					content.title,
 					content.description,
 					selected,
@@ -14791,415 +15285,13 @@ var _user$project$Main$viewMusicItem = F2(
 					_user$project$Main$viewMusicItemHelp,
 					clickMsg,
 					'music-item-soundcloud',
-					content.hash,
+					content.id,
 					content.title,
 					content.description,
 					selected,
 					A4(_elm_lang$html$Html_Lazy$lazy3, _user$project$Main$viewMusicIcon, content.image, content.title, 'SoundCloud'));
 		}
 	});
-var _user$project$Main$SoundCloud = function (a) {
-	return {ctor: 'SoundCloud', _0: a};
-};
-var _user$project$Main$MidiAndMp3 = F3(
-	function (a, b, c) {
-		return {ctor: 'MidiAndMp3', _0: a, _1: b, _2: c};
-	});
-var _user$project$Main$Mp3 = function (a) {
-	return {ctor: 'Mp3', _0: a};
-};
-var _user$project$Main$contents = {
-	ctor: '::',
-	_0: A5(
-		_user$project$Main$Content,
-		'monday-morning',
-		'Monday Morning',
-		'',
-		_elm_lang$core$Maybe$Nothing,
-		A3(_user$project$Main$MidiAndMp3, '2017/monday-morning.mid', '2017/monday-morning.mp3', 1250)),
-	_1: {
-		ctor: '::',
-		_0: A5(
-			_user$project$Main$Content,
-			'train-journey',
-			'列車の旅',
-			'「オレ宿」の裏企画「オレが考えた発車ベルその壱」参加曲',
-			_elm_lang$core$Maybe$Just('train.jpg'),
-			_user$project$Main$SoundCloud('318647824')),
-		_1: {
-			ctor: '::',
-			_0: A5(
-				_user$project$Main$Content,
-				'good-night',
-				'おやすみ',
-				'<a href=\"http://carrotwine.muse.bindsite.jp/myinn.html\" target=\"_blank\">「オレが考えた宿で一泊」</a>参加曲',
-				_elm_lang$core$Maybe$Just('inn.jpg'),
-				_user$project$Main$SoundCloud('318080873')),
-			_1: {
-				ctor: '::',
-				_0: A5(
-					_user$project$Main$Content,
-					'little-world',
-					'Little World',
-					'<a href=\"http://carrotwine.muse.bindsite.jp/dtmmeeting4.html\" target=\"_blank\">「オレが考えたフィールド曲」</a>参加曲',
-					_elm_lang$core$Maybe$Just('field.jpg'),
-					_user$project$Main$SoundCloud('306090165')),
-				_1: {
-					ctor: '::',
-					_0: A5(
-						_user$project$Main$Content,
-						'hokora',
-						'ほこら',
-						'[「オレが考えたほこらの曲」](http://carrotwine.muse.bindsite.jp/dtmermeeting.html)参加曲',
-						_elm_lang$core$Maybe$Just('hokora.jpg'),
-						A3(_user$project$Main$MidiAndMp3, '2016/hokora.mid', '2016/hokora.mp3', 2770)),
-					_1: {
-						ctor: '::',
-						_0: A5(
-							_user$project$Main$Content,
-							'hokora-fc',
-							'ほこら (FCアレンジ)',
-							'by [ハイデン](https://twitter.com/hydden0310)さん',
-							_elm_lang$core$Maybe$Just('hokora.jpg'),
-							_user$project$Main$Mp3('2016/hokora-fc.mp3')),
-						_1: {
-							ctor: '::',
-							_0: A5(
-								_user$project$Main$Content,
-								'kira-kira',
-								'Kira Kira',
-								'',
-								_elm_lang$core$Maybe$Nothing,
-								_user$project$Main$SoundCloud('278194362')),
-							_1: {
-								ctor: '::',
-								_0: A5(
-									_user$project$Main$Content,
-									'candy',
-									'Candy',
-									'',
-									_elm_lang$core$Maybe$Nothing,
-									_user$project$Main$SoundCloud('240810123')),
-								_1: {
-									ctor: '::',
-									_0: A5(
-										_user$project$Main$Content,
-										'ancient',
-										'ancient',
-										'スマホゲーム [Block Brothers](http://blockbros.net/) BGM',
-										_elm_lang$core$Maybe$Just('block.png'),
-										_user$project$Main$Mp3('2016/ancient.mp3')),
-									_1: {
-										ctor: '::',
-										_0: A5(
-											_user$project$Main$Content,
-											'cloud-passage',
-											'Cloud Passage',
-											'スマホゲーム [Block Brothers](http://blockbros.net/) BGM',
-											_elm_lang$core$Maybe$Just('block.png'),
-											_user$project$Main$Mp3('2016/cloud-passage.mp3')),
-										_1: {
-											ctor: '::',
-											_0: A5(
-												_user$project$Main$Content,
-												'ice-world',
-												'Ice World',
-												'スマホゲーム [Block Brothers](http://blockbros.net/) 未収録曲',
-												_elm_lang$core$Maybe$Just('block.png'),
-												_user$project$Main$Mp3('2016/ice-world.mp3')),
-											_1: {
-												ctor: '::',
-												_0: A5(
-													_user$project$Main$Content,
-													'welcome-to-the-jungle',
-													'Welcome to the Jungle!',
-													'スマホゲーム [Block Brothers](http://blockbros.net/) 未収録曲',
-													_elm_lang$core$Maybe$Just('block.png'),
-													_user$project$Main$Mp3('2016/welcome-to-the-jungle.mp3')),
-												_1: {
-													ctor: '::',
-													_0: A5(
-														_user$project$Main$Content,
-														'moon-over-the-castle',
-														'Moon Over The Castle',
-														'スマホゲーム [Block Brothers](http://blockbros.net/) BGM',
-														_elm_lang$core$Maybe$Just('block.png'),
-														_user$project$Main$Mp3('2016/moon-over-the-castle.mp3')),
-													_1: {
-														ctor: '::',
-														_0: A5(
-															_user$project$Main$Content,
-															'lava-mountain',
-															'Lava Mountain',
-															'スマホゲーム [Block Brothers](http://blockbros.net/) 未収録曲',
-															_elm_lang$core$Maybe$Just('block.png'),
-															_user$project$Main$Mp3('2016/lava-mountain.mp3')),
-														_1: {
-															ctor: '::',
-															_0: A5(
-																_user$project$Main$Content,
-																'megalopolis',
-																'Megalopolis',
-																'',
-																_elm_lang$core$Maybe$Nothing,
-																_user$project$Main$SoundCloud('236197155')),
-															_1: {
-																ctor: '::',
-																_0: A5(
-																	_user$project$Main$Content,
-																	'voice-of-water',
-																	'Voice of Water',
-																	'',
-																	_elm_lang$core$Maybe$Nothing,
-																	_user$project$Main$SoundCloud('233781385')),
-																_1: {
-																	ctor: '::',
-																	_0: A5(
-																		_user$project$Main$Content,
-																		'wedding-march',
-																		'Wedding March',
-																		'自作自演',
-																		_elm_lang$core$Maybe$Nothing,
-																		_user$project$Main$SoundCloud('228037751')),
-																	_1: {
-																		ctor: '::',
-																		_0: A5(
-																			_user$project$Main$Content,
-																			'glass-city',
-																			'Glass City',
-																			'',
-																			_elm_lang$core$Maybe$Nothing,
-																			_user$project$Main$SoundCloud('200427994')),
-																		_1: {
-																			ctor: '::',
-																			_0: A5(
-																				_user$project$Main$Content,
-																				'summer',
-																				'Summer',
-																				'',
-																				_elm_lang$core$Maybe$Nothing,
-																				A3(_user$project$Main$MidiAndMp3, '2014/summer.mid', '2014/summer.mp3', 1420)),
-																			_1: {
-																				ctor: '::',
-																				_0: A5(
-																					_user$project$Main$Content,
-																					'sakura',
-																					'桜舞う',
-																					'',
-																					_elm_lang$core$Maybe$Nothing,
-																					A3(_user$project$Main$MidiAndMp3, '2014/sakura.mid', '2014/sakura.mp3', 1600)),
-																				_1: {
-																					ctor: '::',
-																					_0: A5(
-																						_user$project$Main$Content,
-																						'midnight',
-																						'真夜中の暇つぶし',
-																						'',
-																						_elm_lang$core$Maybe$Nothing,
-																						A3(_user$project$Main$MidiAndMp3, '2014/midnight.mid', '2014/midnight.mp3', 540)),
-																					_1: {
-																						ctor: '::',
-																						_0: A5(
-																							_user$project$Main$Content,
-																							'string',
-																							'糸',
-																							'',
-																							_elm_lang$core$Maybe$Nothing,
-																							A3(_user$project$Main$MidiAndMp3, '2013/string.mid', '2013/string.mp3', 840)),
-																						_1: {
-																							ctor: '::',
-																							_0: A5(
-																								_user$project$Main$Content,
-																								'autumn',
-																								'秋風',
-																								'',
-																								_elm_lang$core$Maybe$Nothing,
-																								A3(_user$project$Main$MidiAndMp3, '2013/autumn.mid', '2013/autumn.mp3', 1100)),
-																							_1: {
-																								ctor: '::',
-																								_0: A5(
-																									_user$project$Main$Content,
-																									'afternoon-caos',
-																									'午後のカオス',
-																									'',
-																									_elm_lang$core$Maybe$Nothing,
-																									A3(_user$project$Main$MidiAndMp3, '2013/afternoon_caos.mid', '2013/afternoon_caos.mp3', 700)),
-																								_1: {
-																									ctor: '::',
-																									_0: A5(
-																										_user$project$Main$Content,
-																										'michikusa',
-																										'道草',
-																										'',
-																										_elm_lang$core$Maybe$Nothing,
-																										A3(_user$project$Main$MidiAndMp3, '2013/michikusa.mid', '2013/michikusa.mp3', 860)),
-																									_1: {
-																										ctor: '::',
-																										_0: A5(
-																											_user$project$Main$Content,
-																											'tmp',
-																											'Temporary',
-																											'',
-																											_elm_lang$core$Maybe$Nothing,
-																											A3(_user$project$Main$MidiAndMp3, '2013/tmp.mid', '2013/tmp.mp3', 1700)),
-																										_1: {
-																											ctor: '::',
-																											_0: A5(
-																												_user$project$Main$Content,
-																												'hallucination',
-																												'幻覚',
-																												'',
-																												_elm_lang$core$Maybe$Nothing,
-																												A3(_user$project$Main$MidiAndMp3, '2013/hallucination.mid', '2013/hallucination.mp3', 1200)),
-																											_1: {
-																												ctor: '::',
-																												_0: A5(
-																													_user$project$Main$Content,
-																													'blue',
-																													'Blue',
-																													'',
-																													_elm_lang$core$Maybe$Nothing,
-																													A3(_user$project$Main$MidiAndMp3, '2013/blue.mid', '2013/blue.mp3', 1660)),
-																												_1: {
-																													ctor: '::',
-																													_0: A5(
-																														_user$project$Main$Content,
-																														'painter',
-																														'変人',
-																														'',
-																														_elm_lang$core$Maybe$Nothing,
-																														A3(_user$project$Main$MidiAndMp3, '2012/painter.mid', '2012/painter.mp3', 1800)),
-																													_1: {
-																														ctor: '::',
-																														_0: A5(
-																															_user$project$Main$Content,
-																															'uploar',
-																															'大騒ぎ',
-																															'',
-																															_elm_lang$core$Maybe$Nothing,
-																															A3(_user$project$Main$MidiAndMp3, '2012/uploar.mid', '2012/uploar.mp3', 0)),
-																														_1: {ctor: '[]'}
-																													}
-																												}
-																											}
-																										}
-																									}
-																								}
-																							}
-																						}
-																					}
-																				}
-																			}
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-};
-var _user$project$Main$initialMidiCountents = _elm_lang$core$Dict$fromList(
-	A2(
-		_elm_lang$core$List$filterMap,
-		function (content) {
-			var _p27 = content.details;
-			if (_p27.ctor === 'MidiAndMp3') {
-				var _p28 = _p27._0;
-				return _elm_lang$core$Maybe$Just(
-					{
-						ctor: '_Tuple2',
-						_0: _p28,
-						_1: A4(_user$project$Main$MidiContent, _p28, _p27._1, _p27._2, _elm_lang$core$Maybe$Nothing)
-					});
-			} else {
-				return _elm_lang$core$Maybe$Nothing;
-			}
-		},
-		_user$project$Main$contents));
-var _user$project$Main$init = function (location) {
-	return A2(
-		_user$project$Main$andThen,
-		function (gitHub) {
-			var firstContent = A2(
-				_elm_lang$core$Maybe$andThen,
-				function (maybeId) {
-					return A2(
-						_elm_lang$core$Maybe$andThen,
-						function (id) {
-							return _elm_lang$core$List$head(
-								A2(
-									_elm_lang$core$List$filter,
-									function (content) {
-										return _elm_lang$core$Native_Utils.eq(content.hash, id);
-									},
-									_user$project$Main$contents));
-						},
-						maybeId);
-				},
-				A2(_evancz$url_parser$UrlParser$parsePath, _user$project$Main$parser, location));
-			var model = _user$project$Main$Model(_user$project$Main$initialMidiCountents)(_elm_lang$core$Maybe$Nothing)(false)(0)(0)(
-				{ctor: '[]'})(_elm_lang$core$Maybe$Nothing)(false)(gitHub)(false)(_user$project$Main$NoError);
-			var _p29 = firstContent;
-			if (_p29.ctor === 'Just') {
-				var _p30 = _p29._0;
-				return A2(
-					_user$project$Main$andThen,
-					function (model) {
-						return {
-							ctor: '_Tuple2',
-							_0: model,
-							_1: _user$project$Main$moveToCard(_p30.hash)
-						};
-					},
-					A2(
-						_user$project$Main$update,
-						A2(_user$project$Main$OpenPlayer, true, _p30),
-						model));
-			} else {
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			}
-		},
-		A3(
-			_user$project$GitHub$init,
-			_user$project$Main$GitHubMsg,
-			_elm_lang$core$Maybe$Just('jinjor'),
-			{
-				ctor: '::',
-				_0: 'jinjor/elm-diff',
-				_1: {
-					ctor: '::',
-					_0: 'jinjor/elm-time-travel',
-					_1: {
-						ctor: '::',
-						_0: 'jinjor/elm-html-parser',
-						_1: {
-							ctor: '::',
-							_0: 'jinjor/elm-contextmenu',
-							_1: {
-								ctor: '::',
-								_0: 'jinjor/elm-inline-hover',
-								_1: {
-									ctor: '::',
-									_0: 'jinjor/elm-debounce',
-									_1: {ctor: '[]'}
-								}
-							}
-						}
-					}
-				}
-			}));
-};
 var _user$project$Main$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -15234,7 +15326,7 @@ var _user$project$Main$view = function (model) {
 									A2(
 										_elm_lang$core$List$map,
 										A2(_elm_lang$html$Html_Lazy$lazy2, _user$project$Main$viewMusicItem, model.selected),
-										_user$project$Main$contents)),
+										_user$project$MusicContents$contents)),
 								_1: {
 									ctor: '::',
 									_0: function () {

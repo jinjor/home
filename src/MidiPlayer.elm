@@ -167,14 +167,13 @@ tweetButton options id title =
 tweetUrl : String -> String -> String
 tweetUrl id title =
     "https://twitter.com/intent/tweet"
-        ++ "?original_referer="
-        ++ "http%3A%2F%2Flocalhost%3A8000%2F"
-        ++ "&ref_src="
-        ++ "twsrc%5Etfw"
-        ++ "&text="
-        ++ ("♪" ++ title ++ " - ジンジャー")
-        ++ "&tw_p=tweetbutton&url=http://world-maker.com/?content="
-        ++ Http.encodeUri id
+        -- ++ ("?original_referer=" ++ Http.encodeUri "http://world-maker.com")
+        -- ++ "&ref_src=twsrc%5Etfw"
+        ++
+            ("&text=♪" ++ title ++ " - ジンジャー")
+        -- ++ "&tw_p=tweetbutton"
+        ++
+            ("&url=http://world-maker.com/?content=" ++ Http.encodeUri id)
 
 
 closeButton : msg -> Html msg
