@@ -1,9 +1,3 @@
-window.onerror = (message, url, line) => {
-  document.getElementById('errors').textContent = message + '\n' +
-    url + '\n' + line;
-  return false;
-};
-let app = Elm.Main.fullscreen();
 let AudioContext = window.AudioContext || window.webkitAudioContext;
 let context = new AudioContext();
 var unlock = function() {
@@ -17,15 +11,6 @@ var unlock = function() {
 window.addEventListener('touchend', unlock, true);
 
 var source = null;
-app.ports.moveToCard.subscribe(id => {
-  var element = document.getElementById(id);
-  if (element) {
-    var rect = element.getBoundingClientRect();
-    setTimeout(() => {
-      window.scrollTo(0, window.pageYOffset + rect.top);
-    });
-  }
-});
 app.ports.webAudioApiPlay.subscribe(data => {
   let buffer = data[0];
   let time = data[1];

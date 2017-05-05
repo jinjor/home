@@ -6,7 +6,7 @@
   "scripts": {
     "dev-client": "elm-live src/Main.elm --output=assets/elm.js --open --warn",
     "dev-server": "dev_appserver.py app.yaml",
-    "build": "elm-make src/GenJson.elm --output=elm-gen-json.js && node gen-json && elm-make src/Main.elm --output=assets/elm.js --warn",
+    "build": "elm-make src/GenJson.elm --output=elm-gen-json.js && node gen-json && elm-make src/Main.elm --output=assets/elm.js --warn && elm-make src/Player.elm --output=assets/player.js --warn",
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "gcloud app deploy"
   },

@@ -13,14 +13,15 @@ import BinaryDecoder.File as File exposing (File)
 import BinaryDecoder.Byte as Byte exposing (ArrayBuffer, Error)
 import SmfDecoder exposing (Smf)
 import Midi exposing (Midi, Note, Detailed)
-import MidiPlayer
+import MidiPlayer exposing (MidiPlayer)
 import GitHub exposing (GitHub)
-import WebAudioApi exposing (AudioBuffer)
 import Markdown
 import Navigation exposing (Location)
 import Json.Decode as Decode
 import UrlParser exposing ((<?>))
 import MusicContents exposing (..)
+import Core exposing (..)
+import WebAudioApi exposing (AudioBuffer)
 
 
 main : Program Never Model Msg
@@ -37,12 +38,7 @@ main =
 type alias Model =
     { midiContents : Dict String MidiContent
     , selected : Maybe Content
-    , playing : Bool
-    , startTime : Time
-    , currentTime : Time
-    , futureNotes : List (Detailed Note)
-    , selectedMidiOut : Maybe String
-    , showConfig : Bool
+    , midiPlayer : MidiPlayer
     , gitHub : GitHub
     , fullscreen : Bool
     , error : Error
@@ -63,15 +59,10 @@ type Msg
     | OpenPlayer Bool Content
     | TriggerLoadMidiAndMp3 Bool FileName FileName
     | LoadedMidiAndMp3 Bool FileName FileName (Result String ( AudioBuffer, ArrayBuffer ))
-    | Back
-    | TriggerStart Midi AudioBuffer
-    | Start Midi AudioBuffer Time
-    | Stop
     | Fullscreen Bool
     | Close
-    | Tick Time
-    | ToggleConfig
     | GitHubMsg GitHub.Msg
+    | MidiPlayerMsg MidiPlayer.Msg
 
 
 port moveToCard : String -> Cmd msg
@@ -92,7 +83,7 @@ init location =
             (\gitHub ->
                 let
                     model =
-                        Model initialMidiCountents Nothing False 0 0 [] Nothing False gitHub False NoError
+                        Model initialMidiCountents Nothing MidiPlayer.init gitHub False NoError
 
                     firstContent =
                         UrlParser.parsePath parser location
@@ -122,15 +113,6 @@ parser =
     UrlParser.top <?> UrlParser.stringParam "content"
 
 
-andThen : (model1 -> ( model2, Cmd msg )) -> ( model1, Cmd msg ) -> ( model2, Cmd msg )
-andThen f ( model, cmd ) =
-    let
-        ( newModel, newCmd ) =
-            f model
-    in
-        newModel ! [ cmd, newCmd ]
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -139,9 +121,9 @@ update msg model =
 
         OpenPlayer isInitialLoad content ->
             model.selected
-                |> Maybe.map (\_ -> update Stop model)
+                |> Maybe.map (\_ -> update (MidiPlayerMsg MidiPlayer.stop) model)
                 |> Maybe.withDefault ( model, Cmd.none )
-                |> andThen (update Back)
+                |> andThen (update <| MidiPlayerMsg MidiPlayer.back)
                 |> andThen
                     (if isInitialLoad then
                         update (Fullscreen True)
@@ -204,7 +186,7 @@ update msg model =
                                 (if isInitialLoad then
                                     flip (,) Cmd.none
                                  else
-                                    update (TriggerStart midi mp3AudioBuffer)
+                                    update (MidiPlayerMsg <| MidiPlayer.triggerStart midi mp3AudioBuffer)
                                 )
 
                 Err e ->
@@ -223,50 +205,12 @@ update msg model =
                     ++ "': "
                     ++ s
 
-        Back ->
-            ( { model
-                | startTime = 0
-                , currentTime = 0
-                , playing = False
-              }
-            , Cmd.none
-            )
-
-        TriggerStart midi mp3AudioBuffer ->
-            ( model
-            , Time.now
-                |> Task.perform (Start midi mp3AudioBuffer)
-            )
-
-        Start midi mp3AudioBuffer currentTime ->
-            let
-                startTime =
-                    if model.currentTime > 0 then
-                        currentTime - (model.currentTime - model.startTime)
-                    else
-                        currentTime
-            in
-                ( { model
-                    | startTime = startTime
-                    , currentTime = currentTime
-                    , playing = True
-                    , futureNotes = prepareFutureNotes (currentTime - startTime) midi
-                  }
-                , WebAudioApi.play mp3AudioBuffer (currentTime - startTime)
-                )
-                    |> andThen (update (Tick currentTime))
-
-        Stop ->
-            ( { model | playing = False }
-            , WebAudioApi.stop
-            )
-
         Fullscreen fullscreen ->
             ( { model | fullscreen = fullscreen }, Cmd.none )
 
         Close ->
             model.selected
-                |> Maybe.map (\_ -> update Stop model)
+                |> Maybe.map (\_ -> update (MidiPlayerMsg MidiPlayer.stop) model)
                 |> Maybe.withDefault ( model, Cmd.none )
                 |> andThen
                     (\model ->
@@ -275,67 +219,23 @@ update msg model =
                         )
                     )
 
-        Tick currentTime ->
-            ( { model
-                | currentTime = currentTime
-              }
-            , Cmd.none
-            )
-
-        ToggleConfig ->
-            ( { model | showConfig = not model.showConfig }
-            , Cmd.none
-            )
-
         GitHubMsg msg ->
             ( { model | gitHub = GitHub.update msg model.gitHub }
             , Cmd.none
             )
 
-
-prepareFutureNotes : Time -> Midi -> List (Detailed Note)
-prepareFutureNotes time midi =
-    midi.tracks
-        |> List.indexedMap (,)
-        |> List.concatMap (\( index, track ) -> List.map (Midi.addDetails index track.channel) track.notes)
-        |> List.sortBy .position
-        |> dropWhile (\note -> Midi.positionToTime midi.timeBase midi.tempo note.position < time)
-
-
-dropWhile : (a -> Bool) -> List a -> List a
-dropWhile f list =
-    case list of
-        [] ->
-            []
-
-        x :: xs ->
-            if f x then
-                dropWhile f xs
-            else
-                list
-
-
-splitWhile : (a -> Bool) -> List a -> List a -> ( List a, List a )
-splitWhile f taken list =
-    case list of
-        [] ->
-            ( taken, [] )
-
-        x :: xs ->
-            if f x then
-                splitWhile f (x :: taken) xs
-            else
-                ( taken, list )
+        MidiPlayerMsg msg ->
+            MidiPlayer.update msg model.midiPlayer
+                |> Tuple.mapSecond (Cmd.map MidiPlayerMsg)
+                |> andThen
+                    (\midiPlayer ->
+                        ( { model | midiPlayer = midiPlayer }, Cmd.none )
+                    )
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch
-        [ if model.playing then
-            Time.every (1000 * Time.millisecond / 30) Tick
-          else
-            Sub.none
-        ]
+    Sub.map MidiPlayerMsg (MidiPlayer.subscriptions model.midiPlayer)
 
 
 initialMidiCountents : Dict String MidiContent
@@ -432,19 +332,18 @@ viewPlayerHelp model content =
                                 |> Maybe.map
                                     (\( midi, mp3 ) ->
                                         MidiPlayer.view
-                                            { onBack = Back
-                                            , onStart = TriggerStart midi mp3
-                                            , onStop = Stop
-                                            , onFullscreen = Fullscreen True
+                                            { onFullscreen = Fullscreen True
                                             , onMinimize = Fullscreen False
                                             , onClose = Close
+                                            , transform = MidiPlayerMsg
                                             }
                                             content.id
                                             content.title
                                             model.fullscreen
-                                            model.playing
-                                            (model.currentTime - model.startTime + delay)
                                             midi
+                                            mp3
+                                            delay
+                                            model.midiPlayer
                                     )
                                 |> Maybe.withDefault (MidiPlayer.viewLoading Close)
                         )

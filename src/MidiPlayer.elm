@@ -1,4 +1,18 @@
-module MidiPlayer exposing (Options, view, viewLoading, closeButton)
+module MidiPlayer
+    exposing
+        ( MidiPlayer
+        , init
+        , Msg
+        , back
+        , triggerStart
+        , stop
+        , Options
+        , update
+        , subscriptions
+        , view
+        , viewLoading
+        , closeButton
+        )
 
 import Time exposing (Time)
 import Html as H exposing (..)
@@ -11,15 +25,132 @@ import Svg.Keyed
 import Midi exposing (..)
 import Colors
 import Http
+import WebAudioApi exposing (AudioBuffer)
+import Midi
+import Core exposing (..)
+import Task exposing (Task)
+
+
+type alias MidiPlayer =
+    { playing : Bool
+    , startTime : Time
+    , currentTime : Time
+    , futureNotes : List (Detailed Note)
+    }
+
+
+init : MidiPlayer
+init =
+    MidiPlayer False 0 0 []
+
+
+type Msg
+    = Back
+    | TriggerStart Midi AudioBuffer
+    | Start Midi AudioBuffer Time
+    | Stop
+    | Tick Time
+
+
+back : Msg
+back =
+    Back
+
+
+triggerStart : Midi -> AudioBuffer -> Msg
+triggerStart =
+    TriggerStart
+
+
+stop : Msg
+stop =
+    Stop
+
+
+update : Msg -> MidiPlayer -> ( MidiPlayer, Cmd Msg )
+update msg model =
+    case msg of
+        Back ->
+            ( { model
+                | startTime = 0
+                , currentTime = 0
+                , playing = False
+              }
+            , Cmd.none
+            )
+
+        TriggerStart midi mp3AudioBuffer ->
+            ( model
+            , Time.now
+                |> Task.perform (Start midi mp3AudioBuffer)
+            )
+
+        Start midi mp3AudioBuffer currentTime ->
+            let
+                startTime =
+                    if model.currentTime > 0 then
+                        currentTime - (model.currentTime - model.startTime)
+                    else
+                        currentTime
+            in
+                ( { model
+                    | startTime = startTime
+                    , currentTime = currentTime
+                    , playing = True
+                    , futureNotes = prepareFutureNotes (currentTime - startTime) midi
+                  }
+                , WebAudioApi.play mp3AudioBuffer (currentTime - startTime)
+                )
+                    |> andThen (update (Tick currentTime))
+
+        Stop ->
+            ( { model | playing = False }
+            , WebAudioApi.stop
+            )
+
+        Tick currentTime ->
+            ( { model
+                | currentTime = currentTime
+              }
+            , Cmd.none
+            )
+
+
+dropWhile : (a -> Bool) -> List a -> List a
+dropWhile f list =
+    case list of
+        [] ->
+            []
+
+        x :: xs ->
+            if f x then
+                dropWhile f xs
+            else
+                list
+
+
+subscriptions : MidiPlayer -> Sub Msg
+subscriptions model =
+    if model.playing then
+        Time.every (1000 * Time.millisecond / 30) Tick
+    else
+        Sub.none
+
+
+prepareFutureNotes : Time -> Midi -> List (Detailed Note)
+prepareFutureNotes time midi =
+    midi.tracks
+        |> List.indexedMap (,)
+        |> List.concatMap (\( index, track ) -> List.map (Midi.addDetails index track.channel) track.notes)
+        |> List.sortBy .position
+        |> dropWhile (\note -> Midi.positionToTime midi.timeBase midi.tempo note.position < time)
 
 
 type alias Options msg =
-    { onBack : msg
-    , onStart : msg
-    , onStop : msg
-    , onFullscreen : msg
+    { onFullscreen : msg
     , onMinimize : msg
     , onClose : msg
+    , transform : Msg -> msg
     }
 
 
@@ -34,9 +165,12 @@ colors =
     List.map2 NoteColor (Colors.depth 1) (Colors.depth 5)
 
 
-view : Options msg -> String -> String -> Bool -> Bool -> Time -> Midi -> Html msg
-view options id title fullscreen playing time midi =
+view : Options msg -> String -> String -> Bool -> Midi -> AudioBuffer -> Time -> MidiPlayer -> Html msg
+view options id title fullscreen midi mp3AudioBuffer delay model =
     let
+        time =
+            model.currentTime - model.startTime + delay
+
         currentPosition =
             Midi.timeToPosition midi.timeBase midi.tempo time
     in
@@ -48,7 +182,7 @@ view options id title fullscreen playing time midi =
                 |> svg (svgAttributes currentPosition)
             , centerLine
             , lazy viewTitle title
-            , control options id title fullscreen midi.tracks playing
+            , control options id title fullscreen midi.tracks midi mp3AudioBuffer model.playing
             ]
 
 
@@ -83,12 +217,14 @@ svgAttributes currentPosition =
     ]
 
 
-control : Options msg -> String -> String -> Bool -> List Track -> Bool -> Html msg
-control options id title fullscreen tracks playing =
+control : Options msg -> String -> String -> Bool -> List Track -> Midi -> AudioBuffer -> Bool -> Html msg
+control options id title fullscreen tracks midi mp3AudioBuffer playing =
     div
         [ HA.class "midi-player-control" ]
-        [ lazy backButton options
-        , lazy2 playButton options playing
+        [ backButton
+            |> H.map options.transform
+        , lazy3 playButton midi mp3AudioBuffer playing
+            |> H.map options.transform
         , if fullscreen then
             lazy miniButton options
           else
@@ -107,21 +243,21 @@ disabledControl onClose =
         ]
 
 
-backButton : Options msg -> Html msg
-backButton options =
+backButton : Html Msg
+backButton =
     controlButton
-        [ onClick options.onBack ]
+        [ onClick Back ]
         (S.path [ SA.fill "#ddd", SA.d "M12,10v10h2v-10zm14,0v10l-12,-5z" ] [])
 
 
-playButton : Options msg -> Bool -> Html msg
-playButton options playing =
+playButton : Midi -> AudioBuffer -> Bool -> Html Msg
+playButton midi mp3AudioBuffer playing =
     controlButton
         [ onClick
             (if playing then
-                options.onStop
+                Stop
              else
-                options.onStart
+                TriggerStart midi mp3AudioBuffer
             )
         ]
         (S.path

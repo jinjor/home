@@ -4,15 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="World Maker">
-  <meta property="og:title" content="{{.Title}}">
-  <meta property="og:url" content="http://world-maker.com/">
-  <meta property="og:image" content="{{.Image}}">
-  <meta property="og:description" content="{{.Description}}">
-  <meta name="twitter:card" content="summary">
-  <title>World Maker</title>
-  <script src="./assets/elm.js"></script>
+  <script src="./assets/player.js"></script>
   <link href="./assets/normalize.css" rel="stylesheet">
   <link href="./assets/style.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/earlyaccess/notosansjapanese.css" rel="stylesheet">
@@ -28,16 +20,7 @@
         url + '\n' + line;
       return false;
     };
-    let app = Elm.Main.fullscreen();
-    app.ports.moveToCard.subscribe(id => {
-      var element = document.getElementById(id);
-      if (element) {
-        var rect = element.getBoundingClientRect();
-        setTimeout(() => {
-          window.scrollTo(0, window.pageYOffset + rect.top);
-        });
-      }
-    });
+    let app = Elm.Player.fullscreen();
   </script>
   <script src="./assets/setup-audio.js"></script>
 </body>
