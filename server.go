@@ -12,6 +12,7 @@ type Music struct {
     Id string `json:"id"`
     Title string `json:"title"`
     Description string `json:"description"`
+    Image string `json:"image"`
 }
 
 type Info struct {
@@ -45,10 +46,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
       }
       if _, ok := musicMap[contentId]; ok {
         music := musicMap[contentId]
+        image := "http://world-maker.com/assets/world-maker.jpg"
+        if music.Image != "" {
+          image = "http://world-maker.com/contents/music/jacket/" + music.Image
+        }
         info = &Info{
           Title: music.Title,
           Description: music.Description,
-          Image: "http://world-maker.com/assets/world-maker.jpg",
+          Image: image,
         }
       }
     }

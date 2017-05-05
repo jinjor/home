@@ -99,7 +99,7 @@ encodeContent content =
         [ ( "id", string content.id )
         , ( "title", string content.title )
         , ( "description", string content.description )
-        , ( "image", content.image |> Maybe.map string |> Maybe.withDefault null )
+        , ( "image", content.image |> Maybe.withDefault "" |> string )
         , ( "details", encodeDetails content.details )
         ]
 

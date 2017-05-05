@@ -91,6 +91,36 @@ h2 .introduction {
   color: #aaa;
 }
 
+.midi-player-loading {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 30px;
+  animation: loading 1.5s linear infinite;
+  text-align: center;
+  line-height: 80px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #eee;
+  font-size: smaller;
+}
+
+@keyframes loading {
+  0% {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
 .player-fullscreen .midi-player-title {
   font-size: x-large;
 }
@@ -123,6 +153,10 @@ h2 .introduction {
   display: flex;
   position: absolute;
   bottom: 0;
+}
+
+.midi-player-control-spacer {
+  flex-grow: 4;
 }
 
 .midi-player-control-button {

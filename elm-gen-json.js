@@ -6188,10 +6188,8 @@ var _user$project$MusicContents$encodeContent = function (content) {
 						_0: {
 							ctor: '_Tuple2',
 							_0: 'image',
-							_1: A2(
-								_elm_lang$core$Maybe$withDefault,
-								_elm_lang$core$Json_Encode$null,
-								A2(_elm_lang$core$Maybe$map, _elm_lang$core$Json_Encode$string, content.image))
+							_1: _elm_lang$core$Json_Encode$string(
+								A2(_elm_lang$core$Maybe$withDefault, '', content.image))
 						},
 						_1: {
 							ctor: '::',

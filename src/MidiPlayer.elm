@@ -63,6 +63,7 @@ viewLoading onClose =
         [ HA.class "midi-player"
         ]
         [ svg (svgAttributes 0) []
+        , div [ HA.class "midi-player-loading" ] [ H.text "Loading" ]
         , disabledControl onClose
         ]
 
@@ -101,7 +102,9 @@ disabledControl : msg -> Html msg
 disabledControl onClose =
     div
         [ HA.class "midi-player-control" ]
-        [ closeButton onClose ]
+        [ div [ HA.class "midi-player-control-spacer" ] []
+        , closeButton onClose
+        ]
 
 
 backButton : Options msg -> Html msg

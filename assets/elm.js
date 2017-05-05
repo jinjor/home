@@ -13328,8 +13328,19 @@ var _user$project$MidiPlayer$disabledControl = function (onClose) {
 		},
 		{
 			ctor: '::',
-			_0: _user$project$MidiPlayer$closeButton(onClose),
-			_1: {ctor: '[]'}
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('midi-player-control-spacer'),
+					_1: {ctor: '[]'}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: _user$project$MidiPlayer$closeButton(onClose),
+				_1: {ctor: '[]'}
+			}
 		});
 };
 var _user$project$MidiPlayer$control = F6(
@@ -13433,8 +13444,23 @@ var _user$project$MidiPlayer$viewLoading = function (onClose) {
 				{ctor: '[]'}),
 			_1: {
 				ctor: '::',
-				_0: _user$project$MidiPlayer$disabledControl(onClose),
-				_1: {ctor: '[]'}
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('midi-player-loading'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Loading'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: _user$project$MidiPlayer$disabledControl(onClose),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };
@@ -13642,10 +13668,8 @@ var _user$project$MusicContents$encodeContent = function (content) {
 						_0: {
 							ctor: '_Tuple2',
 							_0: 'image',
-							_1: A2(
-								_elm_lang$core$Maybe$withDefault,
-								_elm_lang$core$Json_Encode$null,
-								A2(_elm_lang$core$Maybe$map, _elm_lang$core$Json_Encode$string, content.image))
+							_1: _elm_lang$core$Json_Encode$string(
+								A2(_elm_lang$core$Maybe$withDefault, '', content.image))
 						},
 						_1: {
 							ctor: '::',
