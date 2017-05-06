@@ -51,7 +51,6 @@ type Msg
     | OpenPlayer Bool Content
     | TriggerLoadMidiAndMp3 Bool FileName FileName
     | LoadedMidiAndMp3 Bool FileName FileName (Result String ( AudioBuffer, ArrayBuffer ))
-    | Close
     | MidiPlayerMsg MidiPlayer.Msg
 
 
@@ -166,17 +165,6 @@ update msg model =
                     ++ "': "
                     ++ s
 
-        Close ->
-            model.selected
-                |> Maybe.map (\_ -> update (MidiPlayerMsg MidiPlayer.stop) model)
-                |> Maybe.withDefault ( model, Cmd.none )
-                |> andThen
-                    (\model ->
-                        ( { model | selected = Nothing }
-                        , Navigation.modifyUrl "/"
-                        )
-                    )
-
         MidiPlayerMsg msg ->
             MidiPlayer.update msg model.midiPlayer
                 |> Tuple.mapSecond (Cmd.map MidiPlayerMsg)
@@ -229,8 +217,7 @@ viewPlayer model =
 viewPlayerHelp : Model -> Content -> Html Msg
 viewPlayerHelp model content =
     div
-        [ class "player-container"
-        , classList [ ( "player-fullscreen", True ) ]
+        [ class "player-container player-player-mode player-fullscreen"
         ]
         [ case content.details of
             MidiAndMp3 midiFile mp3File delay ->
@@ -241,11 +228,7 @@ viewPlayerHelp model content =
                                 |> Maybe.map
                                     (\( midi, mp3 ) ->
                                         MidiPlayer.view
-                                            { onFullscreen = NoOp
-                                            , onMinimize = NoOp
-                                            , onClose = Close
-                                            , transform = MidiPlayerMsg
-                                            }
+                                            midiPlayerOptions
                                             content.id
                                             content.title
                                             True
@@ -254,13 +237,23 @@ viewPlayerHelp model content =
                                             delay
                                             model.midiPlayer
                                     )
-                                |> Maybe.withDefault (MidiPlayer.viewLoading Close)
+                                |> Maybe.withDefault (MidiPlayer.viewLoading Nothing)
                         )
                     |> Maybe.withDefault errorMessage
 
             _ ->
                 errorMessage
         ]
+
+
+midiPlayerOptions : MidiPlayer.Options Msg
+midiPlayerOptions =
+    { onFullscreen = NoOp
+    , onMinimize = NoOp
+    , onClose = NoOp
+    , transform = MidiPlayerMsg
+    , playerMode = True
+    }
 
 
 errorMessage : Html msg

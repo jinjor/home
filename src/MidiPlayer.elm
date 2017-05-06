@@ -71,13 +71,11 @@ update : Msg -> MidiPlayer -> ( MidiPlayer, Cmd Msg )
 update msg model =
     case msg of
         Back ->
-            ( { model
+            { model
                 | startTime = 0
                 , currentTime = 0
-                , playing = False
-              }
-            , Cmd.none
-            )
+            }
+                |> update Stop
 
         TriggerStart midi mp3AudioBuffer ->
             ( model
@@ -151,6 +149,7 @@ type alias Options msg =
     , onMinimize : msg
     , onClose : msg
     , transform : Msg -> msg
+    , playerMode : Bool
     }
 
 
@@ -191,14 +190,14 @@ viewTitle title =
     H.div [ HA.class "midi-player-title" ] [ H.text title ]
 
 
-viewLoading : msg -> Html msg
-viewLoading onClose =
+viewLoading : Maybe msg -> Html msg
+viewLoading maybeOnClose =
     div
         [ HA.class "midi-player"
         ]
         [ svg (svgAttributes 0) []
         , div [ HA.class "midi-player-loading" ] [ H.text "Loading" ]
-        , disabledControl onClose
+        , disabledControl maybeOnClose
         ]
 
 
@@ -221,26 +220,43 @@ control : Options msg -> String -> String -> Bool -> List Track -> Midi -> Audio
 control options id title fullscreen tracks midi mp3AudioBuffer playing =
     div
         [ HA.class "midi-player-control" ]
-        [ backButton
+        ([ backButton
             |> H.map options.transform
-        , lazy3 playButton midi mp3AudioBuffer playing
+         , lazy3 playButton midi mp3AudioBuffer playing
             |> H.map options.transform
-        , if fullscreen then
-            lazy miniButton options
-          else
-            lazy fullButton options
-        , lazy3 tweetButton options id title
-        , lazy closeButton options.onClose
-        ]
+         ]
+            ++ if options.playerMode then
+                [ spacer ]
+               else
+                [ if fullscreen then
+                    lazy miniButton options
+                  else
+                    lazy fullButton options
+                , lazy3 tweetButton options id title
+                , lazy closeButton options.onClose
+                ]
+        )
 
 
-disabledControl : msg -> Html msg
-disabledControl onClose =
+disabledControl : Maybe msg -> Html msg
+disabledControl maybeOnClose =
     div
         [ HA.class "midi-player-control" ]
-        [ div [ HA.class "midi-player-control-spacer" ] []
-        , closeButton onClose
+        [ spacer
+        , spacer
+        , spacer
+        , spacer
+        , maybeOnClose
+            |> Maybe.map closeButton
+            |> Maybe.withDefault (H.text "")
         ]
+
+
+spacer : Html msg
+spacer =
+    div
+        [ HA.class "midi-player-control-spacer" ]
+        [ svg [ SA.width "40", SA.height "30" ] [] ]
 
 
 backButton : Html Msg

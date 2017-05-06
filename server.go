@@ -24,7 +24,8 @@ type Info struct {
 }
 
 func init() {
-    http.HandleFunc("/", handler)
+    http.HandleFunc("/", handleTop)
+    http.HandleFunc("/player", handlePlayer)
 }
 
 var defaultInfo =
@@ -37,7 +38,7 @@ var defaultInfo =
   }
 
 
-func handler(w http.ResponseWriter, r *http.Request) {
+func handleTop(w http.ResponseWriter, r *http.Request) {
     contentId := r.URL.Query().Get("content")
     info := defaultInfo
     if contentId != "" {
@@ -70,4 +71,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
       return
     }
     t.Execute(w, info)
+}
+func handlePlayer(w http.ResponseWriter, r *http.Request) {
+    http.ServeFile(w, r, "player.html")
 }

@@ -325,11 +325,7 @@ viewPlayerHelp model content =
                                 |> Maybe.map
                                     (\( midi, mp3 ) ->
                                         MidiPlayer.view
-                                            { onFullscreen = Fullscreen True
-                                            , onMinimize = Fullscreen False
-                                            , onClose = Close
-                                            , transform = MidiPlayerMsg
-                                            }
+                                            midiPlayerOptions
                                             content.id
                                             content.title
                                             model.fullscreen
@@ -338,13 +334,23 @@ viewPlayerHelp model content =
                                             delay
                                             model.midiPlayer
                                     )
-                                |> Maybe.withDefault (MidiPlayer.viewLoading Close)
+                                |> Maybe.withDefault (MidiPlayer.viewLoading (Just Close))
                         )
                     |> Maybe.withDefault (text "")
 
             SoundCloud id ->
                 lazy viewSoundCloudPlayer id
         ]
+
+
+midiPlayerOptions : MidiPlayer.Options Msg
+midiPlayerOptions =
+    { onFullscreen = Fullscreen True
+    , onMinimize = Fullscreen False
+    , onClose = Close
+    , transform = MidiPlayerMsg
+    , playerMode = False
+    }
 
 
 viewMp3Player : String -> Html Msg

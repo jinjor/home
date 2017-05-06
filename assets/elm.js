@@ -14405,7 +14405,30 @@ var _user$project$MidiPlayer$fullButton = function (options) {
 			},
 			{ctor: '[]'}));
 };
-var _user$project$MidiPlayer$disabledControl = function (onClose) {
+var _user$project$MidiPlayer$spacer = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('midi-player-control-spacer'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$svg$Svg$svg,
+			{
+				ctor: '::',
+				_0: _elm_lang$svg$Svg_Attributes$width('40'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$height('30'),
+					_1: {ctor: '[]'}
+				}
+			},
+			{ctor: '[]'}),
+		_1: {ctor: '[]'}
+	});
+var _user$project$MidiPlayer$disabledControl = function (maybeOnClose) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -14415,18 +14438,26 @@ var _user$project$MidiPlayer$disabledControl = function (onClose) {
 		},
 		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('midi-player-control-spacer'),
-					_1: {ctor: '[]'}
-				},
-				{ctor: '[]'}),
+			_0: _user$project$MidiPlayer$spacer,
 			_1: {
 				ctor: '::',
-				_0: _user$project$MidiPlayer$closeButton(onClose),
-				_1: {ctor: '[]'}
+				_0: _user$project$MidiPlayer$spacer,
+				_1: {
+					ctor: '::',
+					_0: _user$project$MidiPlayer$spacer,
+					_1: {
+						ctor: '::',
+						_0: _user$project$MidiPlayer$spacer,
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$core$Maybe$withDefault,
+								_elm_lang$html$Html$text(''),
+								A2(_elm_lang$core$Maybe$map, _user$project$MidiPlayer$closeButton, maybeOnClose)),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
 			}
 		});
 };
@@ -14484,7 +14515,7 @@ var _user$project$MidiPlayer$centerLine = A2(
 		_1: {ctor: '[]'}
 	},
 	{ctor: '[]'});
-var _user$project$MidiPlayer$viewLoading = function (onClose) {
+var _user$project$MidiPlayer$viewLoading = function (maybeOnClose) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -14514,7 +14545,7 @@ var _user$project$MidiPlayer$viewLoading = function (onClose) {
 					}),
 				_1: {
 					ctor: '::',
-					_0: _user$project$MidiPlayer$disabledControl(onClose),
+					_0: _user$project$MidiPlayer$disabledControl(maybeOnClose),
 					_1: {ctor: '[]'}
 				}
 			}
@@ -14596,9 +14627,9 @@ var _user$project$MidiPlayer$init = A4(
 	0,
 	0,
 	{ctor: '[]'});
-var _user$project$MidiPlayer$Options = F4(
-	function (a, b, c, d) {
-		return {onFullscreen: a, onMinimize: b, onClose: c, transform: d};
+var _user$project$MidiPlayer$Options = F5(
+	function (a, b, c, d, e) {
+		return {onFullscreen: a, onMinimize: b, onClose: c, transform: d, playerMode: e};
 	});
 var _user$project$MidiPlayer$NoteColor = F2(
 	function (a, b) {
@@ -14623,60 +14654,63 @@ var _user$project$MidiPlayer$Start = F3(
 	});
 var _user$project$MidiPlayer$update = F2(
 	function (msg, model) {
-		var _p4 = msg;
-		switch (_p4.ctor) {
-			case 'Back':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
+		update:
+		while (true) {
+			var _p4 = msg;
+			switch (_p4.ctor) {
+				case 'Back':
+					var _v5 = _user$project$MidiPlayer$Stop,
+						_v6 = _elm_lang$core$Native_Utils.update(
 						model,
-						{startTime: 0, currentTime: 0, playing: false}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'TriggerStart':
-				return {
-					ctor: '_Tuple2',
-					_0: model,
-					_1: A2(
-						_elm_lang$core$Task$perform,
-						A2(_user$project$MidiPlayer$Start, _p4._0, _p4._1),
-						_elm_lang$core$Time$now)
-				};
-			case 'Start':
-				var _p5 = _p4._2;
-				var startTime = (_elm_lang$core$Native_Utils.cmp(model.currentTime, 0) > 0) ? (_p5 - (model.currentTime - model.startTime)) : _p5;
-				return A2(
-					_user$project$Core$andThen,
-					_user$project$MidiPlayer$update(
-						_user$project$MidiPlayer$Tick(_p5)),
-					{
+						{startTime: 0, currentTime: 0});
+					msg = _v5;
+					model = _v6;
+					continue update;
+				case 'TriggerStart':
+					return {
+						ctor: '_Tuple2',
+						_0: model,
+						_1: A2(
+							_elm_lang$core$Task$perform,
+							A2(_user$project$MidiPlayer$Start, _p4._0, _p4._1),
+							_elm_lang$core$Time$now)
+					};
+				case 'Start':
+					var _p5 = _p4._2;
+					var startTime = (_elm_lang$core$Native_Utils.cmp(model.currentTime, 0) > 0) ? (_p5 - (model.currentTime - model.startTime)) : _p5;
+					return A2(
+						_user$project$Core$andThen,
+						_user$project$MidiPlayer$update(
+							_user$project$MidiPlayer$Tick(_p5)),
+						{
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									startTime: startTime,
+									currentTime: _p5,
+									playing: true,
+									futureNotes: A2(_user$project$MidiPlayer$prepareFutureNotes, _p5 - startTime, _p4._0)
+								}),
+							_1: A2(_user$project$WebAudioApi$play, _p4._1, _p5 - startTime)
+						});
+				case 'Stop':
+					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{
-								startTime: startTime,
-								currentTime: _p5,
-								playing: true,
-								futureNotes: A2(_user$project$MidiPlayer$prepareFutureNotes, _p5 - startTime, _p4._0)
-							}),
-						_1: A2(_user$project$WebAudioApi$play, _p4._1, _p5 - startTime)
-					});
-			case 'Stop':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{playing: false}),
-					_1: _user$project$WebAudioApi$stop
-				};
-			default:
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{currentTime: _p4._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
+							{playing: false}),
+						_1: _user$project$WebAudioApi$stop
+					};
+				default:
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{currentTime: _p4._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+			}
 		}
 	});
 var _user$project$MidiPlayer$TriggerStart = F2(
@@ -14737,30 +14771,37 @@ var _user$project$MidiPlayer$control = F8(
 				_0: _elm_lang$html$Html_Attributes$class('midi-player-control'),
 				_1: {ctor: '[]'}
 			},
-			{
-				ctor: '::',
-				_0: A2(_elm_lang$html$Html$map, options.transform, _user$project$MidiPlayer$backButton),
-				_1: {
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
 					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$map,
-						options.transform,
-						A4(_elm_lang$html$Html_Lazy$lazy3, _user$project$MidiPlayer$playButton, midi, mp3AudioBuffer, playing)),
+					_0: A2(_elm_lang$html$Html$map, options.transform, _user$project$MidiPlayer$backButton),
 					_1: {
 						ctor: '::',
-						_0: fullscreen ? A2(_elm_lang$html$Html_Lazy$lazy, _user$project$MidiPlayer$miniButton, options) : A2(_elm_lang$html$Html_Lazy$lazy, _user$project$MidiPlayer$fullButton, options),
+						_0: A2(
+							_elm_lang$html$Html$map,
+							options.transform,
+							A4(_elm_lang$html$Html_Lazy$lazy3, _user$project$MidiPlayer$playButton, midi, mp3AudioBuffer, playing)),
+						_1: {ctor: '[]'}
+					}
+				},
+				options.playerMode ? {
+					ctor: '::',
+					_0: _user$project$MidiPlayer$spacer,
+					_1: {ctor: '[]'}
+				} : {
+					ctor: '::',
+					_0: fullscreen ? A2(_elm_lang$html$Html_Lazy$lazy, _user$project$MidiPlayer$miniButton, options) : A2(_elm_lang$html$Html_Lazy$lazy, _user$project$MidiPlayer$fullButton, options),
+					_1: {
+						ctor: '::',
+						_0: A4(_elm_lang$html$Html_Lazy$lazy3, _user$project$MidiPlayer$tweetButton, options, id, title),
 						_1: {
 							ctor: '::',
-							_0: A4(_elm_lang$html$Html_Lazy$lazy3, _user$project$MidiPlayer$tweetButton, options, id, title),
-							_1: {
-								ctor: '::',
-								_0: A2(_elm_lang$html$Html_Lazy$lazy, _user$project$MidiPlayer$closeButton, options.onClose),
-								_1: {ctor: '[]'}
-							}
+							_0: A2(_elm_lang$html$Html_Lazy$lazy, _user$project$MidiPlayer$closeButton, options.onClose),
+							_1: {ctor: '[]'}
 						}
 					}
-				}
-			});
+				}));
 	});
 var _user$project$MidiPlayer$view = F8(
 	function (options, id, title, fullscreen, midi, mp3AudioBuffer, delay, model) {
@@ -15874,6 +15915,13 @@ var _user$project$Main$viewSoundCloudPlayer = function (id) {
 var _user$project$Main$Fullscreen = function (a) {
 	return {ctor: 'Fullscreen', _0: a};
 };
+var _user$project$Main$midiPlayerOptions = {
+	onFullscreen: _user$project$Main$Fullscreen(true),
+	onMinimize: _user$project$Main$Fullscreen(false),
+	onClose: _user$project$Main$Close,
+	transform: _user$project$Main$MidiPlayerMsg,
+	playerMode: false
+};
 var _user$project$Main$viewPlayerHelp = F2(
 	function (model, content) {
 		return A2(
@@ -15908,26 +15956,13 @@ var _user$project$Main$viewPlayerHelp = F2(
 									function (midiContent) {
 										return A2(
 											_elm_lang$core$Maybe$withDefault,
-											_user$project$MidiPlayer$viewLoading(_user$project$Main$Close),
+											_user$project$MidiPlayer$viewLoading(
+												_elm_lang$core$Maybe$Just(_user$project$Main$Close)),
 											A2(
 												_elm_lang$core$Maybe$map,
 												function (_p3) {
 													var _p4 = _p3;
-													return A8(
-														_user$project$MidiPlayer$view,
-														{
-															onFullscreen: _user$project$Main$Fullscreen(true),
-															onMinimize: _user$project$Main$Fullscreen(false),
-															onClose: _user$project$Main$Close,
-															transform: _user$project$Main$MidiPlayerMsg
-														},
-														content.id,
-														content.title,
-														model.fullscreen,
-														_p4._0,
-														_p4._1,
-														_p2._2,
-														model.midiPlayer);
+													return A8(_user$project$MidiPlayer$view, _user$project$Main$midiPlayerOptions, content.id, content.title, model.fullscreen, _p4._0, _p4._1, _p2._2, model.midiPlayer);
 												},
 												midiContent.midiAndMp3));
 									},

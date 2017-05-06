@@ -125,6 +125,10 @@ h2 .introduction {
   font-size: x-large;
 }
 
+.player-fullscreen.player-player-mode .midi-player-title {
+  font-size: medium;
+}
+
 .player-container.player-fullscreen .midi-player {
   height: 100%;
   position: fixed;
@@ -156,7 +160,7 @@ h2 .introduction {
 }
 
 .midi-player-control-spacer {
-  flex-grow: 4;
+  flex-grow: 1;
 }
 
 .midi-player-control-button {
