@@ -5,6 +5,8 @@ node_modules
 elm-stuff
 elm-binary-decoder
 lib
+assets/elm.js
+assets/player.js
 
 # contents
 contents/music/others
@@ -12,3 +14,6 @@ contents/music/others
 # GAE
 *~
 *.pyc
+
+# Mac
+.DS_Store
