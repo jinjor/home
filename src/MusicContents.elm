@@ -45,20 +45,60 @@ contents =
         (Just "field.jpg")
         (SoundCloud "306090165")
       -- 2016
-    , Content "hokora" "ほこら" "[「オレが考えたほこらの曲」](http://carrotwine.muse.bindsite.jp/dtmermeeting.html)参加曲" (Just "hokora.jpg") (MidiAndMp3 "2016/hokora.mid" "2016/hokora.mp3" 2770)
-    , Content "hokora-fc" "ほこら (FCアレンジ)" "by [ハイデン](https://twitter.com/hydden0310)さん" (Just "hokora.jpg") (Mp3 "2016/hokora-fc.mp3")
+    , Content
+        "hokora"
+        "ほこら"
+        """<a href="http://carrotwine.muse.bindsite.jp/dtmermeeting.html" target="_blank">「オレが考えたほこらの曲」</a>参加曲"""
+        (Just "hokora.jpg")
+        (MidiAndMp3 "2016/hokora.mid" "2016/hokora.mp3" 2770)
+    , Content
+        "hokora-fc"
+        "ほこら (FCアレンジ)"
+        """by <a href="https://twitter.com/hydden0310" target="_blank">ハイデン</a>さん"""
+        (Just "hokora.jpg")
+        (Mp3 "2016/hokora-fc.mp3")
     , Content "kira-kira" "Kira Kira" "" Nothing (SoundCloud "278194362")
     , Content "candy" "Candy" "" Nothing (SoundCloud "240810123")
       -- block
-    , Content "ancient" "ancient" "スマホゲーム [Block Brothers](http://blockbros.net/) BGM" (Just "block.png") (Mp3 "2016/ancient.mp3")
+    , Content
+        "animal-kingdom"
+        "Animal Kingdom"
+        """スマホゲーム <a href="http://blockbros.net/" target="_blank">Block Brothers</a> BGM"""
+        (Just "block.png")
+        (Mp3 "2016/animal-kingdom.mp3")
       -- , Content "summer-beach" "Summer Beach" (Just "block.png") (Mp3 "2016/summer-beach.mp3")
-    , Content "cloud-passage" "Cloud Passage" "スマホゲーム [Block Brothers](http://blockbros.net/) BGM" (Just "block.png") (Mp3 "2016/cloud-passage.mp3")
-    , Content "ice-world" "Ice World" "スマホゲーム [Block Brothers](http://blockbros.net/) 未収録曲" (Just "block.png") (Mp3 "2016/ice-world.mp3")
-    , Content "welcome-to-the-jungle" "Welcome to the Jungle!" "スマホゲーム [Block Brothers](http://blockbros.net/) 未収録曲" (Just "block.png") (Mp3 "2016/welcome-to-the-jungle.mp3")
+    , Content
+        "cloud-passage"
+        "Cloud Passage"
+        """スマホゲーム <a href="http://blockbros.net/" target="_blank">Block Brothers</a> BGM"""
+        (Just "block.png")
+        (Mp3 "2016/cloud-passage.mp3")
+    , Content
+        "ice-world"
+        "Ice World"
+        """スマホゲーム <a href="http://blockbros.net/" target="_blank">Block Brothers</a> 未収録曲"""
+        (Just "block.png")
+        (Mp3 "2016/ice-world.mp3")
+    , Content
+        "welcome-to-the-jungle"
+        "Welcome to the Jungle!"
+        """スマホゲーム <a href="http://blockbros.net/" target="_blank">Block Brothers</a> 未収録曲"""
+        (Just "block.png")
+        (Mp3 "2016/welcome-to-the-jungle.mp3")
       -- , Content "kingdom" "kingdom" Nothing (Mp3 "2016/kingdom.mp3")
       -- , Content "night" "night" Nothing (Mp3 "2016/night.mp3")
-    , Content "moon-over-the-castle" "Moon Over The Castle" "スマホゲーム [Block Brothers](http://blockbros.net/) BGM" (Just "block.png") (Mp3 "2016/moon-over-the-castle.mp3")
-    , Content "lava-mountain" "Lava Mountain" "スマホゲーム [Block Brothers](http://blockbros.net/) 未収録曲" (Just "block.png") (Mp3 "2016/lava-mountain.mp3")
+    , Content
+        "moon-over-the-castle"
+        "Moon Over The Castle"
+        """スマホゲーム <a href="http://blockbros.net/" target="_blank">Block Brothers</a> BGM"""
+        (Just "block.png")
+        (Mp3 "2016/moon-over-the-castle.mp3")
+    , Content
+        "lava-mountain"
+        "Lava Mountain"
+        """スマホゲーム <a href="http://blockbros.net/" target="_blank">Block Brothers</a> 未収録曲"""
+        (Just "block.png")
+        (Mp3 "2016/lava-mountain.mp3")
       -- 2015
     , Content "megalopolis" "Megalopolis" "" Nothing (SoundCloud "236197155")
     , Content "voice-of-water" "Voice of Water" "" Nothing (SoundCloud "233781385")
