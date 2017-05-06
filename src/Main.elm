@@ -18,10 +18,10 @@ import GitHub exposing (GitHub)
 import Markdown
 import Navigation exposing (Location)
 import Json.Decode as Decode
-import UrlParser exposing ((<?>))
 import MusicContents exposing (..)
 import Core exposing (..)
 import WebAudioApi exposing (AudioBuffer)
+import RouteParser.QueryString as QueryString
 
 
 main : Program Never Model Msg
@@ -86,16 +86,14 @@ init location =
                         Model initialMidiCountents Nothing MidiPlayer.init gitHub False NoError
 
                     firstContent =
-                        UrlParser.parsePath parser location
+                        QueryString.parse location.search
+                            |> Dict.get "content"
+                            |> Maybe.andThen List.head
                             |> Maybe.andThen
-                                (\maybeId ->
-                                    maybeId
-                                        |> Maybe.andThen
-                                            (\id ->
-                                                contents
-                                                    |> List.filter (\content -> content.id == id)
-                                                    |> List.head
-                                            )
+                                (\id ->
+                                    contents
+                                        |> List.filter (\content -> content.id == id)
+                                        |> List.head
                                 )
                 in
                     case firstContent of
@@ -106,11 +104,6 @@ init location =
                         Nothing ->
                             ( model, Cmd.none )
             )
-
-
-parser : UrlParser.Parser (Maybe String -> a) a
-parser =
-    UrlParser.top <?> UrlParser.stringParam "content"
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

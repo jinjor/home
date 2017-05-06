@@ -19,6 +19,8 @@ type Info struct {
     Title string
     Description string
     Image string
+    Card string
+    PlayerUrl string
 }
 
 func init() {
@@ -30,6 +32,8 @@ var defaultInfo =
     Title: "World Maker",
     Description: "ジンジャーと Yosuke Torii のホームページ",
     Image: "http://world-maker.com/assets/world-maker.jpg",
+    Card: "summary",
+    PlayerUrl: "",
   }
 
 
@@ -50,10 +54,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
         if music.Image != "" {
           image = "http://world-maker.com/contents/music/jacket/" + music.Image
         }
+        playerUrl := "https://world-maker.appspot.com/player?content=" + contentId
         info = &Info{
           Title: music.Title,
           Description: music.Description,
           Image: image,
+          Card: "player",
+          PlayerUrl: playerUrl,
         }
       }
     }

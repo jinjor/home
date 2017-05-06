@@ -12,10 +12,10 @@ import SmfDecoder exposing (Smf)
 import Midi exposing (Midi, Note, Detailed)
 import MidiPlayer exposing (MidiPlayer)
 import Navigation exposing (Location)
-import UrlParser exposing ((<?>))
 import MusicContents exposing (..)
 import Core exposing (..)
 import WebAudioApi exposing (AudioBuffer)
+import RouteParser.QueryString as QueryString
 
 
 main : Program Never Model Msg
@@ -62,16 +62,14 @@ init location =
             Model initialMidiCountents Nothing MidiPlayer.init NoError
 
         firstContent =
-            UrlParser.parsePath parser location
+            QueryString.parse location.search
+                |> Dict.get "content"
+                |> Maybe.andThen List.head
                 |> Maybe.andThen
-                    (\maybeId ->
-                        maybeId
-                            |> Maybe.andThen
-                                (\id ->
-                                    contents
-                                        |> List.filter (\content -> content.id == id)
-                                        |> List.head
-                                )
+                    (\id ->
+                        contents
+                            |> List.filter (\content -> content.id == id)
+                            |> List.head
                     )
     in
         case firstContent of
@@ -80,11 +78,6 @@ init location =
 
             Nothing ->
                 ( model, Cmd.none )
-
-
-parser : UrlParser.Parser (Maybe String -> a) a
-parser =
-    UrlParser.top <?> UrlParser.stringParam "content"
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -230,7 +223,7 @@ viewPlayer : Model -> Html Msg
 viewPlayer model =
     model.selected
         |> Maybe.map (viewPlayerHelp model)
-        |> Maybe.withDefault (text "")
+        |> Maybe.withDefault errorMessage
 
 
 viewPlayerHelp : Model -> Content -> Html Msg
@@ -240,9 +233,6 @@ viewPlayerHelp model content =
         , classList [ ( "player-fullscreen", True ) ]
         ]
         [ case content.details of
-            Mp3 mp3File ->
-                text ""
-
             MidiAndMp3 midiFile mp3File delay ->
                 Dict.get midiFile model.midiContents
                     |> Maybe.map
@@ -266,8 +256,16 @@ viewPlayerHelp model content =
                                     )
                                 |> Maybe.withDefault (MidiPlayer.viewLoading Close)
                         )
-                    |> Maybe.withDefault (text "")
+                    |> Maybe.withDefault errorMessage
 
-            SoundCloud id ->
-                text ""
+            _ ->
+                errorMessage
+        ]
+
+
+errorMessage : Html msg
+errorMessage =
+    div []
+        [ div [] [ text "Error: Unable to show player" ]
+        , div [] [ a [ href "http://world-maker.com" ] [ text "Go to Home" ] ]
         ]
