@@ -198,7 +198,7 @@ view options id title fullscreen midi mp3AudioBuffer delay model =
                 |> List.map2 (lazy3 viewTrack currentPosition) colors
                 |> svg (svgAttributes currentPosition)
             , centerLine
-            , if model.ended then
+            , if options.playerMode && model.ended then
                 lazy2
                     messageCircle
                     "midi-player-ended"
