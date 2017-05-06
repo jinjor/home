@@ -5,8 +5,12 @@ node_modules
 elm-stuff
 elm-binary-decoder
 lib
+
+# generated
 assets/elm.js
 assets/player.js
+elm-gen-json.js
+music.json
 
 # contents
 contents/music/others
