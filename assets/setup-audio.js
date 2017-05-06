@@ -22,6 +22,9 @@ app.ports.webAudioApiPlay.subscribe(data => {
   source.buffer = buffer;
   source.connect(context.destination);
   source.start(0, time);
+  source.onended = function() {
+    app.ports.mp3Finished.send({});
+  }
 });
 app.ports.webAudioApiStop.subscribe(() => {
   if (source) {

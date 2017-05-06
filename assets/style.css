@@ -91,14 +91,13 @@ h2 .introduction {
   color: #aaa;
 }
 
-.midi-player-loading {
+.midi-player-message-circle {
   position: absolute;
   margin: auto;
   top: 0;
   left: 0;
   right: 0;
   bottom: 30px;
-  animation: loading 1.5s linear infinite;
   text-align: center;
   line-height: 80px;
   width: 80px;
@@ -107,6 +106,15 @@ h2 .introduction {
   background-color: rgba(255, 255, 255, 0.2);
   color: #eee;
   font-size: smaller;
+}
+
+.midi-player-message-circle.midi-player-ended {
+  background-color: #aaa;
+}
+
+.midi-player-message-circle.midi-player-loading {
+  background-color: rgba(255, 255, 255, 0.2);
+  animation: loading 1.5s linear infinite;
 }
 
 @keyframes loading {

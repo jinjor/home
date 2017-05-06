@@ -1,4 +1,4 @@
-module MidiPlayer
+port module MidiPlayer
     exposing
         ( MidiPlayer
         , init
@@ -33,6 +33,7 @@ import Task exposing (Task)
 
 type alias MidiPlayer =
     { playing : Bool
+    , ended : Bool
     , startTime : Time
     , currentTime : Time
     , futureNotes : List (Detailed Note)
@@ -41,14 +42,14 @@ type alias MidiPlayer =
 
 init : MidiPlayer
 init =
-    MidiPlayer False 0 0 []
+    MidiPlayer False False 0 0 []
 
 
 type Msg
     = Back
     | TriggerStart Midi AudioBuffer
     | Start Midi AudioBuffer Time
-    | Stop
+    | Stop Bool
     | Tick Time
 
 
@@ -64,7 +65,10 @@ triggerStart =
 
 stop : Msg
 stop =
-    Stop
+    Stop False
+
+
+port mp3Finished : ({} -> msg) -> Sub msg
 
 
 update : Msg -> MidiPlayer -> ( MidiPlayer, Cmd Msg )
@@ -75,7 +79,7 @@ update msg model =
                 | startTime = 0
                 , currentTime = 0
             }
-                |> update Stop
+                |> update (Stop False)
 
         TriggerStart midi mp3AudioBuffer ->
             ( model
@@ -90,19 +94,30 @@ update msg model =
                         currentTime - (model.currentTime - model.startTime)
                     else
                         currentTime
-            in
-                ( { model
-                    | startTime = startTime
-                    , currentTime = currentTime
-                    , playing = True
-                    , futureNotes = prepareFutureNotes (currentTime - startTime) midi
-                  }
-                , WebAudioApi.play mp3AudioBuffer (currentTime - startTime)
-                )
-                    |> andThen (update (Tick currentTime))
 
-        Stop ->
-            ( { model | playing = False }
+                futureNotes =
+                    prepareFutureNotes (currentTime - startTime) midi
+            in
+                if model.ended then
+                    update Back model
+                        |> andThen (update (TriggerStart midi mp3AudioBuffer))
+                else
+                    ( { model
+                        | ended = False
+                        , startTime = startTime
+                        , currentTime = currentTime
+                        , playing = True
+                        , futureNotes = futureNotes
+                      }
+                    , WebAudioApi.play mp3AudioBuffer (currentTime - startTime)
+                    )
+                        |> andThen (update (Tick currentTime))
+
+        Stop ended ->
+            ( { model
+                | playing = False
+                , ended = ended
+              }
             , WebAudioApi.stop
             )
 
@@ -130,7 +145,10 @@ dropWhile f list =
 subscriptions : MidiPlayer -> Sub Msg
 subscriptions model =
     if model.playing then
-        Time.every (1000 * Time.millisecond / 30) Tick
+        Sub.batch
+            [ Time.every (1000 * Time.millisecond / 30) Tick
+            , mp3Finished (\_ -> Stop True)
+            ]
     else
         Sub.none
 
@@ -180,6 +198,16 @@ view options id title fullscreen midi mp3AudioBuffer delay model =
                 |> List.map2 (lazy3 viewTrack currentPosition) colors
                 |> svg (svgAttributes currentPosition)
             , centerLine
+            , if model.ended then
+                lazy2
+                    messageCircle
+                    "midi-player-ended"
+                    (H.a
+                        [ HA.href "http://world-maker.com", HA.target "_blank" ]
+                        [ H.text "More" ]
+                    )
+              else
+                H.text ""
             , lazy viewTitle title
             , control options id title fullscreen midi.tracks midi mp3AudioBuffer model.playing
             ]
@@ -196,9 +224,18 @@ viewLoading maybeOnClose =
         [ HA.class "midi-player"
         ]
         [ svg (svgAttributes 0) []
-        , div [ HA.class "midi-player-loading" ] [ H.text "Loading" ]
+        , lazy2 messageCircle "midi-player-loading" (H.text "Loading")
         , disabledControl maybeOnClose
         ]
+
+
+messageCircle : String -> Html msg -> Html msg
+messageCircle additionalClass inner =
+    div
+        [ HA.class "midi-player-message-circle"
+        , HA.class additionalClass
+        ]
+        [ inner ]
 
 
 centerLine : Svg msg
@@ -271,7 +308,7 @@ playButton midi mp3AudioBuffer playing =
     controlButton
         [ onClick
             (if playing then
-                Stop
+                Stop False
              else
                 TriggerStart midi mp3AudioBuffer
             )
