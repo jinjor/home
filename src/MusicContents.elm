@@ -94,11 +94,11 @@ contents =
         (Just "block.png")
         (Mp3 "2016/moon-over-the-castle.mp3")
     , Content
-        "lava-mountain"
-        "Lava Mountain"
-        """スマホゲーム <a href="http://blockbros.net/" target="_blank">Block Brothers</a> 未収録曲"""
+        "block-desert"
+        "Block Desert"
+        """スマホゲーム <a href="http://blockbros.net/" target="_blank">Block Brothers</a> BGM"""
         (Just "block.png")
-        (Mp3 "2016/lava-mountain.mp3")
+        (Mp3 "2016/block-desert.mp3")
       -- 2015
     , Content "megalopolis" "Megalopolis" "" Nothing (SoundCloud "236197155")
     , Content "voice-of-water" "Voice of Water" "" Nothing (SoundCloud "233781385")
